@@ -1,0 +1,14 @@
+.table-data th {
+	background-color: #f9f9f9;
+	width: 45%;
+}
+.main-logo {
+    float: left;
+    height: 48px;
+    margin-right: 8px;
+    position: relative;
+    top: -5px;
+}
+.dropdown-menu li{
+  padding: 5px 0;
+}

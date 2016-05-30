@@ -1,60 +1,53 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+import path from 'path'
+import Express from 'express'
+import React from 'react'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import counterApp from './counter'
+import { renderToString } from 'react-dom/server'
+import { match, RoutingContext } from 'react-router'
+import routes from './react-view/routes'
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
 
-var app = express();
+import session from 'express-session'
+import bodyParser from 'body-parser'
+import logger from 'morgan'
 
-// view engine setup
+
+
+const app = Express()
+const port = 3000
+
+// This is fired every time the server side receives a request
+
+app.use(Express.static('public'));
+app.use(logger('dev'));
+app.use(session({ resave: true,
+                  saveUninitialized: true,
+                  secret: 'uwotm8' }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'jade');
+//app.use(multer());
+app.use(Express.static(path.join(__dirname, '../public')));
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../public')));
+app.get('*', function(req, res) {
+  // Note that req.url here should be the full URL path from
+  // the original request, including the query string.
+  match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+    if (error) {
+      res.status(500).send(error.message)
+    } else if (redirectLocation) {
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+    } else if (renderProps) {
+      res.status(200).render('index', {
+        reactString : renderToString(<RoutingContext {...renderProps} />)
+      })
+    } else {
+      res.status(404).send('Not found')
+    }
+  })
+})
 
-app.use('/', routes);
-app.use('/users', users);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
-
-
-module.exports = app;
+app.listen(port)
