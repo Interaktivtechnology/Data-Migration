@@ -31,7 +31,9 @@ app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'jade');
 //app.use(multer());
 app.use(Express.static(path.join(__dirname, '../public')));
-
+app.get("/meta", (req, res) => {
+  res.status(200).send(require('../meta-data.json'))
+})
 app.get('*', function(req, res) {
   // Note that req.url here should be the full URL path from
   // the original request, including the query string.

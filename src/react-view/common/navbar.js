@@ -14,7 +14,7 @@ class NavbarInstance extends Component{
     this.state = {
       user: 'Eko Purnomo'
     }
-    
+
   }
   render(){
 
@@ -22,8 +22,8 @@ class NavbarInstance extends Component{
     const depth = this.props.routes.length
     const key = pathname.split('/')[1] || 'root'
     return (
-      <div>
-        <Navbar fixedTop={false}>
+      <div className="container-fluid">
+        <Navbar fixedTop={false} fluid={true} inverse={true}>
           <Navbar.Header>
             <Navbar.Brand style={{margin: 10}}>
               <Link to={"/"}><img className="main-logo" src={'http://interaktiv.sg/wp-content/uploads/2014/10/Logo-web2014-edit21.png'}/> {'Migration Tools'}</Link>
@@ -57,7 +57,7 @@ class NavbarInstance extends Component{
             </Nav>
           </Navbar.Collapse>
       </Navbar>
-       <div id="content" className="container">
+       <div id="content" className="container-fluid">
        <ul  className="breadcrumb">
         {this.props.routes.map((item, index) =>
           <li key={index}>
