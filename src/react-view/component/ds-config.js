@@ -195,7 +195,6 @@ export default class DsConfig extends React.Component {
             <tbody>
               {
                 this.rows.map((object, key) => {
-
                   return <tr key={key+1000}>
                     <td>{object.id}</td>
                     <td>{object.dsName}</td>

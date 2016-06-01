@@ -20,7 +20,7 @@ class MigrationTable extends React.Component {
 
     for(var i=0; i<10;i++){
       this.option.push(
-        <option value={i} key={i+1000}>{(i%5 == 0 && i < 5? 'Swift' : 'Air Energi' ) ||
+        <option value={i} key={i+1000}>{(i%5 == 0 && i < 5? 'Air Swift' : 'Air Energi' ) ||
          faker.internet.domainName()} ~ {['Salesforce', 'MySQL', 'Dynamo Db', 'CSV File', 'JSON File', 'Url'][i%5]}</option>
       )
     }

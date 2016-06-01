@@ -34,7 +34,7 @@ class NavbarInstance extends Component{
             <Nav>
               <NavDropdown eventKey={3} title="Migration" id="basic-nav-dropdown">
                 <li>
-                  <Link to={"/migration"}><i className={'fa fa-th-list'}></i> Migrate Now!</Link>
+                  <Link to={"/migration/"}><i className={'fa fa-th-list'}></i> Migration List</Link>
                 </li>
                 <li>
                   <Link to={"/ds-config"}><i className={'fa fa-database'}></i> Data Source Config</Link>
