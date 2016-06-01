@@ -12,9 +12,6 @@ class Modal extends Component {
 
   constructor(props){
     super(props)
-    this.propTypes = {
-      handleHideModal: React.PropTypes.func.isRequired
-    }
     this.state = {
       type : 'Salesforce'
     }
@@ -110,7 +107,9 @@ class Modal extends Component {
 
 
 }
-
+Modal.propTypes = {
+  handleHideModal: React.PropTypes.func.isRequired
+}
 
 
 export default class DsConfig extends React.Component {

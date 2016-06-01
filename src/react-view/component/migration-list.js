@@ -16,7 +16,7 @@ if (typeof Math != 'object'){
 
 
 
-export default class MigrationList extends React.Component {
+class MigrationList extends React.Component {
 
   constructor(props)
   {
@@ -48,7 +48,7 @@ export default class MigrationList extends React.Component {
   _addDataSource(){
     if(document)
       document.title = "InterAktiv ~ Add new data source"
-    console.log(this.props.context)
+    console.log(this.context.router)
     this.props.history.push('/migration/new')
   }
 
@@ -128,3 +128,10 @@ export default class MigrationList extends React.Component {
     );
   }
 }
+
+
+MigrationList.contextType = {
+  router : React.PropTypes.func.isRequired
+}
+
+export default MigrationList

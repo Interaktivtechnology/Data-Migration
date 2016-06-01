@@ -15,6 +15,7 @@
     "jquery": "^2.2.4",
     "moment": "^2.13.0",
     "morgan": "^1.6.1",
+    "proxy-agent": "^2.0.0",
     "pug": "^2.0.0-alpha8",
     "react": "^15.1.0",
     "react-addons-css-transition-group": "^15.1.0",
@@ -36,9 +37,9 @@
   },
   "scripts": {
     "test": "mocha --compilers js:babel-register --recursive",
-    "devreact": "watchify -t [ babelify --presets [ react ] ] src/react-view/app.js -o ./public/javascripts/app.js",
+    "devreact": "watchify -t [ babelify --presets [ react ] ] src/react-view/app.js -o ./public/javascripts/app.js -v -d ",
     "buildreact": "browserify -t [babelify --presets [ react ]] src/react-view/app.js | uglifyjs -cm > ./public/javascripts/app.min.js",
-    "dev": "nodemon --watch src/app.js --watch src/server/ --exec babel-node ./src/app",
+    "dev": "nodemon --watch src/app.js --watch src/routes-server/ --exec babel-node ./src/app",
     "prestart": "babel src --recursive --out-dir dist",
     "start": "NODE_ENV=production node dist/bin/www"
   },

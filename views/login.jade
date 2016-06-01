@@ -1,0 +1,25 @@
+
+extends layout
+
+block content
+  link(rel='stylesheet', href='/css/login.css')
+  .container
+    form.form-signin(action='/login?mode=' + process.env.RPMS_MODE, method='post')
+      h3.form-signin-heading
+        span.col-md-12.col-xs-12.text-center
+          img.form-logo(src='http://interaktiv.sg/wp-content/uploads/2014/10/Logo-web2014-edit21.png')
+        span.col-md-12.col-xs-12.text-center Data Migration
+        .clearfix
+      .form-group
+        label.sr-only(for='inputEmail') Email address
+        input#inputEmail.form-control(type='email', placeholder='Email address', required='', autofocus='', name='rpms_email')
+      .form-group
+        label.sr-only(for='inputPassword') Password
+        input#inputPassword.form-control(type='password', placeholder='Password', required='', name='rpms_password')
+      .form-group
+        .checkbox
+          label
+            input(type='checkbox', value='remember-me')
+            |  Remember me
+      button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
+  // /container

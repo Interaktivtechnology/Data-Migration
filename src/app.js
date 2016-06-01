@@ -20,7 +20,6 @@ const port = 3000
 
 // This is fired every time the server side receives a request
 
-app.use(Express.static('public'));
 app.use(logger('dev'));
 app.use(session({ resave: true,
                   saveUninitialized: true,
@@ -31,6 +30,12 @@ app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'jade');
 //app.use(multer());
 app.use(Express.static(path.join(__dirname, '../public')));
+
+//Login Page Routes
+app.get('/login', (req, res) => {
+  res.status(200).render('login')
+})
+app.use("/salesforce", require('./routes-server'))
 app.get("/meta", (req, res) => {
   res.status(200).send(require('../meta-data.json'))
 })
