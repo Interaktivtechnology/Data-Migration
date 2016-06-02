@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM, {render} from 'react-dom';
-
+//import $ from 'jquery'
 
 class ModalLoading extends Component {
 
@@ -9,6 +9,7 @@ class ModalLoading extends Component {
     this.state = {
       type : 'Salesforce'
     }
+    this._hide = this._hide.bind(this)
   }
 
   componentDidMount(){
@@ -24,20 +25,26 @@ class ModalLoading extends Component {
     })
   }
 
+  _hide () {
+    var id = ReactDOM.findDOMNode(this).id
+    $('#' + id).modal('hide');
+  }
   render(){
-
-
     return (
-      <div  id="mdlLoading" className="modal fade" ref="modal">
-        <div className="modal-dialog">
+      <div  id="mdlLoading" className="modal fade" ref="modal" data-backdrop={"static"}>
+        <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
               <h4 className="modal-title">Loading</h4>
             </div>
             <div className="modal-body">
-              <i className="fa fa-spinner fa-spin fa-5x fa-fw"></i>
-              <span className="sr-only">Loading...</span>
+              <p className="text-center">
+                <i className="fa fa-spinner fa-spin fa-5x fa-fw"></i>
+                <br />
+                <span style={{marginTop: 20}}>{this.props.content || "Loading..."}</span>
+
+              </p>
             </div>
           </div>
         </div>

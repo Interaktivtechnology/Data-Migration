@@ -146,45 +146,45 @@ class MigrationRow extends React.Component {
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label className="col-md-5">Name</label>
-              <span className="col-md-1">:</span>
-              <p className="col-md-6">Migration for Account </p>
+              <label className="col-md-5 col-sm-6">Name</label>
+              <span className="col-md-1 col-sm-hidden">:</span>
+              <p className="col-md-6 col-sm-6">Migration for Account </p>
             </div>
-            <div className="form-group">
-              <label className="col-md-5">Object Name</label>
-              <span className="col-md-1">:</span>
-              <p className="col-md-6">Account </p>
+            <div className="form-group ">
+              <label className="col-md-5 col-sm-6">Object Name</label>
+              <span className="col-md-1 col-sm-hidden col-xs-hidden">:</span>
+              <p className="col-md-6 col-sm-6">Account </p>
             </div>
             <div className="form-group">
               <label className="col-md-5">From</label>
-              <span className="col-md-1">:</span>
+              <span className="col-md-1 col-sm-hidden col-xs-hidden">:</span>
               <p className="col-md-6">Swift </p>
             </div>
             <div className="form-group">
               <label className="col-md-5">To</label>
-              <span className="col-md-1">:</span>
+              <span className="col-md-1 col-sm-hidden col-xs-hidden">:</span>
               <p className="col-md-6">Air Energi </p>
             </div>
           </div>
           <div className="col-md-6">
             <div className="form-group">
               <label className="col-md-5">Created By</label>
-              <span className="col-md-1">:</span>
-              <p className="col-md-6">eko@interaktiv.sg</p>
+              <span className="col-md-1 col-sm-hidden col-xs-hidden">:</span>
+              <p className="col-md-6 col-sm-6">eko@interaktiv.sg</p>
             </div>
             <div className="form-group">
               <label className="col-md-5">Conflict</label>
-              <span className="col-md-1">:</span>
+              <span className="col-md-1 col-sm-hidden col-xs-hidden">:</span>
               <p className="col-md-6">22</p>
             </div>
             <div className="form-group">
               <label className="col-md-5">Success</label>
-              <span className="col-md-1">:</span>
+              <span className="col-md-1 col-sm-hidden col-xs-hidden">:</span>
               <p className="col-md-6">432</p>
             </div>
             <div className="form-group">
               <label className="col-md-5">Completion</label>
-              <span className="col-md-1">:</span>
+              <span className="col-md-1 col-sm-hidden col-xs-hidden">:</span>
               <div className="col-md-6">
                 <div className="progress ">
                   <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow={80.32} aria-valuemin="0" aria-valuemax="100" style={{width: 80 + "%"}}>
@@ -198,9 +198,10 @@ class MigrationRow extends React.Component {
         </div>
         <div className="row">
           <div className="col-md-12">
-            <h4>Conflict Row</h4>
-            <hr />
-            {this.props.children || <ConflictTable mergedRow={[]} id={id} router={this.props.router} />}
+            {this.props.children || (<div>
+              <h4>Conflict Row</h4>
+              <hr />
+             <ConflictTable mergedRow={[]} id={id} router={this.props.router} /> </div>)}
 
           </div>
         </div>

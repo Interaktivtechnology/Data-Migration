@@ -1,4 +1,6 @@
-module.exports = {
+import faker from 'faker'
+
+const MetaData = {
   "fullName": "Account",
   "actionOverrides": [
     {
@@ -990,3 +992,18 @@ module.exports = {
     }
   ]
 }
+
+export function AccountExample(total){
+  var Account = []
+  for(var i =0; i<total;i++)
+  {
+    var eachRow = {}
+    MetaData.fields.map( (object, index) => {
+     eachRow[object.fullName] = faker.lorem.words()
+    })
+    Account.push(eachRow)
+  }
+  return Account
+}
+
+export default MetaData
