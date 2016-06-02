@@ -5,7 +5,7 @@ import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import counterApp from './counter'
 import { renderToString } from 'react-dom/server'
-import { match, RoutingContext } from 'react-router'
+import { match, RouterContext } from 'react-router'
 import routes from './react-view/routes'
 
 
@@ -35,6 +35,9 @@ app.use(Express.static(path.join(__dirname, '../public')));
 app.get('/login', (req, res) => {
   res.status(200).render('login')
 })
+//Authentication Page
+app.use('/auth', require('./routes-server/auth'))
+
 app.use("/salesforce", require('./routes-server'))
 app.get("/meta", (req, res) => {
   res.status(200).send(require('../meta-data.json'))
@@ -48,8 +51,10 @@ app.get('*', function(req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
+      var reactString =  renderToString(<RouterContext {...renderProps} />)
+      console.log(reactString)
       res.status(200).render('index', {
-        reactString : renderToString(<RoutingContext {...renderProps} />)
+        reactString :reactString
       })
     } else {
       res.status(404).send('Not found')

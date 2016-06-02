@@ -33,7 +33,7 @@ class MigrationList extends React.Component {
         id : faker.random.number(),
         from : 'Swift',
         to : 'Air Energi',
-        sobject : ['Account', 'Object', 'Opportunity'][i%3],
+        sobject : ['Account', 'Contact', 'Opportunity', 'Activity'][i%4],
         type : ['Salesforce', 'MySQL'][i%2],
         username : faker.internet.userName(),
         result : {
@@ -66,9 +66,10 @@ class MigrationList extends React.Component {
     if(this.rows.length > 0)
       for(var key in this.rows[0])
         thead.push(
-          <th>{key}</th>
+          <th style={{textTransform : 'capitalize'}}>{key.replace(/_/ig, ' ')}</th>
         )
-    return (
+
+    return this.props.children ? React.cloneElement(this.props.children) : (
       <div className="col-md-12">
         <h1>Migration List</h1>
         {this.state.showModal ? <Modal handleHideModal={ () => this.showModal(false)} /> : null}
@@ -81,7 +82,7 @@ class MigrationList extends React.Component {
         <div className="col-md-12 table-responsive">
           <table className="table table-bordered" style={{marginTop: 30}}>
             <thead>
-            <tr>
+            <tr >
               {thead}
             </tr>
             </thead>
@@ -111,8 +112,8 @@ class MigrationList extends React.Component {
                         Action <span className="caret"></span>
                       </button>
                       <ul className="dropdown-menu">
-                        <li><Link to={"/ds-config"}><i className={'fa fa-chain-broken'}></i> Fix Conflict</Link></li>
-                        <li><Link to={"/ds-config"}><i className={'fa fa-eyes'}></i> View Success</Link></li>
+                        <li><Link to={"/migration/fix-conflict/" + object.id}><i className={'fa fa-chain-broken'}></i> Fix Conflict</Link></li>
+                        <li><Link to={"/migration/view/" + object.id}><i className={'fa fa-eye'}></i> View Success</Link></li>
                         <li role="separator" className="divider"></li>
                         <li><a href="#" onClick={this._queueMigration}>Queue Migration!</a></li>
                       </ul>

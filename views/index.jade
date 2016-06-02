@@ -3,5 +3,5 @@ extends layout
 block content
   div(id='react')
     div 
-       #{reactString}
+      div!= reactString
   script(type="text/javascript" src="/javascripts/app.js")

@@ -50,24 +50,41 @@ class NavbarInstance extends Component{
             <Nav pullRight>
               <NavDropdown title={this.state.user} id="basic-nav-dropdown">
               <li>
-                <Link to={"/setting/"}><i className={'fa fa-cogs'}></i> Settings</Link>
+                <Link to={"/setting"}><i className={'fa fa-cogs'}></i> Settings</Link>
               </li>
-              <MenuItem eventKey={3.1} href="/logout"><i className={'fa fa-sign-out'}></i> Logout</MenuItem>
+              <MenuItem eventKey={3.1} href="/auth/logout"><i className={'fa fa-sign-out'}></i> Logout</MenuItem>
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>
       </Navbar>
        <div id="content" className="container-fluid">
        <ul  className="breadcrumb">
-        {this.props.routes.map((item, index) =>
-          <li key={index}>
-            <Link
-              onlyActiveOnIndex={true}
-              activeClassName="breadcrumb-active"
-              to={item.path || ''}>
+        {this.props.routes.map((item, index) =>{
+          var params = item.component.contextType ? item.component.contextType.params : {}
+          var matches = item.path.match(/:[a-zA-Z]{1,30}[\/]/ig)
+          //console.log(item)
+          if(typeof params == 'object'){
+            Object.keys(params).forEach((row, i) => {
+              console.log(row)
+            })
+          }
+
+          if(this.props.routes.length != (index + 1)){
+
+            return <li key={index}>
+              <Link
+                onlyActiveOnIndex={true}
+                activeClassName="breadcrumb-active"
+                to={item.path || ''}>
+                {item.title != undefined ? item.title : ''}
+              </Link>
+            </li>
+          }
+          else
+            return <li key={index}>
               {item.title != undefined ? item.title : ''}
-            </Link>
-          </li>
+            </li>
+        }
         )}
       </ul>
        <ReactCSSTransitionGroup

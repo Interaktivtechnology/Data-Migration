@@ -4,7 +4,7 @@ extends layout
 block content
   link(rel='stylesheet', href='/css/login.css')
   .container
-    form.form-signin(action='/login?mode=' + process.env.RPMS_MODE, method='post')
+    form.form-signin(action='/auth/login', method='post')
       h3.form-signin-heading
         span.col-md-12.col-xs-12.text-center
           img.form-logo(src='http://interaktiv.sg/wp-content/uploads/2014/10/Logo-web2014-edit21.png')
