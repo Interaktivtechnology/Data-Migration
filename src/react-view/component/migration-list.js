@@ -71,7 +71,7 @@ class MigrationList extends React.Component {
 
     return this.props.children ? React.cloneElement(this.props.children) : (
       <div className="col-md-12">
-        <h1>Migration List</h1>
+        <h1>Air Energi Migration</h1>
         {this.state.showModal ? <Modal handleHideModal={ () => this.showModal(false)} /> : null}
         <div className="row">
           <div className="col-md-4 col-md-offset-4 text-center" >
