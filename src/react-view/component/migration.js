@@ -6,7 +6,7 @@ import {Router, browserHistory} from 'react-router'
 import faker from 'faker'
 import moment from 'moment'
 
-var meta = require('./sample-meta')
+import meta from './sample-meta'
 
 class MigrationTable extends React.Component {
 

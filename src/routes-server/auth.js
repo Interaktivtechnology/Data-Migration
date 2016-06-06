@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
+var models = require('./sequelize/models')
 
 
 //Login Page Routes
@@ -10,7 +10,17 @@ router.get('/login', (req, res) => {
 
 
 router.post('/login', (req, res) => {
-  res.redirect('/')
+
+  var userObject = models.user.findAll({
+    where : {}
+  }).then((user) => {
+    res.status(200).send({
+      param : req.params,
+      user : user
+    })
+  })
+
+
 })
 
 

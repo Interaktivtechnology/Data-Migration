@@ -31,9 +31,14 @@ app.set('view engine', 'jade');
 //app.use(multer());
 app.use(Express.static(path.join(__dirname, '../public')));
 
+
+app.use("*", (req, res, next) => {
+  next()
+})
 //Login Page Routes
 app.get('/login', (req, res) => {
-  res.status(200).render('login')
+  res.status(304).render('login')
+
 })
 //Authentication Page
 app.use('/auth', require('./routes-server/auth'))
@@ -52,7 +57,6 @@ app.get('*', function(req, res) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
       var reactString =  renderToString(<RouterContext {...renderProps} />)
-      console.log(reactString)
       res.status(200).render('index', {
         reactString :reactString
       })
