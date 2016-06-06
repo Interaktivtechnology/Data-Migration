@@ -43,7 +43,7 @@
     "buildreact": "browserify -t [babelify --presets [ react ]] src/react-view/app.js | uglifyjs -cm > ./public/javascripts/app.min.js",
     "dev": "nodemon --watch src/app.js --watch src/routes-server/ --exec babel-node ./src/app",
     "prestart": "babel src --recursive --out-dir dist",
-    "start": "NODE_ENV=dev node dist/bin/www"
+    "start": "NODE_ENV=dev node dist/app"
   },
   "author": "eko.purnomo@icloud.com",
   "license": "ISC"

@@ -16,7 +16,7 @@ import logger from 'morgan'
 
 
 const app = Express()
-const port = 3000
+const port = 4000
 
 // This is fired every time the server side receives a request
 
