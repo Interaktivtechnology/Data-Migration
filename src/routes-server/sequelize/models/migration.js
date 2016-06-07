@@ -8,47 +8,36 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    from: {
-      type: DataTypes.INTEGER(11),
-      allowNull: true
-    },
-    to: {
-      type: DataTypes.INTEGER(11),
-      allowNull: true
-    },
-    temp_table_from: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    temp_table_to: {
-      type: DataTypes.STRING,
-      allowNull: true
+    type : {
+      type : DataTypes.STRING,
+      allowNull: false,
+      defaultValue : 'Sf, Sf to MySQL'
     },
     created_by_id: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'user',
+        key: 'id'
+      }
     },
     last_modified_by_id: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    sucess_row: {
       type: DataTypes.BIGINT,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'user',
+        key: 'id'
+      }
+    },
+    success_row: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      defaultValue : 0
     },
     conflict_row: {
       type: DataTypes.BIGINT,
-      allowNull: true
-    },
-    created_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: 'CURRENT_TIMESTAMP'
-    },
-    last_modified_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: 'CURRENT_TIMESTAMP'
+      allowNull: true,
+      defaultValue : 0
     }
   }, {
     tableName: 'migration'

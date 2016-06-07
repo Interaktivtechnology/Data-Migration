@@ -11,16 +11,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    created_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: 'CURRENT_TIMESTAMP'
-    },
-    last_modified_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: 'CURRENT_TIMESTAMP'
-    },
     account: {
       type: DataTypes.BIGINT,
       allowNull: true,
