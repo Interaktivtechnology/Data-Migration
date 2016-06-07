@@ -1,17 +1,13 @@
 'use strict';
 
+var models = require('../models')
+
 module.exports = {
   up: function (queryInterface, Sequelize, done ){
-    done()
+    models.sequelize.sync()
   },
 
   down: function (queryInterface, Sequelize) {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
 
-      Example:
-      return queryInterface.dropTable('users');
-    */
   }
 };
