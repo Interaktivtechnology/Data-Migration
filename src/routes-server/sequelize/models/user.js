@@ -44,16 +44,6 @@ module.exports = function(sequelize, DataTypes) {
         model: 'account',
         key: 'id'
       }
-    },
-    created_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: 'CURRENT_TIMESTAMP'
-    },
-    last_modified_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: 'CURRENT_TIMESTAMP'
     }
   }, {
     tableName: 'user',

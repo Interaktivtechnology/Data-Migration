@@ -39,3 +39,4 @@ node_modules
 
 # ignore bundle
 dist/*
+public/javascripts/app*.js

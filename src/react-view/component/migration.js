@@ -7,6 +7,7 @@ import faker from 'faker'
 import moment from 'moment'
 
 import meta from './sample-meta'
+import meta2 from './sample-meta2'
 
 class MigrationTable extends React.Component {
 
@@ -45,7 +46,7 @@ class MigrationTable extends React.Component {
     for(var i=0;i<this.state.cols;i++){
       thList.push(
         <th key={i+10000} className="text-center">
-          {i == this.state.cols - 1 ? "Destination" : "Data Source"}
+          Data Source {i+1}
         </th>
       )
        thListSelect.push(<th key ={i+2000}>
@@ -56,8 +57,11 @@ class MigrationTable extends React.Component {
           <option>---Object--- </option>
           <option value='account'>Account</option>
           <option value='contact'>Contact</option>
-          <option value='leads'>Leads</option>
+          <option value='leads'>Opportunities</option>
+          <option value='activities'>Activities</option>
+          <option value='notes_attachment'>Notes & Attachment</option>
         </select>
+        <input type="text" className="form-control"   placeholder = "Filter" />
       </th>)
     }
 
@@ -68,29 +72,34 @@ class MigrationTable extends React.Component {
           <thead>
           <tr>
             {thList}
-            <th>Transformation</th>
-            <th>Action</th>
+            <th>Transformation / Formula</th>
           </tr>
           <tr>
             {thListSelect}
-            <th></th>
             <th><button className="btn btn-primary btn-sm"><i className="fa fa-refresh"></i> Sync</button></th>
           </tr>
           </thead>
           <tbody>
-            {
-              meta.fields.map((object, key) => {
-                var cols = []
-                for(var x =0;x<this.state.cols;x++)
-                  cols.push(<td key={10000+x}><input type="checkbox" /> {object.fullName}</td>)
-                return <tr key={object.fullName}>
-                  {cols}
-                  <td><textarea type="text" className="form-control" placeholder="Regex or Formula"></textarea></td>
-                  <td><button className="btn btn-inverse btn-sm"><i className="fa fa-save"></i> Save</button></td>
-                </tr>
-              })
-            }
+          {
+            meta.fields.map((object, key) => {
+              var cols = []
 
+              cols.push(<td key={10000}><input type="checkbox" /> {object.fullName}</td>)
+              cols.push(<td><input type="checkbox" />
+              <select className="form-control">
+                {meta2.fields.map((object2, key2) =>{
+                  return <option value={object2.name} selected={object.fullName == object2.name}>{object2.name}</option>
+                })}
+
+              </select>
+              <button className="btn btn-success btn-sm"><i className="fa fa-plus"></i> New field</button>
+              </td>)
+              return <tr key={object.fullName}>
+                {cols}
+                <td><textarea type="text" className="form-control" placeholder="Regex or Formula"></textarea></td>
+              </tr>
+            })
+          }
           </tbody>
           <tfoot></tfoot>
         </table>
@@ -133,10 +142,9 @@ export default class Migration extends React.Component {
   render() {
     return (
       <div className="col-md-12">
-        <h1>Migrate Now!</h1>
+        <h1>Merge Row Configuration</h1>
         <div className="col-md-4 col-md-offset-4 text-center" style={{marginTop: 20, marginBottom: 20}}>
-          <button onClick={() => this._addCols()} className="btn btn-default btn-sm"><i className="fa fa-plus"></i> Attach DataSource</button>
-          <button onClick={() => this._remCols()} className="btn btn-warning btn-sm"><i className="fa fa-minus"></i> Remove DataSource</button>
+          <button onClick={() => this._remCols()} className="btn btn-primary btn-sm"><i className="fa fa-save"></i> Save</button>
         </div>
         <div className="clearfix"></div>
         <MigrationTable cols={this.state.cols}></MigrationTable>
