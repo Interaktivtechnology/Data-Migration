@@ -12,7 +12,7 @@ import routes from './react-view/routes'
 import session from 'express-session'
 import bodyParser from 'body-parser'
 import logger from 'morgan'
-
+import compression from 'compression'
 
 
 const app = Express()
@@ -21,6 +21,7 @@ const port = 4000
 // This is fired every time the server side receives a request
 
 app.use(logger('dev'));
+app.use(compression());
 app.use(session({ resave: true,
                   saveUninitialized: true,
                   secret: 'uwotm8' }));
