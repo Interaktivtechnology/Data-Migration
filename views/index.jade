@@ -5,3 +5,8 @@ block content
     div 
       div!= reactString
   
+block script
+  if process.env.SwiftEnv == 'production'
+    script(type="text/javascript" src="/javascripts/app.min.js")
+  else 
+    script(type="text/javascript" src="/javascripts/app.js")
