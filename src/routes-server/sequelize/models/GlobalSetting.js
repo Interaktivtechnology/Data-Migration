@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('global_setting', {
+  return sequelize.define('GlobalSetting', {
     code: {
       type: DataTypes.CHAR(5),
       allowNull: false,
@@ -20,6 +20,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }, {
-    tableName: 'global_setting'
+    tableName: 'GlobalSetting'
   });
 };

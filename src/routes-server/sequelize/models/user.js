@@ -4,14 +4,14 @@
 
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('user', {
+  var user = sequelize.define('User', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    full_name: {
+    fullName: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -27,26 +27,21 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    is_active: {
+    isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
       defaultValue: '0'
     },
-    is_administrator: {
+    isAdministrator: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
       defaultValue: '0'
-    },
-    company_id: {
-      type: DataTypes.BIGINT,
-      allowNull: true,
-      references: {
-        model: 'account',
-        key: 'id'
-      }
     }
   }, {
-    tableName: 'user',
-    timestamps : false
+    tableName: 'User',
+    timestamps : true
   });
+  var account = require('./Account')
+  user.belongsTo(account(sequelize, DataTypes), {as : "account"})
+  return user
 };

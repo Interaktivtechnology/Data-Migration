@@ -29,11 +29,25 @@ Merges
 Server side application, need to be stored in server on top NodeJS.
 
 ### Production mode
+It will create bundled js file in **public/javascripts/app.js**.
 ``
-  npm start
+  npm start;
 ``
 
 ### Dev mode
 ``
-  npm run dev
+  npm run dev;
+  npm run devreact;
 ``
+
+
+### Project Structure
+* cert : Certification to connect to mysql if needed
+* public : Public is accessible by user, usually contain image, compiled js, or css
+* src : Source Code of application
+ * bin : for production purpose
+ * react-view: view layer of react app, you can edit the content for viewing using ReactJS Framework
+ * routes : routing for front end apps using react
+ * routes-server: Server routing and contain all logic to retrieve or serve data from and to server **(Server Side Scripting)**
+* test : unit test code
+* views : JADE template view for drawing expressjs server views

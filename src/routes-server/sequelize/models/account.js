@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('account', {
+  var account = sequelize.define('Account', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -17,6 +17,9 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'account'
+    tableName: 'Account'
   });
+  //var User = require('./User')
+  //account.hasMany(User(sequelize, DataTypes), {as : 'Users'})
+  return account
 };

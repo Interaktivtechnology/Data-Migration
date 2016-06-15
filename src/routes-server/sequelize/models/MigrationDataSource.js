@@ -1,30 +1,30 @@
 /* jshint indent: 2 */
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('migration_data_source', {
+  return sequelize.define('MigrationDataSource', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    migration_id: {
+    migrationId: {
       type: DataTypes.BIGINT,
       allowNull: false,
       references: {
-        model: 'migration',
+        model: 'Migration',
         key: 'id'
       }
     },
-    data_source : {
+    dataSourceId : {
       type: DataTypes.INTEGER(11),
       allowNull: true,
       references: {
-        model: 'data_source',
+        model: 'DataSource',
         key: 'id'
       }
     },
-    object_name : {
+    objectName : {
       type : DataTypes.STRING,
       allowNull : false,
     },
@@ -32,12 +32,12 @@ module.exports = (sequelize, DataTypes) => {
       type : DataTypes.STRING,
       defaultValue: 'source'
     },
-    code_references : {
+    codeReferences : {
       type : DataTypes.STRING,
       allowNull : false,
     }
   },
   {
-    tableName: 'migration_data_source'
+    tableName: 'MigrationDataSource'
   })
 }

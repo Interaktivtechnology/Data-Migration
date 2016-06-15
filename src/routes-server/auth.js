@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var models = require('./sequelize/models')
-
+var crypto = require('crypto')
 
 //Login Page Routes
 router.get('/login', (req, res) => {
@@ -10,9 +10,12 @@ router.get('/login', (req, res) => {
 
 
 router.post('/login', (req, res) => {
-
-  var userObject = models.user.findAll({
-    where : {}
+  console.log(req.body)
+  var userObject = models.User.findAll({
+    where : {
+      email : req.body.email,
+      password : crypto.createHash('md5').update(req.body.password).digest('hex')
+    }
   }).then((user) => {
     res.status(200).send({
       param : req.params,

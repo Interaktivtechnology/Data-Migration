@@ -1,18 +1,18 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('data_source', {
+  return sequelize.define('DataSource', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    owner_id: {
+    ownerId: {
       type: DataTypes.BIGINT,
       allowNull: true,
       references: {
-        model: 'account',
+        model: 'Account',
         key: 'id'
       }
     },
@@ -36,19 +36,19 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    additional_setting: {
+    additionalSetting: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    last_modified_by_id: {
+    lastModifiedById: {
       type: DataTypes.BIGINT,
       allowNull: true,
       references: {
-        model: 'user',
+        model: 'User',
         key: 'id'
       }
     }
   }, {
-    tableName: 'data_source'
+    tableName: 'DataSource'
   });
 };
