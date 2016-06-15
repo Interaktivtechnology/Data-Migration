@@ -18,19 +18,29 @@ module.exports = function(sequelize, DataTypes) {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false,
+      validate : {
+        isAlphanumeric : true
+      }
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      validate : {
+        isOnList : function(value) {
+          const list = ['Salesforce', 'MySQL', 'DynamoDb', 'CSV', 'Excel']
+          if(list.indexOf(value) == -1)
+            throw new Error("Only Salesforce, Mysql, CSV and Excel allowed")
+        }
+      }
     },
     username: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
     token: {
       type: DataTypes.TEXT,
@@ -49,6 +59,11 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }, {
-    tableName: 'DataSource'
+    tableName: 'DataSource',
+    hooks :{
+      beforeCreate : (ds, options) => {
+        console.log(ds)
+      }
+    }
   });
 };

@@ -21,7 +21,6 @@ router.post('/login', (req, res) => {
     }
   }).then((user) => {
     if(user.length > 0){
-      console.log(user[0])
       var encryptedPassword = crypto.createHash('md5').update(req.body.password).digest('hex')
       if(encryptedPassword == user[0].password){
         const loggedUser = {
@@ -29,21 +28,26 @@ router.post('/login', (req, res) => {
           fullName : user[0].fullName,
           username : user[0].username,
           email : user[0].email,
-          accountId : user[0].accountId
+          accountId : user[0].accountId,
+          isAdministrator : user[0].isAdministrator
         }
-        req.session.user = user
-        res.status(200).redirect('/')
+        req.session.user = loggedUser
+        res.status(200).send({
+          ok : true,
+          message : "Correct Login",
+          user : user
+        })
       }
       else{
         res.status(400).send({
-          error : "Incorrect username or password.",
+          message : "Incorrect username or password.",
           ok : false
         })
       }
     }
     else
       res.status(400).send({
-        error : "Incorrect username or password.",
+        message : "Incorrect username or password.",
         ok : false
       })
 

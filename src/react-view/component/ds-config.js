@@ -34,14 +34,19 @@ class Modal extends Component {
     let additionalSetting = ''
 
     if(this.state.type == 'Salesforce'){
-
        additionalSetting = <div>
+         <div className="form-group">
+          <label>Mode</label>
+          <select type="text" className="form-control">
+            <option value="dev">Sandbox</option>
+            <option value="prod">Production</option>
+          </select>
+        </div>
          <div className="form-group">
           <label>Password</label>
           <input type="text" className="form-control" placeholder="Password" />
         </div>
-
-          <div className="form-group">
+        <div className="form-group">
            <label>Security Token</label>
            <input type="text" className="form-control" placeholder="Security Token" />
          </div>
