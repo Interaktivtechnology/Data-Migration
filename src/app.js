@@ -12,18 +12,35 @@ import routes from './react-view/routes'
 import session from 'express-session'
 import bodyParser from 'body-parser'
 import logger from 'morgan'
+import compression from 'compression'
 
 
+const RedisStore = require('connect-redis')(session)
 
 const app = Express()
-const port = 3000
+const port = 4000
 
 // This is fired every time the server side receives a request
 
 app.use(logger('dev'));
-app.use(session({ resave: true,
-                  saveUninitialized: true,
-                  secret: 'uwotm8' }));
+app.use(compression());
+
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: 'interaktiv-swift' ,
+  cookie: {
+    path: '/',
+    maxAge: 30 * 60 * 1000, //30 Minutes
+    signed: false
+  },
+  store : new RedisStore({
+    host : 'localhost',
+    port : 6379,
+    prefix : 'dmswift_'
+  })
+}))
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', path.join(__dirname, '../views'));
@@ -43,11 +60,22 @@ app.get('/login', (req, res) => {
 //Authentication Page
 app.use('/auth', require('./routes-server/auth'))
 
-app.use("/salesforce", require('./routes-server'))
+app.use("/api", (req, res, next) => {
+  if(req.session.user)
+    next()
+  else {
+    res.status(403).send({
+      ok : false,
+      message : "Forbidden, Please login."
+    })
+  }
+}, require('./routes-server'))
 app.get("/meta", (req, res) => {
   res.status(200).send(require('../meta-data.json'))
 })
 app.get('*', function(req, res) {
+  if(req.session.user == undefined)
+    res.redirect("/auth/login")
   // Note that req.url here should be the full URL path from
   // the original request, including the query string.
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
@@ -66,4 +94,7 @@ app.get('*', function(req, res) {
   })
 })
 
-app.listen(port)
+var server = app.listen(port)
+
+
+module.exports = server
