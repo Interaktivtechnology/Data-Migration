@@ -55,6 +55,7 @@ class ConflictTable extends React.Component {
       this.props.router.push({pathname : '/migration/fix-conflict/' + this.props.id + '/merge', query:{rowId : keys}})
     }
   }
+
   _checkMergedRow(object, val){
     var mergedRow = this.state.mergedRow
 
@@ -125,7 +126,7 @@ class MigrationRow extends React.Component {
 
   }
   componentWillMount(){
-    console.log(this.props)
+    
   }
 
   render() {

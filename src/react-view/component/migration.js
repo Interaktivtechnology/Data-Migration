@@ -32,6 +32,8 @@ class MigrationTable extends React.Component {
       cols : this.props.cols
     })
   }
+
+  
   componentWillReceiveProps(nextProps){
     this.setState({
       cols : nextProps.cols
@@ -147,7 +149,7 @@ export default class Migration extends React.Component {
           <button onClick={() => this._remCols()} className="btn btn-primary btn-sm"><i className="fa fa-save"></i> Save</button>
         </div>
         <div className="clearfix"></div>
-        <MigrationTable cols={this.state.cols}></MigrationTable>
+        <MigrationTable router={this.props.router} cols={this.state.cols}></MigrationTable>
       </div>
     );
   }

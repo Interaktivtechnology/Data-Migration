@@ -8,7 +8,7 @@ router.get('/login', (req, res) => {
   if(req.session.user)
     res.redirect('/')
   else
-    res.status(200).render('login')
+    res.status(200).render('login', {csrf : req.csrfToken()})
 })
 
 

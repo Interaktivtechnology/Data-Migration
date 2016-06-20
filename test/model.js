@@ -40,15 +40,40 @@ describe("API Controller", function(){
       })
     })
 
-    it('Should List all DataSource ', (done) => {
+    it('Should list all DataSource ', (done) => {
       agent
       .get(url + '/api/ds')
       .end((err, res) => {
 
         res.body.should.have.property('result')
         res.body.result.should.instanceof(Array)
-        assert.equal(err, null)
+        if(res.body.result.length > 0){
+          console.log("More than 1");
+          should(res.body.result[0]).type('object')
+          should(res.body.result[0].id).type('number')
+        }
         done()
+      })
+    })
+
+    it('Should get one specific DataSource', (done) => {
+      models.DataSource
+      .findOne()
+      .then((result) => {
+        if(result)
+          agent
+          .get(url + '/api/ds/' + result.id)
+          .end((err, res) => {
+
+            res.body.should.have.property('result')
+            res.body.result.should.instanceof(Array)
+            if(res.body.result.length > 0){
+              console.log("More than 1");
+              should(res.body.result[0]).type('object')
+              should(res.body.result[0].id).type('number')
+            }
+            done()
+          })
       })
     })
 
@@ -89,8 +114,6 @@ describe("API Controller", function(){
           done()
         })
       })
-
-
     })
   })
 })

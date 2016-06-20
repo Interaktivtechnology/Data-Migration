@@ -13,7 +13,8 @@ import session from 'express-session'
 import bodyParser from 'body-parser'
 import logger from 'morgan'
 import compression from 'compression'
-
+import csrf from 'csurf'
+import cookieParser from 'cookie-parser'
 
 const RedisStore = require('connect-redis')(session)
 
@@ -48,7 +49,22 @@ app.set('view engine', 'jade');
 //app.use(multer());
 app.use(Express.static(path.join(__dirname, '../public')));
 
+app.use(cookieParser())
+app.use(csrf({ cookie: true }))
 
+
+// CSRF error handler
+app.use(function (err, req, res, next) {
+    if (err.code !== 'EBADCSRFTOKEN') return next(err)
+
+    // handle CSRF token errors here
+    res
+    .status(403)
+    .send({
+        message : "Forbidden, Bad CSRF",
+        ok : false
+    })
+  })
 app.use("*", (req, res, next) => {
   next()
 })
@@ -86,7 +102,8 @@ app.get('*', function(req, res) {
     } else if (renderProps) {
       var reactString =  renderToString(<RouterContext {...renderProps} />)
       res.status(200).render('index', {
-        reactString :reactString
+        reactString :reactString,
+        csrfToken: req.csrfToken()
       })
     } else {
       res.status(404).send('Not found')
