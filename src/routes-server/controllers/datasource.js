@@ -80,9 +80,22 @@ export function dsUpdate(req, res, next) {
   }
 }
 
-export function dsDelete() {
-  res.status(200).send({
-    message : "Deleted.",
-    ok : true
+export function dsDelete(req, res) {
+  models.DataSource
+  .findOne({where : {id : req.params.id, ownerId : req.session.user.accountId}}).then((result) => {
+    if(result)
+      result.destroy().then((result1) => {
+        console.log(result)
+        res.status(200).send({
+          message : "Deleted.",
+          ok : true
+        })
+      })
+    else
+      res.status(200).send({
+        message : "No record found.",
+        ok : false
+      })
   })
+
 }

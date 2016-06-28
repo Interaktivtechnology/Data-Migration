@@ -51,3 +51,18 @@ It will create bundled js file in **public/javascripts/app.js**.
  * routes-server: Server routing and contain all logic to retrieve or serve data from and to server **(Server Side Scripting)**
 * test : unit test code
 * views : JADE template view for drawing expressjs server views
+
+
+### Project Pending function
+* DataSource
+  * Delete
+  * Test Code
+* Migration
+  * CRUD
+  * Do Migration
+  * Unit Test Code
+  * Fix Conflict
+    * Unit Test
+* User
+  * Created from Salesforce
+  * Unit Test Code

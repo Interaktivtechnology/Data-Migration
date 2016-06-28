@@ -31,10 +31,17 @@ class ModalConfirm extends Component {
     $('.modal-backdrop').remove()
   }
 
+  _onYesCallback(e){
+    this.props.yesCallback(this.props.object, () => {
+      var id = ReactDOM.findDOMNode(this).id
+      $('#' + id).modal('hide')
+    })
+  }
+
 
   render(){
     return (
-      <div  id="mdlLoading" className="modal fade" ref="modal" data-backdrop={"static"}>
+      <div  id="mdlConfirm" className="modal fade" ref="modal" data-backdrop={"static"}>
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
@@ -46,7 +53,7 @@ class ModalConfirm extends Component {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-default" data-dismiss="modal">No</button>
-              <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={this.props.yesCallback}>Yes</button>
+              <button type="button" className="btn btn-primary" data-obj={this.props.object} onClick={this._onYesCallback.bind(this)}>Yes</button>
             </div>
           </div>
         </div>

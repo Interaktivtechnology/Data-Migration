@@ -2,23 +2,36 @@ var assert      = require('assert');
 var superagent  = require('superagent')
 var models      = require("../src/routes-server/sequelize/models");
 var should      = require('should')
-var url = "http://localhost:4000"
-
-
+var url         = "http://localhost:4000"
+//var $           = require('jquery')(require("jsdom").jsdom().parentWindow)
+var csrftoken        = ''
 describe("API Controller", function(){
   var user = {}, cookies
   var agent = superagent.agent()
   before((done) => {
     agent
-      .post(url + '/auth/login')
-      .send({email: 'eko@interaktiv.sg', password : 'interaktiv.123'})
-      .set('Accept', 'application/json')
+      .get(url + '/login')
       .end((err, res) => {
-        user = res.body.user
-
-        done()
+        csrftoken = unescape(/_csrf=(.*?);/.exec(res.headers['set-cookie']));
+        //console.log(res.headers['set-cookie'])
+        auth = {email: 'eko@interaktiv.sg', password : 'interaktiv.123', _csrf: csrftoken}
+        console.log(auth)
+        agent
+          .post(url + '/auth/login')
+          .send(auth)
+          .set('Accept', 'application/json')
+          .end((err, res) => {
+            if(err)
+            {
+              console.log("Error occured.")
+              process.exit()
+            }
+            else
+              user = res.body.user
+            //console.log(user)
+            done()
+          })
       })
-
   })
   after((done) => {
     agent
@@ -112,6 +125,28 @@ describe("API Controller", function(){
           res.body.should.have.property('result')
           should(res.status).equal(200)
           done()
+        })
+      })
+    })
+
+
+    it('Should delete DataSource based on parameter given', (done) => {
+      it('Should update DataSource based on parameter given', (done) => {
+        models.DataSource
+        .findOne()
+        .then((result) => {
+          agent
+          .delete(url + '/api/ds/' + result.id)
+          .send({
+            name : "AirEnergi2Sekali",
+            username : "atan@interaktiv.sg"
+          })
+          .end((err, res) => {
+            console.log(res.body.result)
+            res.body.should.have.property('result')
+            should(res.status).equal(200)
+            done()
+          })
         })
       })
     })

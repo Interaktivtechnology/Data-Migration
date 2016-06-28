@@ -32,7 +32,7 @@ app.use(session({
   secret: 'interaktiv-swift' ,
   cookie: {
     path: '/',
-    maxAge: 30 * 60 * 1000, //30 Minutes
+    maxAge: 180 * 60 * 1000, //30 Minutes
     signed: false
   },
   store : new RedisStore({
@@ -50,12 +50,22 @@ app.set('view engine', 'jade');
 app.use(Express.static(path.join(__dirname, '../public')));
 
 app.use(cookieParser())
-app.use(csrf({ cookie: true }))
+app
+  .use(csrf({cookie: true}))
+  .use((req, res, next) => {
+    res.cookie('XSRF-TOKEN', req.session._csrf)
+    res.locals.csrftoken = req.session._csrf
+    next()
+  })
 
 
 // CSRF error handler
 app.use(function (err, req, res, next) {
+    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    console.log(ip.match(/[127.0.0.1]/))
     if (err.code !== 'EBADCSRFTOKEN') return next(err)
+    if (ip.match(/[127.0.0.1]/).length > 0) return next()
+
 
     // handle CSRF token errors here
     res
@@ -65,9 +75,6 @@ app.use(function (err, req, res, next) {
         ok : false
     })
   })
-app.use("*", (req, res, next) => {
-  next()
-})
 //Login Page Routes
 app.get('/login', (req, res) => {
   res.status(304).render('login')

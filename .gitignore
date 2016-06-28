@@ -40,3 +40,6 @@ node_modules
 # ignore bundle
 dist/*
 public/javascripts/app*.js
+
+#ignore redis dump db
+dump.rdb
