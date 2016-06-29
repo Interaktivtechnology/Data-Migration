@@ -44,7 +44,7 @@ describe("API Controller", function(){
 
   //Data Source
   describe('#DataSource', () => {
-    this.timeout(500);
+    this.timeout(10000);
     it('Should allow to use API', () => {
       agent
       .get(url + '/api/')
@@ -112,7 +112,9 @@ describe("API Controller", function(){
 
     it('Should update DataSource based on parameter given', (done) => {
       models.DataSource
-      .findOne()
+      .findOne({
+        order : 'id DESC'
+      })
       .then((result) => {
         agent
         .put(url + '/api/ds/' + result.id)
@@ -131,24 +133,23 @@ describe("API Controller", function(){
 
 
     it('Should delete DataSource based on parameter given', (done) => {
-      it('Should update DataSource based on parameter given', (done) => {
-        models.DataSource
-        .findOne()
-        .then((result) => {
-          agent
-          .delete(url + '/api/ds/' + result.id)
-          .send({
-            name : "AirEnergi2Sekali",
-            username : "atan@interaktiv.sg"
-          })
-          .end((err, res) => {
-            console.log(res.body.result)
-            res.body.should.have.property('result')
-            should(res.status).equal(200)
-            done()
-          })
+      models.DataSource
+      .findOne({
+        order : 'id DESC'
+      })
+      .then((result) => {
+        console.log(result)
+        agent
+        .delete(url + '/api/ds/' + result.id)
+        .send()
+        .end((err, res) => {
+          res.body.should.have.property('ok')
+          res.body.ok.should.equal(true)
+          should(res.status).equal(200)
+          done()
         })
       })
+
     })
   })
 })

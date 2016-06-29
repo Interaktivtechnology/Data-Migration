@@ -48,7 +48,6 @@ class MigrationList extends React.Component {
   _addDataSource(){
     if(document)
       document.title = "InterAktiv ~ Add new data source"
-    console.log(this.context.router)
     this.props.history.push('/migration/new')
   }
 
