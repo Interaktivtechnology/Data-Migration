@@ -9,6 +9,7 @@ import MigrationSave from '../component/migration-save'
 import MigrationList from '../component/migration-list'
 import MigrationRow from '../component/migration-row'
 import MigrationRowDetail from '../component/migration-row-detail'
+import OpportunityDetail from '../component/migration-opp-detail'
 //import $ from 'jquery'
 
 if( typeof require.ensure !== "function") {
@@ -27,6 +28,7 @@ const rootRoute = <Route path='/' component={NavbarInstance} title={'Home'}>
     <Route path='/migration/fix-conflict/:id' title="Fix Conflict" component={MigrationRow}>
       <Route path='/migration/fix-conflict/:id/merge' title="Row Merging" component={MigrationRowDetail} />
     </Route>
+    <Route path='/migration/success/opportunity/:id' title="Opportunity Detail" component={OpportunityDetail} />
   </Route>
 
 </Route>

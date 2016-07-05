@@ -42,12 +42,17 @@
   },
   "scripts": {
     "test": "mocha --compilers js:babel-register --recursive",
-    "devreact": "NODE_ENV=production watchify -t [ babelify --presets [ react ] ] src/react-view/app.js -o ./public/javascripts/app.js -v -d ",
-    "buildreact" : "browserify ./src/react-view/app.js -t [envify --NODE_ENV production]  -t [babelify] | uglifyjs -cm > ./public/javascripts/app.min.js",
+    "devreact": "SET NODE_ENV=dev && watchify -t [ babelify --presets [ react ] ] src/react-view/app.js -o ./public/javascripts/app.js -v -d ",
+    "buildreact": "browserify ./src/react-view/app.js -t [envify --NODE_ENV production]  -t [babelify] | uglifyjs -cm > ./public/javascripts/app.min.js",
     "dev": "nodemon --watch src/app.js --watch src/routes-server/ --exec babel-node ./src/app",
     "prestart": "babel src --recursive --out-dir dist",
     "start": "NODE_ENV=dev node dist/app"
   },
+  "browserify": {
+        "transform": [
+            ["reactify", {"es6": true}]
+        ]
+    },
   "author": "eko.purnomo@icloud.com",
   "license": "ISC"
 }
