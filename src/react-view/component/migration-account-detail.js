@@ -89,27 +89,27 @@ class AccountDetail extends React.Component {
            <tbody>
            <tr>
              <td className="tlabel col25">Account Owner</td>
-             <td className="tdata col25">{this.state.acctdet.Owner}</td>
+             <td className="tdata col25">{this.state.acctdet.Owner}&nbsp;</td>
              <td className="tlabel col25">Account Record Type</td>
-             <td className="tdata col25">{this.state.acctdet.AccountRecordType}</td>
+             <td className="tdata col25">{this.state.acctdet.AccountRecordType}&nbsp;</td>
            </tr>
            <tr>
              <td className="tlabel col25">Account Name</td>
-             <td className="tdata col25">{this.state.acctdet.AccountName}</td>
+             <td className="tdata col25">{this.state.acctdet.AccountName}&nbsp;</td>
              <td className="tlabel col25">Phone</td>
-             <td className="tdata col25">{this.state.acctdet.Phone}</td>
+             <td className="tdata col25">{this.state.acctdet.Phone}&nbsp;</td>
            </tr>
            <tr>
              <td className="tlabel col25">Type Of Account</td>
-             <td className="tdata col25">{this.state.acctdet.TypeOfAccount}</td>
+             <td className="tdata col25">{this.state.acctdet.TypeOfAccount}&nbsp;</td>
              <td className="tlabel col25">Website</td>
-             <td className="tdata col25">{this.state.acctdet.Website}</td>
+             <td className="tdata col25">{this.state.acctdet.Website}&nbsp;</td>
            </tr>
            <tr>
              <td className="tlabel col25">ParentAccount</td>
-             <td className="tdata col25">{this.state.acctdet.ParentAccount}</td>
+             <td className="tdata col25">{this.state.acctdet.ParentAccount}&nbsp;</td>
              <td className="tlabel col25">Employees</td>
-             <td className="tdata col25">{this.state.acctdet.Employees}</td>
+             <td className="tdata col25">{this.state.acctdet.Employees}&nbsp;</td>
            </tr>
            </tbody>
          </table>
@@ -122,27 +122,27 @@ class AccountDetail extends React.Component {
            <tbody>
            <tr>
              <td className="tlabel col25">Forecast Yr 1 GP</td>
-             <td className="tdata col25">{this.state.acctdet.ForecastYr1GP}</td>
+             <td className="tdata col25">{this.state.acctdet.ForecastYr1GP}&nbsp;</td>
              <td className="tlabel col25">Description</td>
-             <td className="tdata col25">{this.state.acctdet.Description}</td>
+             <td className="tdata col25">{this.state.acctdet.Description}&nbsp;</td>
            </tr>
            <tr>
              <td className="tlabel col25">Forecast Yr 2 GP</td>
-             <td className="tdata col25">{this.state.acctdet.ForecastYr2GP}</td>
+             <td className="tdata col25">{this.state.acctdet.ForecastYr2GP}&nbsp;</td>
              <td className="tlabel col25">Actual Yr 1 GP</td>
-             <td className="tdata col25">{this.state.acctdet.ActualYr1GP}</td>
+             <td className="tdata col25">{this.state.acctdet.ActualYr1GP}&nbsp;</td>
            </tr>
            <tr>
              <td className="tlabel col25">Forecast Yr 3 GP</td>
-             <td className="tdata col25">{this.state.acctdet.ForecastYr3GP}</td>
+             <td className="tdata col25">{this.state.acctdet.ForecastYr3GP}&nbsp;</td>
              <td className="tlabel col25">Actual Yr 2 GP</td>
-             <td className="tdata col25">{this.state.acctdet.ActualYr2GP}</td>
+             <td className="tdata col25">{this.state.acctdet.ActualYr2GP}&nbsp;</td>
            </tr>
            <tr>
              <td className="tlabel col25"><br></br></td>
              <td className="tdata col25"><br></br></td>
              <td className="tlabel col25">Actual Yr 3 GP</td>
-             <td className="tdata col25">{this.state.acctdet.ActualYr3GP}</td>
+             <td className="tdata col25">{this.state.acctdet.ActualYr3GP}&nbsp;</td>
            </tr>
            </tbody>
          </table>
@@ -155,13 +155,13 @@ class AccountDetail extends React.Component {
            <tbody>
            <tr>
              <td className="tlabel col25">Billing Address</td>
-             <td className="tdata col25">{this.state.acctdet.BillingAddress}</td>
+             <td className="tdata col25">{this.state.acctdet.BillingAddress}&nbsp;</td>
              <td className="tlabel col25"><br></br></td>
              <td className="tdata col25"><br></br></td>
            </tr>
            <tr>
              <td className="tlabel col25">Regions</td>
-             <td className="tdata col25">{this.state.acctdet.Regions}</td>
+             <td className="tdata col25">{this.state.acctdet.Regions}&nbsp;</td>
              <td className="tlabel col25"><br></br></td>
              <td className="tdata col25"><br></br></td>
            </tr>
@@ -176,7 +176,7 @@ class AccountDetail extends React.Component {
            <tbody>
            <tr>
              <td className="tlabel col25">Account Overview</td>
-             <td className="tdata col75">{this.state.acctdet.AccountOverview}</td>
+             <td className="tdata col75">{this.state.acctdet.AccountOverview}&nbsp;</td>
            </tr>
            </tbody>
          </table>

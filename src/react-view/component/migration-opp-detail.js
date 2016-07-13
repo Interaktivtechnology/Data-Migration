@@ -114,99 +114,99 @@ class OpportunityDetail extends React.Component {
              <tbody>
              <tr>
                <td className="tlabel col25">Opportunity Name</td>
-               <td className="tdata col25">{this.state.oppfield.Name}</td>
+               <td className="tdata col25">{this.state.oppfield.Name}&nbsp;</td>
                <td className="tlabel col25">Opportuntiy Owner</td>
-               <td className="tdata col25">{this.state.oppfield.Owner}</td>
+               <td className="tdata col25">{this.state.oppfield.Owner}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Account Name</td>
-               <td className="tdata col25">{this.state.oppfield.AccountName}</td>
+               <td className="tdata col25">{this.state.oppfield.AccountName}&nbsp;</td>
                <td className="tlabel col25">Project Startup Year</td>
-               <td className="tdata col25">{this.state.oppfield.Project_Startup_Year__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Project_Startup_Year__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Type</td>
-               <td className="tdata col25">{this.state.oppfield.Type}</td>
+               <td className="tdata col25">{this.state.oppfield.Type}&nbsp;</td>
                <td className="tlabel col25">Projected Close Date</td>
-               <td className="tdata col25">{this.state.oppfield.airenergi__End_Date__c}</td>
+               <td className="tdata col25">{this.state.oppfield.airenergi__End_Date__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Lead Source</td>
-               <td className="tdata col25">{this.state.oppfield.LeadSource}</td>
+               <td className="tdata col25">{this.state.oppfield.LeadSource}&nbsp;</td>
                <td className="tlabel col25">Stage</td>
-               <td className="tdata col25">{this.state.oppfield.StageName}</td>
+               <td className="tdata col25">{this.state.oppfield.StageName}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Air Energi VP Region</td>
-               <td className="tdata col25">{this.state.oppfield.Air_Energi_VP_Location__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Air_Energi_VP_Location__c}&nbsp;</td>
                <td className="tlabel col25">Estimated Project Start Date</td>
-               <td className="tdata col25">{this.state.oppfield.airenergi__Start_Date__c}</td>
+               <td className="tdata col25">{this.state.oppfield.airenergi__Start_Date__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Sub Region</td>
-               <td className="tdata col25">{this.state.oppfield.Region__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Region__c}&nbsp;</td>
                <td className="tlabel col25">Total Annual GP</td>
-               <td className="tdata col25">{this.state.oppfield.TotalAnnualGP}</td>
+               <td className="tdata col25">{this.state.oppfield.TotalAnnualGP}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Location</td>
-               <td className="tdata col25">{this.state.oppfield.Location__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Location__c}&nbsp;</td>
                <td className="tlabel col25">Year1</td>
-               <td className="tdata col25">{this.state.oppfield.Year1__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Year1__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Account Site</td>
-               <td className="tdata col25">{this.state.oppfield.Account_Site__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Account_Site__c}&nbsp;</td>
                <td className="tlabel col25">Year2</td>
-               <td className="tdata col25">{this.state.oppfield.Year2__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Year2__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Business Stream</td>
-               <td className="tdata col25">{this.state.oppfield.BUSINESS_STREAM__c}</td>
+               <td className="tdata col25">{this.state.oppfield.BUSINESS_STREAM__c}&nbsp;</td>
                <td className="tlabel col25">Year3</td>
-               <td className="tdata col25">{this.state.oppfield.Year3__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Year3__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Project Category</td>
-               <td className="tdata col25">{this.state.oppfield.airenergi__Project_Category__c}</td>
+               <td className="tdata col25">{this.state.oppfield.airenergi__Project_Category__c}&nbsp;</td>
                <td className="tlabel col25">Basis of Value Calculation</td>
-               <td className="tdata col25">{this.state.oppfield.Basis_of_Value_Calculation__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Basis_of_Value_Calculation__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Created By</td>
-               <td className="tdata col25">{this.state.oppfield.CreatedBy}</td>
+               <td className="tdata col25">{this.state.oppfield.CreatedBy}&nbsp;</td>
                <td className="tlabel col25">Last Modified By</td>
-               <td className="tdata col25">{this.state.oppfield.LastModifiedBy}</td>
+               <td className="tdata col25">{this.state.oppfield.LastModifiedBy}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Description</td>
-               <td className="tdata col25">{this.state.oppfield.Description}</td>
+               <td className="tdata col25">{this.state.oppfield.Description}&nbsp;</td>
                <td className="tlabel col25">Updated Comments</td>
-               <td className="tdata col25">{this.state.oppfield.Updated_Comments__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Updated_Comments__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Opportunity Code</td>
-               <td className="tdata col25">{this.state.oppfield.Opportunity_Code__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Opportunity_Code__c}&nbsp;</td>
                <td className="tlabel col25">Due Date</td>
-               <td className="tdata col25">{this.state.oppfield.DueDate}</td>
+               <td className="tdata col25">{this.state.oppfield.DueDate}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Is a Bid Response Required?</td>
-               <td className="tdata col25">{this.state.oppfield.Is_a_Bid_Response_Required__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Is_a_Bid_Response_Required__c}&nbsp;</td>
                <td className="tlabel col25">Contract Type</td>
-               <td className="tdata col25">{this.state.oppfield.ContractType}</td>
+               <td className="tdata col25">{this.state.oppfield.ContractType}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Bid Format</td>
-               <td className="tdata col25">{this.state.oppfield.Format__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Format__c}&nbsp;</td>
                <td className="tlabel col25">Oppty/Bid Type</td>
-               <td className="tdata col25">{this.state.oppfield.Type_of_Bid__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Type_of_Bid__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Request Received Date</td>
-               <td className="tdata col25">{this.state.oppfield.RequestReceivedDate}</td>
+               <td className="tdata col25">{this.state.oppfield.RequestReceivedDate}&nbsp;</td>
                <td className="tlabel col25">Submitted Date</td>
-               <td className="tdata col25">{this.state.oppfield.SubmittedDate}</td>
+               <td className="tdata col25">{this.state.oppfield.SubmittedDate}&nbsp;</td>
              </tr>
              </tbody>
            </table>
@@ -264,27 +264,27 @@ class OpportunityDetail extends React.Component {
              <tbody>
              <tr>
                <td className="tlabel col25">Customer Decision Team Member1</td>
-               <td className="tdata col25">{this.state.oppfield.Customer_Decision_Team_Member1__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Customer_Decision_Team_Member1__c}&nbsp;</td>
                <td className="tlabel col25">PSC1</td>
-               <td className="tdata col25">{this.state.oppfield.PSC1__c}</td>
+               <td className="tdata col25">{this.state.oppfield.PSC1__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Customer Decision Team Member2</td>
-               <td className="tdata col25">{this.state.oppfield.Customer_Decision_Team_Member2__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Customer_Decision_Team_Member2__c}&nbsp;</td>
                <td className="tlabel col25">PSC2</td>
-               <td className="tdata col25">{this.state.oppfield.PSC2__c}</td>
+               <td className="tdata col25">{this.state.oppfield.PSC2__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Customer Decision Team Member3</td>
-               <td className="tdata col25">{this.state.oppfield.Customer_Decision_Team_Member3__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Customer_Decision_Team_Member3__c}&nbsp;</td>
                <td className="tlabel col25">PSC3</td>
-               <td className="tdata col25">{this.state.oppfield.PSC3__c}</td>
+               <td className="tdata col25">{this.state.oppfield.PSC3__c}&nbsp;</td>
              </tr>
              <tr>
                <td className="tlabel col25">Customer Decision Team Member4</td>
-               <td className="tdata col25">{this.state.oppfield.Customer_Decision_Team_Member4__c}</td>
+               <td className="tdata col25">{this.state.oppfield.Customer_Decision_Team_Member4__c}&nbsp;</td>
                <td className="tlabel col25">PSC4</td>
-               <td className="tdata col25">{this.state.oppfield.PSC4__c}</td>
+               <td className="tdata col25">{this.state.oppfield.PSC4__c}&nbsp;</td>
              </tr>
              </tbody>
            </table>
@@ -297,31 +297,31 @@ class OpportunityDetail extends React.Component {
         <tbody>
          <tr>
            <td className="tlabel col25">Customer External Drivers</td>
-           <td className="tdata col75">{this.state.oppfield.PSC1__c}</td>
+           <td className="tdata col75">{this.state.oppfield.PSC1__c}&nbsp;</td>
          </tr>
          <tr>
            <td className="tlabel col25">Customer Business Objectivies</td>
-           <td className="tdata col75">{this.state.oppfield.PSC1__c}</td>
+           <td className="tdata col75">{this.state.oppfield.PSC1__c}&nbsp;</td>
          </tr>
          <tr>
            <td className="tlabel col25">Customer Internal Challengs</td>
-           <td className="tdata col75">{this.state.oppfield.PSC1__c}</td>
+           <td className="tdata col75">{this.state.oppfield.PSC1__c}&nbsp;</td>
          </tr>
          <tr>
            <td className="tlabel col25">Swift's Solutions</td>
-           <td className="tdata col75">{this.state.oppfield.PSC1__c}</td>
+           <td className="tdata col75">{this.state.oppfield.PSC1__c}&nbsp;</td>
          </tr>
          <tr>
            <td className="tlabel col25">Swift's Advantages</td>
-           <td className="tdata col75">{this.state.oppfield.PSC1__c}</td>
+           <td className="tdata col75">{this.state.oppfield.PSC1__c}&nbsp;</td>
          </tr>
          <tr>
            <td className="tlabel col25">Swift's References</td>
-           <td className="tdata col75">{this.state.oppfield.PSC1__c}</td>
+           <td className="tdata col75">{this.state.oppfield.PSC1__c}&nbsp;</td>
          </tr>
          <tr>
            <td className="tlabel col25">Swift's Unique Value</td>
-           <td className="tdata col75">{this.state.oppfield.PSC1__c}</td>
+           <td className="tdata col75">{this.state.oppfield.PSC1__c}&nbsp;</td>
          </tr>
          </tbody>
         </table>
