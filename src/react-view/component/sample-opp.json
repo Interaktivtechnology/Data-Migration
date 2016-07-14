@@ -42,48 +42,6 @@
 		"Customer_Decision_Team_Member4__c" : "Russell Jimison",
 		"PSC4__c": "Technical capabilities/Pricing"
 		}],
-		"Service_Line__c":[
-			{
-				"Name":"SL-2015-1302",
-				"Service__c":"Talent Acquisition-Perms",
-				"Year__c":"Year 1",
-				"Value__c":"20,000"
-			},
-			{
-				"Name":"SL-2014-0900",
-				"Service__c":"Project Services",
-				"Year__c":"Year 2",
-				"Value__c":"300,000"
-			},
-			{
-				"Name":"SL-2014-0901",
-				"Service__c":"Project Services",
-				"Year__c":"Year 3",
-				"Value__c":"300,000"
-			}
-		],
-		"Opportunity_Team__c":[
-		{
-			"Team_Memeber__c":"Grace Cuellar",
-			"Member_Role__c":"Bid & Proposal"
-		},
-		{
-			"Team_Memeber__c":"Beth Bowen",
-			"Member_Role__c":"Managing Director"
-		},
-		{
-			"Team_Memeber__c":"Michael Sanches",
-			"Member_Role__c":"Global Account Manager"
-		},
-		{
-			"Team_Memeber__c":"Perrine Piano",
-			"Member_Role__c":"Country Manager"
-		},
-		{
-			"Team_Memeber__c":"Nicolas Boever",
-			"Member_Role__c":"Account Manager"
-		}
-	],
 	"Opportunity_Assessments__c" : [
 		{
 			"Opportunity_Assessments_Name__c" :"Albermarle 2015 Temp Labor RFP, US/EMEA-17-2015-09-03",
@@ -106,28 +64,6 @@
 			"Created_By__c":"Michael Sanches 9/4/2015 12:15 AM"
 		}
 	],
-	"Partner__c" :[
-	{
-		"Partner__c":"KMN Group Berhad",
-		"Role__c":"Contractor"
-	},
-	{
-		"Partner__c":"MUHIBBAH ENGINEERING APAC",
-		"Role__c":"Contractor"
-	},
-	{
-		"Partner__c":"CN ELECO Engineering Sdn Bhd",
-		"Role__c":"Contractor"
-	},
-	{
-		"Partner__c":"CAV APAC",
-		"Role__c":"Suppplier"
-	},
-	{
-		"Partner__c":"PETROVIETNAM",
-		"Role__c":"Contractor"
-	}
-],
 "Competitors__c":[
 	{
 		"Name__c":"Brunel Energy",
@@ -210,39 +146,5 @@
 		"ClosedDate":"30/06/2015",
 		"LastModified":"Darren McLean, 01/07/2016 14:25"
   }
-],
-"Recruitment_Opp__c":[
-	{
-		"Name":"APCMYS201501384"
-	},
-	{
-		"Name":"APCMYS201501388"
-	},
-	{
-		"Name":"APCMYS201501534"
-	}
-],
-"OpportunityFieldHistory":[
-	{
-	"FieldValue":"Opportunity_Code__c",
-	"NewValue":"2014-000029",
-	"OldValue":"",
-	"CreatedDate":"2016-05-25 02:44",
-	"CreatedBy":"InterAktiv InterAktiv"
- },
- {
- "FieldValue":"Opportunity_Code__c",
- "NewValue":"",
- "OldValue":"2014-000360",
- "CreatedDate":"2016-05-25 02:44",
- "CreatedBy":"InterAktiv InterAktiv"
-},
-{
-"FieldValue":"Airswift VP Region",
-"NewValue":"Europe & Africa",
-"OldValue":"UK & Europe",
-"CreatedDate":"2016-05-25 02:42",
-"CreatedBy":"InterAktiv InterAktiv"
-}
 ]
 }

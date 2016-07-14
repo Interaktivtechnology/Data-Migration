@@ -5,7 +5,7 @@ import {Router, browserHistory, withRouter} from 'react-router'
 import opp from './sample-opp'
 import faker from 'faker'
 import moment from 'moment'
-
+/*var oppimage = require('entitlements32.png');*/
 class OpportunityDetail extends React.Component {
 
   constructor(props)
@@ -13,46 +13,23 @@ class OpportunityDetail extends React.Component {
     super(props)
     this.state = {
       oppfield : opp.attributes['0'],
-      ot:opp.Opportunity_Team__c,
       oa:opp.Opportunity_Assessments__c,
-      op:opp.Partner__c,
       oc:opp.Competitors__c,
       ah:opp.ActivityHistory,
-      na:opp.NotesAndAttachments,
-      sh:opp.OpportunityHistories,
-      ro:opp.Recruitment_Opp__c,
-      ofh:opp.OpportunityFieldHistory,
-      sl:opp.Service_Line__c
+      na:opp.NotesAndAttachments
     }
   }
   componentDidMount(){
   //  this.setState({ot : opp.Opportunity_Team__c})
 }
   render() {
-     var dispheadsl = []
-     dispheadsl.push(<tr className="headerRow"><th>Service Line ID</th><th>Service</th><th>Year</th><th>Value</th></tr>)
-     var disprowsl = []
-     this.state.sl.map((object1, keyv) => {
-         disprowsl.push(<tr className="bodyRow"><td>{object1.Name}</td><td>{object1.Service__c}</td><td>{object1.Year__c}</td><td>{object1.Value__c}</td></tr>)
-      })
-      var dispheadot = []
-      dispheadot.push(<tr className="headerRow"><th>Team Member</th><th>Member Role</th></tr>)
-      var disprowot = []
-      this.state.ot.map((object1, keyv) => {
-           disprowot.push(<tr className="bodyRow"><td>{object1.Team_Memeber__c}</td><td>{object1.Member_Role__c}</td></tr>)
-        })
-      var dispheadoa = []
+       var dispheadoa = []
           dispheadoa.push(<tr className="headerRow"><th>OpportunityvAssessments Name</th><th>Total Score</th><th>Discovery Score</th><th>Relationship Score</th><th>Positioning Score</th><th>Differentiation Score</th><th>Created Date</th><th>Created By</th></tr>)
       var disprowoa = []
        this.state.oa.map((obj2, key2) => {
              disprowoa.push(<tr className="bodyRow"><td>{obj2.Opportunity_Assessments_Name__c}</td><td>{obj2.Total_Score__c}</td><td>{obj2.Discovery_Score__c}</td><td>{obj2.Relationship_Score__c}</td><td>{obj2.Positioning_Score__c}</td><td>{obj2.Differentiation_Score__c}</td><td>{obj2.Created_Date__c}</td><td>{obj2.Created_By__c}</td></tr>)
           })
-      var dispheadp= []
-      dispheadp.push(<tr className="headerRow"><th>Partner</th><th>Role</th></tr>)
-      var disprowp = []
-          this.state.op.map((object1, keyv) => {
-               disprowp.push(<tr className="bodyRow"><td>{object1.Partner__c}</td><td>{object1.Role__c}</td></tr>)
-            })
+
       var dispheadc= []
       dispheadc.push(<tr className="headerRow"><th>Competitor Name</th><th>Strengths</th><th>Weeknesses</th></tr>)
       var disprowc = []
@@ -71,44 +48,36 @@ class OpportunityDetail extends React.Component {
       this.state.na.map((object1, keyv) => {
            disprowna.push(<tr className="bodyRow"><td>{object1.Type}</td><td>{object1.Title}</td><td>{object1.LastModified}</td><td>{object1.CreatedBy}</td></tr>)
         })
-      var dispheadsh = []
-      dispheadsh.push(<tr className="headerRow"><th>Stage</th><th>Probability(%)</th><th>Close Date</th><th>Last Modified</th></tr>)
-      var disprowsh = []
-      this.state.sh.map((object1, keyv) => {
-             disprowsh.push(<tr className="bodyRow"><td>{object1.StageName}</td><td>{object1.Probability}</td><td>{object1.ClosedDate}</td><td>{object1.LastModified}</td></tr>)
-      })
-      var dispheadro = []
-      dispheadro.push(<tr className="headerRow"><th>Opportunity Code</th></tr>)
-      var disprowro = []
-      this.state.ro.map((object1, keyv) => {
-           disprowro.push(<tr className="bodyRow"><td>{object1.Name}</td></tr>)
-        })
-        var dispheadofh = []
-        dispheadofh.push(<tr className="headerRow"><th>Date</th><th>User</th><th>Action</th></tr>)
-        var disprowofh = []
-        var actofh = ""
-        this.state.ofh.map((object1, keyv) => {
-            actofh=""
-              if(object1.OldValue == "" && object1.NewValue == "" && object1.FieldValue == "created"){
-                 actofh = object1.FieldValue
-              } else if(object1.OldValue != "" && object1.NewValue != "" && object1.FieldValue != ""){
-                actofh = "Changed "+object1.FieldValue+" from "+object1.OldValue+" to "+object1.NewValue
-              } else if(object1.OldValue == "" && object1.NewValue != "" && object1.FieldValue != ""){
-                actofh = "Changed "+object1.FieldValue+" to "+object1.NewValue
-              } else if(object1.OldValue != "" && object1.NewValue == "" && object1.FieldValue != ""){
-                actofh = "Deleted "+object1.OldValue+" in "+object1.FieldValue
-              }
-              disprowofh.push(<tr className="bodyRow"><td>{object1.CreatedDate}</td><td>{object1.CreatedBy}</td><td>{actofh}</td></tr>)
+      return (
 
-        })
-    return (
       <div className="col-md-12">
-          <div className="col-md-12" >
-            <div className="mheading">
-            <h2>Opportunity Detail</h2>
-            </div>
-          </div>
+      <div className="bPageTitle">
+      <div className="ptBody">
+      <div className="content">
+      <img className="pageTitleIcon" src={'http://free-121d5f44d20-121d603d1c5-121ee2b8103.force.com/img/icon/portals32.png'}/>
+      <h1 className="pageType">Opportunity</h1>
+      <h2 className="pageDescription">{this.state.oppfield.Name}</h2>
+      </div>
+      </div>
+      </div>
+      <div className="clearfix"></div>
+      <span><br/></span><span><br/></span>
+      <div className="pbHeader">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tbody><tr><td className="pbTitle">
+      <h2 className="mainTitle">Opportunity Detail</h2>
+      </td>
+      <td className="pbButton" id="topButtonRow">
+      <input value=" Edit " className="btn" name="edit" title="Edit" type="button"></input>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+        <span><br/></span>
+      </div>
+<div className="clearfix"></div>
           <div className="bPageBlock2 divdata2">
+          <div className="txtlabel">Opportunity Detail</div>
            <div className="pbSubsection">
              <table className="sec" border="0" cellPadding="0" cellSpacing="0">
              <tbody>
@@ -212,51 +181,6 @@ class OpportunityDetail extends React.Component {
            </table>
            </div>
       </div>
-      <div>
-        <br/>
-            {
-             <div className="bPageBlock">
-                 <div className="pHeader">
-                 <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-                 <tr>
-                   <td class="pbTitle"><h3>Service Lines</h3></td>
-                 </tr>
-               </table>
-               <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-                 <thead>
-                 {dispheadsl}
-                 </thead>
-               <tbody>
-                {disprowsl}
-              </tbody>
-              </table>
-              </div>
-              </div>
-            }
-            </div>
-          <div>
-            <br/>
-          {
-           <div className="bPageBlock">
-               <div className="pHeader">
-               <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-               <tr>
-                 <td class="pbTitle"><h3>Opportunity Team</h3></td>
-               </tr>
-             </table>
-             <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-               <thead>
-               {dispheadot}
-               </thead>
-             <tbody>
-              {disprowot}
-            </tbody>
-            </table>
-            </div>
-            </div>
-          }
-          </div>
-          <br/>
           <div className="bPageBlock2 divdata2">
             <div className="txtlabel">Customer Team and Personal Success Criteria</div>
            <div className="pbSubsection">
@@ -356,28 +280,6 @@ class OpportunityDetail extends React.Component {
        <div className="pHeader">
        <table border="0" cellPadding="0" cellSpacing="0" width="100%">
        <tr>
-         <td class="pbTitle"><h3>Partner</h3></td>
-       </tr>
-     </table>
-     <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-       <thead>
-       {dispheadp}
-       </thead>
-     <tbody>
-      {disprowp}
-    </tbody>
-    </table>
-    </div>
-    </div>
-  }
-  </div>
-  <div>
-  <br/>
-  {
-   <div className="bPageBlock">
-       <div className="pHeader">
-       <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-       <tr>
          <td class="pbTitle"><h3>Competitors</h3></td>
        </tr>
      </table>
@@ -431,72 +333,6 @@ class OpportunityDetail extends React.Component {
        </thead>
      <tbody>
       {disprowna}
-    </tbody>
-    </table>
-    </div>
-    </div>
-  }
-  </div>
-  <div>
-  <br/>
-  {
-   <div className="bPageBlock">
-       <div className="pHeader">
-       <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-       <tr>
-         <td class="pbTitle"><h3>Stage History</h3></td>
-       </tr>
-     </table>
-     <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-       <thead>
-       {dispheadsh}
-       </thead>
-     <tbody>
-      {disprowsh}
-    </tbody>
-    </table>
-    </div>
-    </div>
-  }
-  </div>
-  <div>
-  <br/>
-  {
-   <div className="bPageBlock">
-       <div className="pHeader">
-       <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-       <tr>
-         <td class="pbTitle"><h3>Recruitment Opps</h3></td>
-       </tr>
-     </table>
-     <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-       <thead>
-       {dispheadro}
-       </thead>
-     <tbody>
-      {disprowro}
-    </tbody>
-    </table>
-    </div>
-    </div>
-  }
-  </div>
-  <div>
-  <br/>
-  {
-   <div className="bPageBlock">
-       <div className="pHeader">
-       <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-       <tr>
-         <td class="pbTitle"><h3>Opportunity Field History</h3></td>
-       </tr>
-     </table>
-     <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-       <thead>
-       {dispheadofh}
-       </thead>
-     <tbody>
-      {disprowofh}
     </tbody>
     </table>
     </div>

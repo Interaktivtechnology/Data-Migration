@@ -3,7 +3,7 @@
 	"attributes":[{
 		"Owner":"Ken Nickel-Lane",
 		"AccountRecordType":"Child Account",
-		"AccountName" : "Shell - Canada",
+		"Name" : "Shell - Canada",
 		"Phone" : "(403) 691-3111",
 		"TypeOfAccount" : "Global",
 		"Website" : "http://www.shell.ca/home/Framework?siteId=ca-en",
@@ -58,7 +58,7 @@
 		{
 			"Name":"Shell - Carmon Creek Project",
 			"Stage":"Certain",
-			"ArchiveComments":"-",
+			"ArchiveComments":"",
 			"ActualYr1GP":"$0.00",
 			"ForecastYr1GP":"$0.00",
 			"ForecastYr2GP":"$0.00",
@@ -70,7 +70,7 @@
 		{
 			"Name":"Shell - Carmon Creek Project",
 			"Stage":"Certain",
-			"ArchiveComments":"-",
+			"ArchiveComments":"",
 			"ActualYr1GP":"$0.00",
 			"ForecastYr1GP":"$0.00",
 			"ForecastYr2GP":"$0.00",
@@ -82,7 +82,7 @@
 		{
 			"Name":"Shell - Carmon Creek Project",
 			"Stage":"Certain",
-			"ArchiveComments":"-",
+			"ArchiveComments":"",
 			"ActualYr1GP":"$0.00",
 			"ForecastYr1GP":"$0.00",
 			"ForecastYr2GP":"$0.00",
@@ -94,7 +94,7 @@
 		{
 			"Name":"Shell - Carmon Creek Project",
 			"Stage":"Certain",
-			"ArchiveComments":"-",
+			"ArchiveComments":"",
 			"ActualYr1GP":"$0.00",
 			"ForecastYr1GP":"$0.00",
 			"ForecastYr2GP":"$0.00",
@@ -112,7 +112,7 @@
 			"AssignedTo":"Marketo Sync",
 			"Name":"Ramdall Warren",
 			"DueDate":"5/16/2016",
-			"VRAttachment":"-",
+			"VRAttachment":"",
 			"LastModifiedDateTime":"",
 			"Summary":"Checked Queresh Nakhoda references"
 		},
@@ -122,7 +122,7 @@
 			"AssignedTo":"Marketo Sync",
 			"Name":"Ramdall Warren",
 			"DueDate":"5/16/2016",
-			"VRAttachment":"-",
+			"VRAttachment":"",
 			"LastModifiedDateTime":"",
 			"Summary":"Checked Queresh Nakhoda references"
 		},
@@ -132,16 +132,9 @@
 			"AssignedTo":"Marketo Sync",
 			"Name":"Ramdall Warren",
 			"DueDate":"5/16/2016",
-			"VRAttachment":"-",
+			"VRAttachment":"",
 			"LastModifiedDateTime":"",
 			"Summary":"Checked Queresh Nakhoda references"
-		}
-	],
-	"AccountTeam":
-	[
-		{
-			"Team_Memeber__c":"Michael Sanches",
-			"Member_Role__c":"Global Account Manager"
 		}
 	],
 	"NotesAndAttachments":[
@@ -189,22 +182,5 @@
 			"Management_Ownership_Change__c":"Recent or Impending",
 			"CreatedDate":"7/8/2016"
 		}
-	],
-	"AccountHistory":
-	[
-	{
-		"Field":"Subtype__c",
-		"NewValue":"Local",
-		"OldValue":"Legacy",
-		"CreatedDate":"2016-05-25 02:44",
-		"CreatedBy":"InterAktiv InterAktiv"
-	},
-	{
-		"Field":"Contract_Status__c",
-		"NewValue":"Negotiating",
-		"OldValue":"Legacy",
-		"CreatedDate":"2016-05-25 02:44",
-		"CreatedBy":"InterAktiv InterAktiv"
-	}
-]
+	]
 }

@@ -2,6 +2,62 @@ body, td {
     font-family: Arial,Helvetica,sans-serif;
     color: #222;
 }
+table{
+  width:100%;
+}
+body .bPageTitle .ptBody .pageDescription { font-size: 120%; font-weight: normal; line-height: 1.1em; }
+
+.bPageTitle .ptBody .content {
+    float: left;
+    vertical-align: middle;
+    padding-left: 5px;
+    width: 70%;
+}
+
+img { border: 0px; }
+.pageTitleIcon { display: inline; float: left; width: 32px; margin-right: 5px; }
+
+h1 { font-family: Verdana, Geneva, sans-serif; font-size: 100%; margin: 0px; display: inline; }
+.bPageTitle h1 { display: block; }
+.bPageTitle .ptBody .pageType { font-size: 91%; }
+
+h2 { font-family: Verdana, Geneva, sans-serif; font-size: 100%; margin: 0px; display: inline; }
+.bPageTitle h2 { display: block; }
+.bPageTitle .ptBody .pageDescription { font-size: 109%; font-weight: bold; }
+
+body .bPageTitle .pageTitleIcon { margin-top: 5px; }
+body .bPageTitle .ptBody .pageType { font-size: 0.9em; font-weight: bold; color: #4a4a56; padding-left: 1px; }
+body .bPageTitle .ptBody .pageType,body .bPageTitle .ptBody .pageDescription { margin-left: 37px; }
+body .bodyDiv .bPageTitle .blank { height: 0px; }
+
+td { margin: 0px; color: #333; }
+input { padding-top: 0px; }
+.outer td { vertical-align: top; }
+.btn { font-family: Verdana, Geneva, sans-serif; border-right-width: 1px; border-style: none solid solid none; border-right-color: #5c5d61; border-bottom-width: 1px; border-bottom-color: #5c5d61; font-size: 80%; color: #fff; padding: 1px 3px; cursor: pointer; font-weight: bold; display: inline; background-image: url("https://cs2.salesforce.com/img/bgButton.gif"); background-position: left top; background-repeat: repeat-x; }
+.btn { margin: 0px 2px; }
+.bPageBlock .pbButton { padding: 1px 0px; vertical-align: middle; }
+body .btn:hover { background-position: right -30px; }
+
+td { font-family: Arial, Helvetica, sans-serif; color: #222; }
+body .btn { font-family: Arial, Helvetica, sans-serif; }
+body .btn { color: #333; margin: 1px; padding: 2px 3px; border-width: 1px; border-style: solid; border-color: #b5b5b5 #b5b5b5 #7f7f7f; font-weight: bold; font-size: 0.9em; border-radius: 3px; background: url("https://cs2.salesforce.com/img/alohaSkin/btn_sprite.png") right top repeat-x #e8e8e9; }
+body .btn:active { border-color: #585858 #585858 #939393; background-position: right -60px; }
+.bPageBlock .pbHeader > table > tbody > tr > td { padding: 5px 12px; }
+body input.btn { padding: 4px 3px; }
+
+body .bPageBlock .pbHeader {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+td { font-family: Arial, Helvetica, sans-serif; color: #222; }
+h2 { font-weight: bold; }
+h2 { font-family: Arial, Helvetica, sans-serif; }
+body .bPageBlock .pbTitle { padding: 5px 12px; }
+.pbHeader .pbTitle h2 { margin: 0px; }
+body .bPageBlock .pbTitle h2 { color: #000; font-size: 1.3em; }
+.bPageBlock .pbHeader > table > tbody > tr > td { padding: 5px 12px; }
+
 .table-data th {
 	background-color: #f9f9f9;
 	width: 45%;
@@ -42,7 +98,7 @@ h1,h2,h3,h4,h5,h6{
   font-size: 85%;
   width:50%;
 }
-tr th, tr td {
+tr.headerRow th,tr.bodyRow td, tr td.tlabel, tr td.tdata {
   border-bottom: 1px solid #e3deb8;
 }
 .divdata2{
@@ -143,4 +199,7 @@ td, th {
 }
 .txtlabel{
   font-weight:bold;
+}
+.clearfix{
+  clear:both;
 }

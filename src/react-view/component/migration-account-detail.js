@@ -17,9 +17,7 @@ class AccountDetail extends React.Component {
       sc: acct.Account_Scorecard__c,
       opp:acct.Opportunity__c,
       ah:acct.ActivityHistory,
-      at:acct.AccountTeam,
       na:acct.NotesAndAttachments,
-      ah2:acct.AccountHistory
     }
   }
   componentDidMount(){
@@ -48,42 +46,43 @@ class AccountDetail extends React.Component {
       dispheadah.push(<tr className="headerRow"><th>Subject</th><th>Action</th><th>AssignedTo</th><th>Name</th><th>Due Date</th><th>VRAttachment</th><th>LastModifiedDateTime</th><th>Summary</th></tr>)
       var disprowah = []
       this.state.ah.map((object1, keyv) => {
-          disprowah.push(<tr className="bodyRow"><td>{object1.Subject}</td><td>{object1.Action}</td><td>{object1.AssignedTo}</td><td>{object1.Name}</td><td>{object1.DueDate}</td><td>{object1.VRAttachment}</td><td>{object1.LastModifiedDateTime}</td><td>{object1.CloseDate}</td><td>{object1.Summary}</td></tr>)
+          disprowah.push(<tr className="bodyRow"><td>{object1.Subject}</td><td>{object1.Action}</td><td>{object1.AssignedTo}</td><td>{object1.Name}</td><td>{object1.DueDate}</td><td>{object1.VRAttachment}</td><td>{object1.LastModifiedDateTime}</td><td>{object1.Summary}</td></tr>)
        })
-       var dispheadat = []
-       dispheadat.push(<tr className="headerRow"><th>Team Member</th><th>Team Role</th></tr>)
-       var disprowat = []
-       this.state.at.map((object1, keyv) => {
-            disprowat.push(<tr className="bodyRow"><td>{object1.Team_Memeber__c}</td><td>{object1.Member_Role__c}</td></tr>)
-         })
          var dispheadna = []
          dispheadna.push(<tr className="headerRow"><th>Type</th><th>Title</th><th>LastModified</th><th>Created By</th></tr>)
          var disprowna = []
          this.state.na.map((object1, keyv) => {
               disprowna.push(<tr className="bodyRow"><td>{object1.Type}</td><td>{object1.Title}</td><td>{object1.LastModified}</td><td>{object1.CreatedBy}</td></tr>)
            })
-           var dispheadah2 = []
-           dispheadah2.push(<tr className="headerRow"><th>Date</th><th>User</th><th>Action</th></tr>)
-           var disprowah2 = []
-           var actah = ""
-           this.state.ah2.map((object1, keyv) => {
-               actah=""
-                 if(object1.OldValue == "" && object1.NewValue == "" && object1.FieldValue == "created"){
-                    actah = object1.FieldValue
-                 } else if(object1.OldValue != "" && object1.NewValue != "" && object1.FieldValue != ""){
-                   actah = "Changed "+object1.FieldValue+" from "+object1.OldValue+" to "+object1.NewValue
-                 } else if(object1.OldValue == "" && object1.NewValue != "" && object1.FieldValue != ""){
-                   actah = "Changed "+object1.FieldValue+" to "+object1.NewValue
-                 } else if(object1.OldValue != "" && object1.NewValue == "" && object1.FieldValue != ""){
-                   actah = "Deleted "+object1.OldValue+" in "+object1.FieldValue
-                 }
-                 disprowah2.push(<tr className="bodyRow"><td>{object1.CreatedDate}</td><td>{object1.CreatedBy}</td><td>{actah}</td></tr>)
-
-           })
-  return(
+    return(
     <div className="col-md-12">
+    <div className="bPageTitle">
+    <div className="ptBody">
+    <div className="content">
+    <img className="pageTitleIcon" src={'http://free-121d5f44d20-121d603d1c5-121ee2b8103.force.com/img/icon/bank32.png'}/>
+    <h1 className="pageType">Account</h1>
+    <h2 className="pageDescription">{this.state.acctdet.Name}</h2>
+    </div>
+    </div>
+    </div>
+    <div className="clearfix"></div>
+    <span><br/></span><span><br/></span>
+    <div className="pbHeader">
+    <table border="0" cellpadding="0" cellspacing="0">
+    <tbody><tr><td className="pbTitle">
+    <h2 className="mainTitle">Account Detail</h2>
+    </td>
+    <td className="pbButton" id="topButtonRow">
+    <input value=" Edit " className="btn" name="edit" title="Edit" type="button"></input>
+    </td>
+    </tr>
+    </tbody>
+    </table>
+      <span><br/></span>
+    </div>
+<div className="clearfix"></div>
         <div className="bPageBlock2 divdata2">
-        <div className="txtlabel">Account Details</div>
+        <div className="txtlabel">Account Detail</div>
          <div className="pbSubsection">
            <table className="sec" border="0" cellPadding="0" cellSpacing="0">
            <tbody>
@@ -95,7 +94,7 @@ class AccountDetail extends React.Component {
            </tr>
            <tr>
              <td className="tlabel col25">Account Name</td>
-             <td className="tdata col25">{this.state.acctdet.AccountName}&nbsp;</td>
+             <td className="tdata col25">{this.state.acctdet.Name}&nbsp;</td>
              <td className="tlabel col25">Phone</td>
              <td className="tdata col25">{this.state.acctdet.Phone}&nbsp;</td>
            </tr>
@@ -270,29 +269,7 @@ class AccountDetail extends React.Component {
                             </div>
                           }
                 </div>
-                <div>
-                  <br/>
-                      {
-                       <div className="bPageBlock">
-                           <div className="pHeader">
-                           <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-                           <tr>
-                             <td class="pbTitle"><h3>Acccount Team</h3></td>
-                           </tr>
-                         </table>
-                         <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-                           <thead>
-                           {dispheadat}
-                           </thead>
-                         <tbody>
-                          {disprowat}
-                        </tbody>
-                        </table>
-                        </div>
-                        </div>
-                      }
-            </div>
-            <div>
+              <div>
             <br/>
             {
              <div className="bPageBlock">
@@ -314,29 +291,6 @@ class AccountDetail extends React.Component {
               </div>
             }
             </div>
-            <div>
-              <br/>
-                  {
-                   <div className="bPageBlock">
-                       <div className="pHeader">
-                       <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-                       <tr>
-                         <td class="pbTitle"><h3>Account History</h3></td>
-                       </tr>
-                     </table>
-                     <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-                       <thead>
-                       {dispheadah2}
-                       </thead>
-                     <tbody>
-                      {disprowah2}
-                    </tbody>
-                    </table>
-                    </div>
-                    </div>
-                  }
-                  </div>
-
     </div>
   )}
 }
