@@ -20,6 +20,7 @@ export function describeObject(req, res, next)
         else
         {
           conn.metadata.read('CustomObject',[req.params.objectName], (err, metadata) => {
+            if(err) res.status(500).send({ ok: false, message : "Describing object error", details : JSON.stringify(err)})
             res.status(200).send(
             {
               ok: true,

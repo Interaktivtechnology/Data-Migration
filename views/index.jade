@@ -6,6 +6,9 @@ block content
       div!= reactString
   
 block script
+  script(type="text/javascript", src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js")
+  script(type="text/javascript", src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js")
+  script const CURRENT_USER = !{JSON.stringify(currentUser)}
   if process.env.SwiftEnv == 'production'
     script(type="text/javascript" src="/javascripts/app.min.js")
   else 

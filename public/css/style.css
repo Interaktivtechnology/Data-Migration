@@ -16,3 +16,7 @@
 .subtitle{
 	color : #888
 }
+
+#errors {
+	margin: 100px auto
+}

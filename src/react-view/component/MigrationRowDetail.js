@@ -5,8 +5,8 @@ import ReactDOM, {render} from 'react-dom';
 import {Router, browserHistory, withRouter} from 'react-router'
 import faker from 'faker'
 import moment from 'moment'
-import {ModalLoading} from '../common/modal'
-import MetaDataSample, {AccountExample}  from './sample-meta'
+import {ModalLoading} from '../common/Modal'
+//import MetaDataSample, {AccountExample}  from './sample-meta'
 
 
 

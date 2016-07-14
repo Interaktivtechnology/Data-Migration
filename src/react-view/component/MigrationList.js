@@ -48,7 +48,7 @@ class MigrationList extends React.Component {
   _addDataSource(){
     if(document)
       document.title = "InterAktiv ~ Add new data source"
-    this.props.history.push('/migration/new')
+    this.props.history.push('/merge/new')
   }
 
   showModal(status){

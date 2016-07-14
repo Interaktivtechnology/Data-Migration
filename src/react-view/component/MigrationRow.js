@@ -126,7 +126,7 @@ class MigrationRow extends React.Component {
 
   }
   componentWillMount(){
-    
+
   }
 
   render() {

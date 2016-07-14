@@ -6,7 +6,7 @@ import {Router, browserHistory} from 'react-router'
 import {SF_REQUEST} from '../global'
 import moment from 'moment'
 
-class MigrationTable extends React.Component {
+class MergeTable extends React.Component {
 
   constructor(props)
   {
@@ -15,13 +15,15 @@ class MigrationTable extends React.Component {
       cols : this.props,
       option : [],
       meta : [{fields : []}, {fields : []}],
-      dataSource : [],
+      dataSource : [{} , {}],
       errorMessage : <p></p>,
       syncing : false,
       form : {}
     }
   }
   componentDidMount(){
+    if(this.props.currentState)
+      this.setState(this.props.currentState)
     this.setState({
       cols : this.props.cols
     })
@@ -55,7 +57,7 @@ class MigrationTable extends React.Component {
     let dataSource = this.state.dataSource
     let errorView = <div className="alert alert-warning alert-dismissible" role="alert">
                   <button type="button" className="close" onClick={() => this.setState({errorMessage : <p></p>})} aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <strong>Sync Meta Data</strong> En error occured, don't worry we'll fix this.
+                  <strong>Sync Meta Data</strong> En error occured, your haven't picked object or data source.
                 </div>
     let meta = this.state.meta
     dataSource[key] = dataSource[key] ? dataSource[key] : {}
@@ -66,10 +68,9 @@ class MigrationTable extends React.Component {
         success : function(response){
           if(response.ok)
           {
-
             meta[key] = response.result
             this.setState({
-              meta : meta,
+              meta : meta[key] ? meta : this.state.meta ,
               syncing : false
             })
           }
@@ -92,7 +93,8 @@ class MigrationTable extends React.Component {
     }
     else
       this.setState({
-        errorMessage :errorView
+        errorMessage :errorView,
+        syncing : false
       })
 
   }
@@ -173,12 +175,13 @@ class MigrationTable extends React.Component {
          <select name={'DataSource' + i} className="form-control" onChange={this._dataSourceChange.bind(this)} data-key={i}>
            <option value=''></option>
            {this.state.option.map((object, key) => {
-             return <option value={object.id} key={key+object}>{object.name}</option>
+             return <option value={object.id} selected={this.state.dataSource[i].dataSourceId == object.id ? 'selected' : ''}
+              key={key+object}>{object.name}</option>
            })}
          </select>
          <select name={'DataSource' + i} className="form-control" onChange={this._objectChange.bind(this)} data-key={i}>
            <option>---Object--- </option>
-           <option value='account'>Account</option>
+           <option value='account' >Account</option>
            <option value='contact'>Contact</option>
            <option value='opportunity'>Opportunity</option>
            <option value='activities'>Activities</option>
@@ -212,14 +215,6 @@ class MigrationTable extends React.Component {
     return (
       <div className="table-responsive">
         {this.state.errorMessage}
-        <div className="form-group col-md-6 col-lg-6 col-sm-6">
-          <label>Global Merge Name</label>
-          <input type="text" name='logic' className="form-control" placeholder="Name" ></input>
-        </div>
-        <div className="form-group col-md-6 col-lg-6 col-sm-6">
-          <label>Deduplication Logic</label>
-          <textarea type="text" name='logic' className="form-control" placeholder="Deduplication Logic" ></textarea>
-        </div>
 
         <table className="table table-striped table-bordered">
           <thead>
@@ -237,11 +232,12 @@ class MigrationTable extends React.Component {
             this.state.meta[0].fields.map((field, index) => {
               let cols = []
 
-              cols.push(<td key={10000}><input type="checkbox" value={field.fullName } onChange={this._checkboxChanged.bind(this)} /> {field.label ? field.label : field.fullName} <br />
+              cols.push(<td key={10000}><input type="checkbox" value={field.fullName } data-key={'ds1'} onChange={this._checkboxChanged.bind(this)} /> {field.label ? field.label : field.fullName} <br />
                 <strong>DataType :</strong> {field.type ? field.type : "default" }
               </td>)
-              cols.push(<td><input type="checkbox" name={'cols[1]' + field.fullName} onChange={this._checkboxChanged.bind(this)}  />
+              cols.push(<td><input type="checkbox" name={'cols[1]' + field.fullName} data-key={'ds2'} onChange={this._checkboxChanged.bind(this)}  />
               <select className="form-control" onChange={this._onChangeFieldSelectBox.bind(this)}>
+                <option></option>
                 {
                     this.state.meta[1].fields.map((field2, index2) =>{
                       return <option value={field2.fullName} selected={field2.fullName == field.fullName}>{field2.label ? field2.label : field2.fullName}</option>
@@ -260,7 +256,8 @@ class MigrationTable extends React.Component {
             unMappedData.map((field, index) => {
               return <tr>
                 <td></td>
-                <td><input type="checkbox" value={field.fullName} onChange={this._checkboxChanged.bind(this)} /> {field.label ? field.label : field.fullName}</td>
+                <td><input type="checkbox" value={field.fullName} onChange={this._checkboxChanged.bind(this)} /> {field.label ? field.label : field.fullName} <br />
+                <strong>Data Type</strong>: {field.type ? field.type : 'Default'}</td>
                 <td><textarea type="text" name={field.fullName} className="form-control" placeholder="Regex or Formula"></textarea></td>
               </tr>
             })
@@ -274,38 +271,125 @@ class MigrationTable extends React.Component {
 }
 
 
+
 export default class Migration extends React.Component {
 
   constructor(props)
   {
     super(props)
     this.state = {
-      jombotron : {display: 'block'},
-      cols : 2
+      cols : 2,
+      mergeName : '',
+      dedupLogic : '',
+      isConfirmPage : false,
+      mergedColumn : []
     }
+    this._renderTable = this._renderTable.bind(this)
   }
   componentDidMount(){
 
   }
 
   _save(){
+    if(document){
+      var checkboxArray =  document.getElementsByTagName("input");
+      var checked = []
+      for(var i = 0; i < checkboxArray.length; i++){
+        if(checkboxArray[i].type == "checkbox" && checkboxArray[i].checked){
+          var textareaArray = document.getElementsByTagName("textarea")
+          var txtFormula = ''
+          for(var x = 0 ; x< textareaArray.length;x++)
+          {
+            if(textareaArray[x].name == checkboxArray[i].value)
+              txtFormula = textareaArray[x].value
+          }
+          checked[checkboxArray[i].value]  = {
+            source : checkboxArray[i].getAttribute('data-key'),
+            formula : txtFormula
+          }
+        }
+        console.log(checked)
+      }
+      this.setState({
+        mergedColumn : checked,
+        isConfirmPage : true,
+        migrationTableState : this.refs.mergeTable.state
+      })
+      console.log(this.state)
+    }
 
   }
 
-  renderLoading(){
+  _textOnChange(component){
+    this.state[component.target.name] = component.target.value
+    this.setState(this.state)
 
   }
+
+  _renderTable() {
+    return <div className="row">
+      <div className="form-group col-md-6 col-lg-6 col-sm-6">
+        <label>Global Merge Name</label>
+        <input type="text" name='mergeName' className="form-control" placeholder="Name" onChange={this._textOnChange.bind(this)} value={this.state.mergeName}></input>
+      </div>
+      <div className="form-group col-md-6 col-lg-6 col-sm-6">
+        <label>Deduplication Logic</label>
+        <textarea type="text" name='dedupLogic' className="form-control" placeholder="Deduplication Logic" onChange={this._textOnChange.bind(this)} value={this.state.dedupLogic}></textarea>
+      </div>
+      <div className="clearfix" />
+      <MergeTable ref='mergeTable' currentState={this.state.mergeTableState} router={this.props.router} cols={this.state.cols} onSave={this._save.bind(this)}></MergeTable>
+    </div>
+  }
+
+
 
   render() {
     return (
       <div className="col-md-12">
         <h1>Global Merge Row Configuration</h1>
         <div className="col-md-4 col-md-offset-4 text-center" style={{marginTop: 20, marginBottom: 20}}>
+          {this.state.isConfirmPage ?
+            <button onClick={() => this.setState({isConfirmPage : false})}
+            className="btn btn-warning btn-sm"><i className="fa fa-save"></i> Cancel</button> : '' }
           <button onClick={this._save.bind(this)} className="btn btn-primary btn-sm"><i className="fa fa-save"></i> Save</button>
         </div>
         <div className="clearfix"></div>
-        <MigrationTable router={this.props.router} cols={this.state.cols}></MigrationTable>
+        {this.state.isConfirmPage ? <MigrationConfirm mergedColumn={this.state.mergedColumn} /> :  this._renderTable()}
       </div>
     );
   }
+}
+
+
+
+
+class MigrationConfirm extends Component{
+  constructor(props){
+    super(props)
+  }
+
+  componentDidMount(){
+    console.log(this.props)
+  }
+
+  render()
+  {
+    return<div className="table-responsive">
+    <p>Please confirm this merge object</p>
+     <table className="table table-striped table-bordered">
+      <thead><tr><td>Merged Column</td><td>Formula</td></tr></thead>
+      <tbody>
+        {this.props.mergedColumn.map((object, key) => {
+          return <tr key={object.source + key}>
+          <td>{object.source}</td>
+          <td>{object.formula}</td>
+          </tr>
+        })}
+      </tbody>
+    </table>
+    </div>
+  }
+}
+MigrationConfirm.propTypes = {
+  mergedColumn : React.PropTypes.object
 }

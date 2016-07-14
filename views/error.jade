@@ -1,6 +1,9 @@
 extends layout
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  #errors
+    h1 OOOPPPPSSS... 
+      span Page not found
+    p We don't know how you end up here but you should go 
+      a(href="/", rel="") home 
+      span now.

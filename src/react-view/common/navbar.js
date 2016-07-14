@@ -6,7 +6,7 @@ import {Link} from 'react-router'
 import Home from '../home'
 import ReactCSSTransitionGroup from  'react-addons-css-transition-group'
 
-
+//const CURRENT_USER = CURRENT_USER ? CURRENT_USER : {}
 
 class NavbarInstance extends Component{
   constructor(props){
@@ -48,7 +48,7 @@ class NavbarInstance extends Component{
             </Nav>
 
             <Nav pullRight>
-              <NavDropdown title={this.state.user} id="basic-nav-dropdown">
+              <NavDropdown title={CURRENT_USER ? CURRENT_USER.fullName : ''} id="basic-nav-dropdown">
               <li>
                 <Link to={"/setting"}><i className={'fa fa-cogs'}></i> Settings</Link>
               </li>

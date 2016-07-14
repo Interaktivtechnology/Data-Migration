@@ -110,10 +110,11 @@ app.get('*', function(req, res) {
       var reactString =  renderToString(<RouterContext {...renderProps} />)
       res.status(200).render('index', {
         reactString :reactString,
+        currentUser : req.session.user,
         csrfToken: req.csrfToken()
       })
     } else {
-      res.status(404).send('Not found')
+      res.status(404).render('error', {error : error})
     }
   })
 })
