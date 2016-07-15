@@ -21,6 +21,7 @@ module.exports = {
 
     query = query.slice(0, -2) + ";"
     models.sequelize.query("SET FOREIGN_KEY_CHECKS = 0").then((result) => {
+      
       models.sequelize.query(query).then((result) => {
         console.log(result)
         done()

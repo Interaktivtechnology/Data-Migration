@@ -1,31 +1,23 @@
 /* jshint indent: 2 */
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('migration_data_source_field', {
+  var model =  sequelize.define('MigrationDataSourceField', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    migration_data_source_id : {
-      type : DataTypes.BIGINT,
-      allowNull : false,
-      references: {
-        model: 'migration_data_source',
-        key: 'id'
-      }
-    },
     role : {
       type : DataTypes.STRING,
       allowNull: false,
       defaultValue : 'source'
     },
-    field_name : {
+    fieldName : {
       type : DataTypes.STRING,
       allowNull : false
     },
-    merged_to : {
+    mergedTo : {
       type : DataTypes.STRING,
       allowNull : true,
     },
@@ -34,6 +26,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull : true
     }
   }, {
-    tableName: 'migration_data_source_row'
+    tableName: 'MigrationDataSourceField'
   })
+  var migrationDataSource = require('./MigrationDataSource')
+  model.belongsTo(migrationDataSource(sequelize, DataTypes),{ as: 'Current', foreignKey: 'migrationDataSourceId', constraints: true})
+  return model
 }

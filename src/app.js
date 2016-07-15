@@ -13,7 +13,10 @@ import session from 'express-session'
 import bodyParser from 'body-parser'
 import logger from 'morgan'
 import compression from 'compression'
+import csrf from 'csurf'
+import cookieParser from 'cookie-parser'
 
+const RedisStore = require('connect-redis')(session)
 
 const app = Express()
 const port = 4000
@@ -22,9 +25,23 @@ const port = 4000
 
 app.use(logger('dev'));
 app.use(compression());
-app.use(session({ resave: true,
-                  saveUninitialized: true,
-                  secret: 'uwotm8' }));
+
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: 'interaktiv-swift' ,
+  cookie: {
+    path: '/',
+    maxAge: 180 * 60 * 1000, //30 Minutes
+    signed: false
+  },
+  store : new RedisStore({
+    host : 'localhost',
+    port : 6379,
+    prefix : 'dmswift_'
+  })
+}))
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', path.join(__dirname, '../views'));
@@ -32,10 +49,32 @@ app.set('view engine', 'jade');
 //app.use(multer());
 app.use(Express.static(path.join(__dirname, '../public')));
 
+app.use(cookieParser())
+app
+  .use(csrf({cookie: true}))
+  .use((req, res, next) => {
+    res.cookie('XSRF-TOKEN', req.session._csrf)
+    res.locals.csrftoken = req.session._csrf
+    next()
+  })
 
-app.use("*", (req, res, next) => {
-  next()
-})
+
+// CSRF error handler
+app.use(function (err, req, res, next) {
+    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    console.log(ip.match(/[127.0.0.1]/))
+    if (err.code !== 'EBADCSRFTOKEN') return next(err)
+    if (ip.match(/[127.0.0.1]/).length > 0) return next()
+
+
+    // handle CSRF token errors here
+    res
+    .status(403)
+    .send({
+        message : "Forbidden, Bad CSRF",
+        ok : false
+    })
+  })
 //Login Page Routes
 app.get('/login', (req, res) => {
   res.status(304).render('login')
@@ -44,11 +83,22 @@ app.get('/login', (req, res) => {
 //Authentication Page
 app.use('/auth', require('./routes-server/auth'))
 
-app.use("/salesforce", require('./routes-server'))
+app.use("/api", (req, res, next) => {
+  if(req.session.user)
+    next()
+  else {
+    res.status(403).send({
+      ok : false,
+      message : "Forbidden, Please login."
+    })
+  }
+}, require('./routes-server'))
 app.get("/meta", (req, res) => {
   res.status(200).send(require('../meta-data.json'))
 })
 app.get('*', function(req, res) {
+  if(req.session.user == undefined)
+    res.redirect("/auth/login")
   // Note that req.url here should be the full URL path from
   // the original request, including the query string.
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
@@ -59,12 +109,17 @@ app.get('*', function(req, res) {
     } else if (renderProps) {
       var reactString =  renderToString(<RouterContext {...renderProps} />)
       res.status(200).render('index', {
-        reactString :reactString
+        reactString :reactString,
+        currentUser : req.session.user,
+        csrfToken: req.csrfToken()
       })
     } else {
-      res.status(404).send('Not found')
+      res.status(404).render('error', {error : error})
     }
   })
 })
 
-app.listen(port)
+var server = app.listen(port)
+
+
+module.exports = server

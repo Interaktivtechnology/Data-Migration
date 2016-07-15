@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('migration', {
+  return sequelize.define('Migration', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue : 'Sf, Sf to MySQL'
     },
-    created_by_id: {
+    createdById: {
       type: DataTypes.BIGINT,
       allowNull: true,
       references: {
@@ -21,7 +21,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    last_modified_by_id: {
+    lastModifiedById: {
       type: DataTypes.BIGINT,
       allowNull: true,
       references: {
@@ -29,17 +29,17 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    success_row: {
+    successRow: {
       type: DataTypes.BIGINT,
       allowNull: true,
       defaultValue : 0
     },
-    conflict_row: {
+    conflictRow: {
       type: DataTypes.BIGINT,
       allowNull: true,
       defaultValue : 0
     }
   }, {
-    tableName: 'migration'
+    tableName: 'Migration'
   });
 };

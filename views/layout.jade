@@ -5,15 +5,15 @@ html
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     title InterAktiv Migration Tools
-    link(rel='stylesheet', href='/css/bootstrap.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
     link(rel='stylesheet', href='/fa/css/font-awesome.min.css')
     link(rel='stylesheet', href='/css/react-datagrid.css')
     link(rel='stylesheet', href='/css/fullcalendar.css') 
     link(rel='stylesheet', href='/css/react-bootstrap-table-all.min.css')
     link(rel='stylesheet', href='/css/style.css')
+    script const CSRF_TOKEN = '#{csrfToken}'
   body
     //div.container-fluid
     block content
-    script(type="text/javascript", src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js")
-    script(type="text/javascript", src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js")
-    script(type="text/javascript" src="/javascripts/app.js")
+    block script
+    

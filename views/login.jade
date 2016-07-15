@@ -4,22 +4,50 @@ extends layout
 block content
   link(rel='stylesheet', href='/css/login.css')
   .container
-    form.form-signin(action='/auth/login', method='post')
+    form#loginform.form-signin(action='/auth/login', method='post')
+      input(type='hidden', value=csrf name="_csrf")
       h3.form-signin-heading
         span.col-md-12.col-xs-12.text-center
-          img.form-logo(src='http://interaktiv.sg/wp-content/uploads/2014/10/Logo-web2014-edit21.png')
+          img.form-logo(src='//interaktiv.sg/wp-content/uploads/2014/10/Logo-web2014-edit21.png')
         span.col-md-12.col-xs-12.text-center Data Migration
         .clearfix
+      .error
       .form-group
         label.sr-only(for='inputEmail') Email address
-        input#inputEmail.form-control(type='email', placeholder='Email address', required='', autofocus='', name='rpms_email')
+        input#inputEmail.form-control(type='email', placeholder='Email address', required='', autofocus='', name='email')
       .form-group
         label.sr-only(for='inputPassword') Password
-        input#inputPassword.form-control(type='password', placeholder='Password', required='', name='rpms_password')
+        input#inputPassword.form-control(type='password', placeholder='Password', required='', name='password')
       .form-group
         .checkbox
           label
             input(type='checkbox', value='remember-me')
             |  Remember me
       button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
-  // /container
+      
+  // Script
+block script
+  script(type="text/javascript", src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js")
+  script(type="text/javascript", src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js")
+  script(type="text/javascript").
+    $(function() {
+      $('#loginform').submit(function(e){
+        e.preventDefault();
+        var form = $(this);
+        $.ajax({
+          url : $(this).attr('action'),
+          method : "POST",
+          data : $(this).serialize(),
+          success : function(response){
+            window.location = '/';
+          },
+          error : function(err){
+            var errorMessage = JSON.parse( err.responseText)
+            form.find('.error').html('<div class="alert alert-info alert-dismissible" role="alert">' +
+              '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+              '<strong>Warning!</strong>' + errorMessage.error + 
+              '</div>')
+          }
+        })
+      })
+    })

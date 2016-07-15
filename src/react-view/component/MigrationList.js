@@ -48,8 +48,7 @@ class MigrationList extends React.Component {
   _addDataSource(){
     if(document)
       document.title = "InterAktiv ~ Add new data source"
-    console.log(this.context.router)
-    this.props.history.push('/migration/new')
+    this.props.history.push('/merge/new')
   }
 
   showModal(status){
@@ -114,7 +113,9 @@ class MigrationList extends React.Component {
                       <ul className="dropdown-menu">
                         <li><Link to={"/migration/fix-conflict/" + object.id}><i className={'fa fa-chain-broken'}></i> Fix Conflict</Link></li>
                         <li><Link to={"/migration/view/" + object.id}><i className={'fa fa-eye'}></i> View Success</Link></li>
-                        <li role="separator" className="divider"></li>
+                       <li><Link to={"/migration/success/account/" + object.id}><i className={'fa fa-eye'}></i> View Account</Link></li>
+                       <li><Link to={"/migration/success/opportunity/" + object.id}><i className={'fa fa-eye'}></i> View Opportunity</Link></li>
+                       <li role="separator" className="divider"></li>
                         <li><a href="#" onClick={this._queueMigration}>Queue Migration!</a></li>
                       </ul>
                       </div>

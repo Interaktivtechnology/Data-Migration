@@ -33,7 +33,11 @@ class MigrationConfig extends React.Component {
       cols : this.props.cols
     })
   }
+<<<<<<< HEAD
   componentWillReceiveProps(nextProps){
+=======
+  componentWillyReceiveProps(nextProps){
+>>>>>>> 1a65ace37574ee2affef950003a62caec76f9bfb
     this.setState({
       cols : nextProps.cols
     })
