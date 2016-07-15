@@ -26,7 +26,7 @@ class NavbarInstance extends Component{
         <Navbar fixedTop={false} fluid={true} inverse={true}>
           <Navbar.Header>
             <Navbar.Brand style={{margin: 10}}>
-              <Link to={"/"}><img className="main-logo" src={'http://interaktiv.sg/wp-content/uploads/2014/10/Logo-web2014-edit21.png'}/> {'Migration Tools'}</Link>
+              <Link to={"/"}><img className="main-logo" src={'//interaktiv.sg/wp-content/uploads/2014/10/Logo-web2014-edit21.png'}/> {'Migration Tools'}</Link>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
