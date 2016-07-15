@@ -131,7 +131,7 @@ td.tdata{
   vertical-align: top;
 }
 td{
-  font-size: 75%;
+  /*font-size: 75%;*/
 }
 .col25{
     width:25%;
