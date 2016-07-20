@@ -378,7 +378,7 @@ export default class DsConfig extends React.Component {
                     <td>{object.dsName}</td>
                     <td>{object.ds}</td>
                     <td>{object.uname}</td>
-                    <td>{object.password}</td>
+                    <td>*******</td>
                     <td>{object.created_date}</td>
                     <td>
                     <div className="btn-group">

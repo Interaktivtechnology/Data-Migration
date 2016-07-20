@@ -6,6 +6,9 @@ import {Router, browserHistory} from 'react-router'
 import {SF_REQUEST} from '../global'
 import moment from 'moment'
 
+const _FORM = {}
+const _META = [{fields : []}, {fields : []}]
+
 class MergeTable extends React.Component {
 
   constructor(props)
@@ -25,7 +28,9 @@ class MergeTable extends React.Component {
     if(this.props.currentState)
       this.setState(this.props.currentState)
     this.setState({
-      cols : this.props.cols
+      cols : this.props.cols,
+      meta : _META,
+      form : _FORM
     })
     $.ajax({
       url   : '/api/ds',
@@ -73,6 +78,7 @@ class MergeTable extends React.Component {
               meta : meta[key] ? meta : this.state.meta ,
               syncing : false
             })
+            Object.assign(_META, this.state.meta)
           }
           else
             this.setState({
@@ -135,7 +141,7 @@ class MergeTable extends React.Component {
     this.setState({
       form : form
     })
-
+    console.log(this.state.form)
   }
 
   _onChangeFieldSelectBox(component)
@@ -231,11 +237,11 @@ class MergeTable extends React.Component {
           {
             this.state.meta[0].fields.map((field, index) => {
               let cols = []
-
-              cols.push(<td key={10000}><input type="checkbox" value={field.fullName } data-key={'ds1'} onChange={this._checkboxChanged.bind(this)} /> {field.label ? field.label : field.fullName} <br />
+              let data = this.state.form[field.fullName]
+              cols.push(<td key={10000}><input type="checkbox" checked={ data ? data.source == 'ds1' : false} value={field.fullName } data-key={'ds1'} onChange={this._checkboxChanged.bind(this)} /> {field.label ? field.label : field.fullName} <br />
                 <strong>DataType :</strong> {field.type ? field.type : "default" }
               </td>)
-              cols.push(<td><input type="checkbox" name={'cols[1]' + field.fullName} data-key={'ds2'} onChange={this._checkboxChanged.bind(this)}  />
+              cols.push(<td><input type="checkbox" checked={ data ? data.source == 'ds2' : false} name={'cols[1]' + field.fullName} data-key={'ds2'} onChange={this._checkboxChanged.bind(this)}  />
               <select className="form-control" onChange={this._onChangeFieldSelectBox.bind(this)}>
                 <option></option>
                 {
@@ -292,30 +298,12 @@ export default class Migration extends React.Component {
 
   _save(){
     if(document){
-      var checkboxArray =  document.getElementsByTagName("input");
-      var checked = []
-      for(var i = 0; i < checkboxArray.length; i++){
-        if(checkboxArray[i].type == "checkbox" && checkboxArray[i].checked){
-          var textareaArray = document.getElementsByTagName("textarea")
-          var txtFormula = ''
-          for(var x = 0 ; x< textareaArray.length;x++)
-          {
-            if(textareaArray[x].name == checkboxArray[i].value)
-              txtFormula = textareaArray[x].value
-          }
-          checked[checkboxArray[i].value]  = {
-            source : checkboxArray[i].getAttribute('data-key'),
-            formula : txtFormula
-          }
-        }
-        console.log(checked)
-      }
       this.setState({
-        mergedColumn : checked,
+        //mergedColumn : checked,
         isConfirmPage : true,
         migrationTableState : this.refs.mergeTable.state
       })
-      console.log(this.state)
+      Object.assign(_FORM, this.refs.mergeTable.state.form)
     }
 
   }
@@ -349,12 +337,12 @@ export default class Migration extends React.Component {
         <h1>Global Merge Row Configuration</h1>
         <div className="col-md-4 col-md-offset-4 text-center" style={{marginTop: 20, marginBottom: 20}}>
           {this.state.isConfirmPage ?
-            <button onClick={() => this.setState({isConfirmPage : false})}
+            <button onClick={() => this.setState({isConfirmPage : false, mergeTableState : _FORM})}
             className="btn btn-warning btn-sm"><i className="fa fa-save"></i> Cancel</button> : '' }
           <button onClick={this._save.bind(this)} className="btn btn-primary btn-sm"><i className="fa fa-save"></i> Save</button>
         </div>
         <div className="clearfix"></div>
-        {this.state.isConfirmPage ? <MigrationConfirm mergedColumn={this.state.mergedColumn} /> :  this._renderTable()}
+        {this.state.isConfirmPage ? <MigrationConfirm mergedColumn={_FORM} dedupLogic={this.state.dedupLogic} mergeName={this.state.mergeName} /> :  this._renderTable()}
       </div>
     );
   }
@@ -374,22 +362,39 @@ class MigrationConfirm extends Component{
 
   render()
   {
-    return<div className="table-responsive">
-    <p>Please confirm this merge object</p>
-     <table className="table table-striped table-bordered">
-      <thead><tr><td>Merged Column</td><td>Formula</td></tr></thead>
-      <tbody>
-        {this.props.mergedColumn.map((object, key) => {
-          return <tr key={object.source + key}>
-          <td>{object.source}</td>
-          <td>{object.formula}</td>
-          </tr>
-        })}
-      </tbody>
-    </table>
+    let body = []
+    Object.keys(this.props.mergedColumn).forEach((key) => {
+      body.push(<tr key={key}>
+        <td>{key}</td>
+        <td>{this.props.mergedColumn[key].source}</td>
+        <td>{this.props.mergedColumn[key].formula}</td>
+      </tr>)
+    })
+    return<div className="row">
+      <p>Please confirm this merge object</p>
+      <div className="col-md-6">
+        <label>Merge Name</label>
+        <p>{this.props.mergeName}</p>
+      </div>
+      <div className="col-md-6">
+        <label>Deduplication Logic</label>
+        <p>{this.props.dedupLogic}</p>
+      </div>
+      <div className="clearfix"></div>
+      <div className="table-responsive">
+        <table className="table table-striped table-bordered">
+          <thead><tr><td>Merged Column</td><td>Source</td><td>Formula</td></tr></thead>
+          <tbody>
+            {body}
+          </tbody>
+        </table>
+      </div>
     </div>
   }
 }
 MigrationConfirm.propTypes = {
   mergedColumn : React.PropTypes.object
 }
+MigrationConfirm.defaultProps = {
+  mergedColumn: []
+};

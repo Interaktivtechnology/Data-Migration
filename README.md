@@ -60,6 +60,8 @@ It will create bundled js file in **public/javascripts/app.js**.
 * Migration
   * CRUD
   * Do Migration
+    * Result Item : Conflict, Success, Total DataSource1, Total DataSource2, Total
+    * All new record 
   * Unit Test Code
   * Fix Conflict
     * Unit Test

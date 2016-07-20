@@ -1,4 +1,5 @@
-var models = require('../sequelize/models')
+const models = require('../sequelize/models')
+const AWS = require('aws-sdk')
 import jsforce from 'jsforce'
 
 
@@ -32,4 +33,9 @@ export function describeObject(req, res, next)
 
       })
   })
+}
+
+export function saveGlobalMerge(req, res, next)
+{
+
 }

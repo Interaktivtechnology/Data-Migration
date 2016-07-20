@@ -6,8 +6,6 @@ import {Router, browserHistory, withRouter} from 'react-router'
 import faker from 'faker'
 import moment from 'moment'
 
-import meta from './sample-meta'
-import meta2 from './sample-meta2'
 
 class MigrationConfig extends React.Component {
 

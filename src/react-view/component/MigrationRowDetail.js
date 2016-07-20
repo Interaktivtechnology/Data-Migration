@@ -6,7 +6,7 @@ import {Router, browserHistory, withRouter} from 'react-router'
 import faker from 'faker'
 import moment from 'moment'
 import {ModalLoading} from '../common/Modal'
-//import MetaDataSample, {AccountExample}  from './sample-meta'
+import MetaDataSample, {AccountExample}  from './sample-meta'
 
 
 
@@ -18,7 +18,7 @@ class MigrationRowDetail extends React.Component {
     this.state = {
       jombotron : {display: 'block'},
       rowsMerged : [],
-      meta : MetaDataSample.fields,
+      //meta : MetaDataSample.fields,
       detailRow : [],
       mergeResult : {},
       showLoading : true
