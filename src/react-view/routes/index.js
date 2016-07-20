@@ -11,6 +11,7 @@ import MigrationRow from '../component/MigrationRow'
 import MigrationRowDetail from '../component/MigrationRowDetail'
 import OpportunityDetail from '../component/migration-opp-detail'
 import AccountDetail from '../component/migration-account-detail'
+import ContactDetail from '../component/migration-contact-detail'
 
 //import $ from 'jquery'
 
@@ -30,6 +31,7 @@ const rootRoute = <Route path='/' component={NavbarInstance} title={'Home'}>
       <Route path='/migration/fix-conflict/:id/merge' title="Row Merging" component={MigrationRowDetail} />
     </Route>
     <Route path='/migration/success/account/:id' title="Account Detail" component={AccountDetail} />
+    <Route path='/migration/success/contact/:id' title="Contact Detail" component={ContactDetail} />
     <Route path='/migration/success/opportunity/:id' title="Opportunity Detail" component={OpportunityDetail} />
   </Route>
 
