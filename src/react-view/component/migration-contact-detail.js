@@ -83,7 +83,7 @@ class ContactDetail extends React.Component {
     <div className="bPageTitle">
     <div className="ptBody">
     <div className="content">
-    <img className="pageTitleIcon" src={'http://free-121d5f44d20-121d603d1c5-121ee2b8103.force.com/img/icon/bank32.png'}/>
+    <img className="pageTitleIcon" src={'http://free-121d5f44d20-121d603d1c5-121ee2b8103.force.com/img/icon/profile32.png'}/>
     <h1 className="pageType">Contact</h1>
     <h2 className="pageDescription">{this.state.condet.Name}</h2>
     </div>
@@ -132,7 +132,7 @@ class ContactDetail extends React.Component {
              <td className="tlabel col25">SeniorPerson</td>
              <td className="tdata col25">{this.state.condet.SeniorPerson}&nbsp;</td>
              <td className="tlabel col25">LinkedIn</td>
-             <td className="tdata col25">{this.state.condet.LinkedIn__c}&nbsp;</td>
+             <td className="tdata col25"><a target="_blank" href={this.state.condet.LinkedIn__c}><img className="pageTitleIcon" src={'http://free-121d5f44d20-121d603d1c5-121ee2b8103.force.com/img/icon/hands24.png'}/></a>&nbsp;</td>
            </tr>
            <tr>
              <td className="tlabel col25">Lead Source</td>
@@ -207,13 +207,13 @@ class ContactDetail extends React.Component {
          <tbody>
          <tr>
            <td className="tlabel col25">Marketo</td>
-           <td className="tdata col25">{this.state.condet.Marketo}&nbsp;</td>
+           <td className="tdata col25"><input type="checkbox" disabled id="marketto" name="marketto" defaultChecked={this.state.condet.Marketto}/> &nbsp;</td>
            <td className="tlabel col25">Do not Call</td>
-           <td className="tdata col25">{this.state.condet.DoNotCall}&nbsp;</td>
+           <td className="tdata col25"><input type="checkbox" disabled id="donotcall" name="donotcall" defaultChecked={this.state.condet.DoNotCall}/>&nbsp;</td>
          </tr>
          <tr>
            <td className="tlabel col25">Email Opt Out</td>
-           <td className="tdata col75">{this.state.condet.HasOptedOutOfEmail}&nbsp;</td>
+           <td className="tdata col75"><input type="checkbox" disabled id="hoe" name="hoe" defaultChecked={this.state.condet.HasOptedOutOfEmail}/>&nbsp;</td>
          </tr>
          </tbody>
       </table>
