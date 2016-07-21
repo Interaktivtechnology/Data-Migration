@@ -200,3 +200,11 @@ td, th {
 #errors {
 	margin: 100px auto
 }
+
+.data-save-preview .title{
+  font-size: 16px
+}
+.data-save-preview label{
+  font-weight: 600;
+  font-size: 14px;
+}
