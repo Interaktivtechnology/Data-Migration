@@ -5,6 +5,7 @@ import ReactDOM, {render} from 'react-dom';
 import {Router, browserHistory} from 'react-router'
 import {SF_REQUEST} from '../global'
 import moment from 'moment'
+import jq from 'jquery'
 
 const _FORM = {}
 const _META = [{fields : []}, {fields : []}]
@@ -196,7 +197,6 @@ class MergeTable extends React.Component {
     this.setState({
       form : form
     })
-    console.log(form)
   }
 
   render () {
@@ -241,7 +241,7 @@ class MergeTable extends React.Component {
         var found = false
         for(var y =0; y < this.state.meta[0].fields.length; y++)
         {
-          if(this.state.meta[0].fields[y].fullName == this.state.meta[1].fields[x].fullName)
+          if(this.state.meta[0].fields[y].name == this.state.meta[1].fields[x].name)
             found = true
         }
         if(!found)
@@ -268,9 +268,9 @@ class MergeTable extends React.Component {
           {
             this.state.meta[0].fields.map((field, index) => {
               let cols = []
-              let data = this.state.form[field.fullName]
+              let data = this.state.form[field.name]
               cols.push(<td key={10000}><input type="checkbox" checked={ data ? data.source == 'ds1' : false}
-                  value={field.fullName} data-label={field.label} data-key={'ds1'} onChange={this._checkboxChanged.bind(this)} /> {field.label ? field.label : field.fullName} <br />
+                  value={field.name} data-label={field.label} data-key={'ds1'} onChange={this._checkboxChanged.bind(this)} /> {field.label ? field.label : field.fullName} <br />
                 <strong>DataType :</strong> {field.type ? field.type : "default" }
               </td>)
               cols.push(<td><input type="checkbox" checked={ data ? data.source == 'ds2' : false} name={'cols[1]' + field.fullName} data-key={'ds2'} data-label={field.label} onChange={this._checkboxChanged.bind(this)}  />
@@ -278,24 +278,24 @@ class MergeTable extends React.Component {
                 <option></option>
                 {
                     this.state.meta[1].fields.map((field2, index2) =>{
-                      return <option value={field2.fullName} selected={field2.fullName == field.fullName}>{field2.label ? field2.label : field2.fullName}</option>
+                      return <option value={field2.name} selected={field2.name == field.name}>{field2.label ? field2.label : field2.name}</option>
                     })
                 }
               </select>
               </td>)
-              return <tr key={field.fullName}>
+              return <tr key={field.name}>
                 {cols}
-                <td><textarea type="text" value={this.state.form.formula} name={field.fullName} className="form-control" onChange={this._formulaOnChange.bind(this)} placeholder="Regex or Formula"></textarea></td>
+                <td><textarea type="text" value={this.state.form[field.name] ? this.state.form[field.name].formula : ""} name={field.name} className="form-control" onChange={this._formulaOnChange.bind(this)} placeholder="Regex or Formula"></textarea></td>
               </tr>
             })
           }
           {
 
             unMappedData.map((field, index) => {
-              let data = this.state.form[field.fullName]
+              let data = this.state.form[field.name]
               return <tr>
                 <td></td>
-                <td><input type="checkbox" data-label={field.label} checked={ data ? data.source == 'ds2' : false} value={field.fullName} onChange={this._checkboxChanged.bind(this)} data-key={"ds2"}/> {field.label ? field.label : field.fullName} <br />
+                <td><input type="checkbox" data-label={field.label} checked={ data ? data.source == 'ds2' : false} value={field.name} onChange={this._checkboxChanged.bind(this)} data-key={"ds2"}/> {field.label ? field.label : field.name} <br />
                 <strong>Data Type</strong>: {field.type ? field.type : 'Default'}</td>
                 <td><textarea type="text" name={field.fullName} className="form-control" placeholder="Regex or Formula"></textarea></td>
               </tr>
@@ -317,6 +317,7 @@ export default class Migration extends React.Component {
   {
     super(props)
     this.state = {
+      errorView: <p></p>,
       cols : 2,
       mergeName : '',
       dedupLogic : '',
@@ -346,10 +347,73 @@ export default class Migration extends React.Component {
         Object.assign(_FORM, this.refs.mergeTable.state.form)
       }
       else{
-        
+
+        let errorView = <div className="alert alert-warning alert-dismissible" role="alert">
+                      <button type="button" className="close" onClick={() => this.setState({errorView : <p></p>})} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong>Saving Data Failed</strong> Please re-check your configuration.
+                    </div>
+        console.log(_FORM)
+        jq.ajax({
+          url : '/api/global-merge',
+          type: "POST",
+          data : this._transformToReadyForm(),
+          success : function(res){
+            if(res.ok)
+              this.props.router.push({pathname : '/migration'})
+          }.bind(this),
+          error :function (res){
+            var response = JSON.parse(res.responseText)
+            if(typeof response.message == 'object')
+              this.setState({
+                errorView : errorView
+              })
+          }.bind(this)
+        })
       }
     }
 
+  }
+
+  _transformToReadyForm(){
+    let config = {
+      mergeConfig : {
+        name : this.state.mergeName,
+        deduplicationLogic : this.state.dedupLogic,
+        MigrationDataSource : [],
+        MigrationDataSourceField : [{
+          fieldName : 'id',
+          mergedTo : 'id',
+          logic  : "Clear Some Space",
+          role : 'ds1'
+        },
+        {
+          fieldName : 'AccountNumber',
+          mergedTo : 'AccountNumber',
+          logic  : "//Clear Spaces",
+          role : 'ds1'
+        }]
+      }
+    }
+    for(let x = 0 ; x < this.state.dataSource.length; x ++)
+      config.mergeConfig.MigrationDataSource.push(
+        {
+          objectName : this.state.dataSource[x].objectName,
+          dataSourceId : this.state.dataSource[x].dataSourceId,
+          codeReferences : "ds" + (x + 1),
+          role : "RecordType.Name = 'client'"
+        }
+      )
+      Object.keys(_FORM).forEach((key) => {
+        config.mergeConfig.MigrationDataSourceField.push({
+          fieldName : key,
+          mergedTo : _FORM[key].mapTo ? _FORM[key].mapTo  : key,
+          logic  : _FORM[key].formula,
+          role : _FORM[key].source
+        })
+      })
+
+    console.log(config)
+    return config
   }
 
   _textOnChange(component){
@@ -379,11 +443,16 @@ export default class Migration extends React.Component {
     return (
       <div className="col-sm-12">
         <h1>Global Merge Row Configuration</h1>
+        {this.state.errorView}
         <div className="col-md-4 col-md-offset-4 text-center" style={{marginTop: 20, marginBottom: 20}}>
           {this.state.isConfirmPage ?
-            <button onClick={() => this.setState({isConfirmPage : false, mergeTableState : _FORM})}
-            className="btn btn-warning btn-sm"><i className="fa fa-save"></i> Cancel</button> : '' }
-          <button onClick={this._save.bind(this)} className="btn btn-primary btn-sm"><i className="fa fa-save"></i> Save</button>
+            <div>
+              <button onClick={() => this.setState({isConfirmPage : false, mergeTableState : _FORM})}
+                className="btn btn-warning btn-sm"><i className="fa fa-save"></i> Cancel</button>
+              <button onClick={this._save.bind(this)} className="btn btn-primary btn-sm"><i className="fa fa-save"></i> Save</button>
+            </div>
+             : <button onClick={this._save.bind(this)} className="btn btn-success btn-sm"><i className="fa fa-arrow-right"></i> Next</button> }
+
         </div>
         <div className="clearfix"></div>
         {this.state.isConfirmPage ? <MigrationConfirm dataSource={this.state.dataSource} mergedColumn={this.state.form} dedupLogic={this.state.dedupLogic} mergeName={this.state.mergeName} /> :  this._renderTable()}
@@ -411,7 +480,7 @@ class MigrationConfirm extends Component{
       body.push(<tr key={key}>
         <td>{this.props.mergedColumn[key].label ? this.props.mergedColumn[key].label : key}</td>
         <td>{this.props.mergedColumn[key].source == 'ds1' ? _DATASOURCE[0].dataSourceName : _DATASOURCE[1].dataSourceName}</td>
-        <td>{this.props.mergedColumn[key].source == 'ds1'? (this.props.mergedColumn[key].mapTo ? this.props.mergedColumn[key].mapTo : "New Field") : "Existing Field"}</td>
+        <td>{this.props.mergedColumn[key].source == 'ds1'? (this.props.mergedColumn[key].mapTo ? this.props.mergedColumn[key].mapTo : "New Field (If not exist in target)") : "Existing Field"}</td>
         <td>{this.props.mergedColumn[key].formula}</td>
       </tr>)
     })
@@ -444,7 +513,7 @@ class MigrationConfirm extends Component{
       <div className="clearfix"></div>
       <div className="table-responsive">
         <table className="table table-striped table-bordered">
-          <thead><tr><td>Merged Column</td><td>Picked Source</td><td>Map To</td><td>Formula</td></tr></thead>
+          <thead><tr><td>Filed Name</td><td>Master Source</td><td>Map To</td><td>Formula</td></tr></thead>
           <tbody>
             {body}
           </tbody>

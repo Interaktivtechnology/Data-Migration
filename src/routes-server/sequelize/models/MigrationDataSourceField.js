@@ -2,12 +2,6 @@
 
 module.exports = (sequelize, DataTypes) => {
   var model =  sequelize.define('MigrationDataSourceField', {
-    id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
-    },
     role : {
       type : DataTypes.STRING,
       allowNull: false,
@@ -24,11 +18,19 @@ module.exports = (sequelize, DataTypes) => {
     logic : {
       type : DataTypes.TEXT,
       allowNull : true
+    },
+    migrationId : {
+      type : DataTypes.INTEGER,
+      allowNull : false,
+      references: {
+        model: 'Migration',
+        key: 'id'
+      }
     }
   }, {
     tableName: 'MigrationDataSourceField'
   })
   var migrationDataSource = require('./MigrationDataSource')
-  model.belongsTo(migrationDataSource(sequelize, DataTypes),{ as: 'Current', foreignKey: 'migrationDataSourceId', constraints: true})
+  //model.belongsTo(migrationDataSource(sequelize, DataTypes),{ as: 'MigrationDataSourceField', foreignKey: 'migrationDataSourceId', constraints: true})
   return model
 }

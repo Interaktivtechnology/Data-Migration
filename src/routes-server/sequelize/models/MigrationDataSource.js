@@ -1,16 +1,11 @@
+"use strict";
 /* jshint indent: 2 */
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('MigrationDataSource', {
-    id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    migrationId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
+  let  MigrationDataSource = sequelize.define('MigrationDataSource', {
+    migrationId : {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
       references: {
         model: 'Migration',
         key: 'id'
@@ -39,5 +34,8 @@ module.exports = (sequelize, DataTypes) => {
   },
   {
     tableName: 'MigrationDataSource'
-  })
+  });
+  let dataField = require("./MigrationDataSourceField")
+  MigrationDataSource.hasMany(dataField(sequelize, DataTypes))
+  return MigrationDataSource
 }

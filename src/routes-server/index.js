@@ -4,7 +4,7 @@ var router = express.Router();
 var cache = require('express-redis-cache')();
 import bodyParser from 'body-parser'
 import {dsPost, dsGet, dsGetDetail, dsUpdate, dsDelete} from './controllers/datasource'
-import {describeObject} from './controllers/newMigration'
+import * as globalMerge from './controllers/migration'
 //MiddleWare for GET Req
 
 /* GET home page. */
@@ -35,7 +35,15 @@ const defaultFunc = (req, res, next) => {
 const env = process.env.NODE_ENV || 'development'
 var objectCache = cache.route({
     expire: 1800})
-router.get('/migration/describe-object/:id/:objectName', objectCache, describeObject)
+router.get('/migration/describe-object/:id/:objectName', objectCache, globalMerge.describeObject)
 
+
+/*
+  Global merge configuration
+*/
+
+router.get('/global-merge', globalMerge.list)
+router.post('/global-merge', globalMerge.create)
+router.put('/global-merge', globalMerge.create)
 
 module.exports = router;

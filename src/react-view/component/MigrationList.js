@@ -5,7 +5,7 @@ import ReactDOM, {render} from 'react-dom';
 import {Router, browserHistory, Link} from 'react-router'
 import faker from 'faker'
 import moment from 'moment'
-
+import jq from 'jquery'
 if (typeof Math != 'object'){
   let Math = {
     random : () => {
@@ -23,26 +23,29 @@ class MigrationList extends React.Component {
     super(props)
     this.state = {
       jombotron : {display: 'block'},
-      showModal : false
+      showModal : false,
+      rows : []
     }
     this.rows = []
   }
-  componentWillMount(){
-    for(var i=0;i< 3;i++)
-      this.rows.push({
-        id : faker.random.number(),
-        from : 'Swift',
-        to : 'Air Energi',
-        sobject : ['Account', 'Contact', 'Opportunity', 'Activity'][i%4],
-        type : ['Salesforce', 'MySQL'][i%2],
-        username : faker.internet.userName(),
-        result : {
-          conflict : Math.random() * 1000,
-          success : Math.random() * 1000,
-          complete : Math.random() * 100,
-        },
-        created_date : moment(faker.date.recent()).format("ddd, DD MMM YYYY HH:mm")
-      })
+  componentDidMount(){
+    jq.ajax({
+      url: '/api/global-merge',
+      data : {
+        _csrf : CSRF_TOKEN
+      },
+      type: 'GET',
+      success: function(response) {
+        this.setState({
+          rows : response.result
+        })
+      }.bind(this),
+      error : function(result)
+      {
+        //this.setState({errorView: errorView})
+      }.bind(this)
+    });
+
   }
 
   _addDataSource(){
@@ -61,16 +64,11 @@ class MigrationList extends React.Component {
 
 
   render() {
-    var thead = []
-    if(this.rows.length > 0)
-      for(var key in this.rows[0])
-        thead.push(
-          <th style={{textTransform : 'capitalize'}}>{key.replace(/_/ig, ' ')}</th>
-        )
+
 
     return this.props.children ? React.cloneElement(this.props.children) : (
       <div className="col-md-12">
-        <h1>Air Energi Migration</h1>
+        <h1>Global Merge Configuration</h1>
         {this.state.showModal ? <Modal handleHideModal={ () => this.showModal(false)} /> : null}
         <div className="row">
           <div className="col-md-4 col-md-offset-4 text-center" >
@@ -79,32 +77,35 @@ class MigrationList extends React.Component {
           </div>
         </div>
         <div className="col-md-12 table-responsive">
-          <table className="table table-bordered" style={{marginTop: 30}}>
+          <table className="table table-striped table-bordered" style={{marginTop: 30}}>
             <thead>
-            <tr >
-              {thead}
+            <tr>
+              <th>#</th>
+              <th>Type</th>
+              <th>Name</th>
+              <th>Deduplication Logic</th>
+              <th>Result</th>
+              <th>Status</th>
+              <th>Created At</th>
+              <th>Action</th>
             </tr>
             </thead>
             <tbody>
               {
-                this.rows.map((object, key) => {
+                this.state.rows.map((object, key) => {
                   return <tr key={key+1000}>
                     <td>{object.id}</td>
-                    <td>{object.from}</td>
-                    <td>{object.to}</td>
-                    <td>{object.sobject}</td>
-                    <td>{object.type}</td>
-                    <td>{object.username}</td>
+                    <td style={{textTransform:'capitalize'}}>{object.type}</td>
+                    <td>{object.name}</td>
+                    <td>{object.deduplicationLogic}</td>
                     <td>
-                      <p style={{color: 'red'}}>{object.result.conflict.toFixed(0)} Conflict</p>
-                      <p style={{color: 'green'}}>{object.result.success.toFixed(0)} Success</p>
-                      <div className="progress">
-                        <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow={object.result.conflict.toFixed(2)} aria-valuemin="0" aria-valuemax="100" style={{width: object.result.complete + "%"}}>
-                          {object.result.complete.toFixed(0)} %
-                        </div>
-                      </div>
+                      <p style={{color: 'red'}}>{object.conflictRow} Conflict</p>
+                      <p style={{color: 'green'}}>{object.successRow} Success</p>
+                      <p style={{color: 'aqua'}}>{object.importedRow} Existing</p>
+                      <p style={{color: 'aqua'}}>{object.newRow} New</p>
                     </td>
-                    <td>{object.created_date}</td>
+                    <td>{object.status}</td>
+                    <td>{moment(object.createdAt).format("ddd, DD-MMMM-YYYY hh:mm a")}</td>
                     <td>
                       <div className="btn-group">
                       <button type="button" className="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
