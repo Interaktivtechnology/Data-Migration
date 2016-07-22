@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import ReactDOM, {render} from 'react-dom';
 import {Router, browserHistory, Link} from 'react-router'
 import Modal from '../common/ModalConfirm'
+import * as helper from '../common/Helper'
 import moment from 'moment'
 import jq from 'jquery'
 
@@ -18,7 +19,8 @@ class MigrationList extends React.Component {
       jombotron : {display: 'block'},
       showModal : false,
       rows : [],
-      deletedObj : null
+      deletedObj : null,
+      errorView : <p></p>
     }
     this._delete = this._delete.bind(this)
     this._showModal = this._showModal.bind(this)
@@ -38,7 +40,14 @@ class MigrationList extends React.Component {
       }.bind(this),
       error : function(result)
       {
-        //this.setState({errorView: errorView})
+        this.setState(
+          {
+            errorView: helper.printErrorView("Unable to get the global merge configuration. Please retry. ",
+                      "warning", function(){
+                        this.setState({errorView:<p></p>})
+                      }.bind(this))
+          }
+        )
       }.bind(this)
     });
 
@@ -61,12 +70,34 @@ class MigrationList extends React.Component {
   _delete(deletedObj, callback)
   {
     let rows = this.state.rows
-    for(let x in rows)
-    {
-      if(rows[x] == deletedObj)
-        delete rows[x]
-    }
-    this.setState({rows : rows})
+    jq.ajax({
+      url: '/api/global-merge/' + deletedObj.id,
+      data : {
+        _csrf : CSRF_TOKEN
+      },
+      type: 'delete',
+      success: function(response) {
+        if(response.ok)
+        {
+          for(let x in rows){
+            if(rows[x] == deletedObj)
+              delete rows[x]
+          }
+          this.setState({rows : rows})
+        }
+      }.bind(this),
+      error : function(result)
+      {
+        this.setState(
+          {
+            errorView: helper.printErrorView("Unable to delete " + deletedObj.name + ". Please retry. ",
+                      "warning", function(){
+                        this.setState({errorView:<p></p>})
+                      }.bind(this))
+          }
+        )
+      }.bind(this)
+    });
     callback()
   }
 
