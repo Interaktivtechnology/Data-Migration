@@ -7,9 +7,9 @@ import {SF_REQUEST} from '../global'
 import moment from 'moment'
 import jq from 'jquery'
 import * as helper from "../common/Helper"
-const _FORM = {}
-const _META = [{fields : []}, {fields : []}]
-const _DATASOURCE = [{} , {}]
+let _FORM = {}
+let _META = [{fields : []}, {fields : []}]
+let _DATASOURCE = [{} , {}]
 
 class MergeTable extends React.Component {
 
@@ -352,8 +352,18 @@ class Migration extends React.Component {
           type: "POST",
           data : this._transformToReadyForm(),
           success : function(res){
-            if(res.ok)
-              this.props.router.push({pathname : '/migration'})
+            if(res.ok){
+              this.setState({
+                errorView : helper.printErrorView(res.message, 'danger', function(){
+                  this.setState({errorView: <p></p>})
+                }.bind(this))
+              })
+              setTimeout(() => this.props.router.push({pathname : '/migration'}), 3000)
+              _FORM = {}
+              _META = [{fields : []}, {fields : []}]
+              _DATASOURCE = [{} , {}]
+            }
+
           }.bind(this),
           error :function (res){
             var response = JSON.parse(res.responseText)

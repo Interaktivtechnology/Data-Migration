@@ -115,5 +115,28 @@ export function deleteObj(req, res, next)
   .catch((err) => {
     res.status(500).send({message: err, ok : false})
   })
+}
 
+export function updateStatus(req, res, next)
+{
+  models.Migration.findOne({
+    where : {
+      id : req.params.id
+    }
+  }).then((result) => {
+    
+    result.update({status : req.body.status}).then((update) => {
+      res.status(200).send({
+        message : "Deleted.",
+        ok : true,
+        result : update
+      })
+    }).catch((err) => {
+      console.log(err)
+      res.status(500).send({message: err, ok : false})
+    })
+  }).catch((err) => {
+    console.log(err)
+    res.status(500).send({message: "Object not found", ok : false})
+  })
 }

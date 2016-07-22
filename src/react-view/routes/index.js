@@ -24,7 +24,7 @@ const rootRoute = <Route path='/' component={NavbarInstance} title={'Home'}>
   <Route path='/ds-config' title="Data Source Configuration" component={DsConfig}></Route>
   <Route path='/migration' title="Migration List" component={MigrationList}>
     <Route path='/merge/new' title="New Migration" component={GlobalMergeSetting}></Route>
-    <Route path='/merge/edit' title="Edit Migration" component={GlobalMergeSetting}></Route>
+    <Route path='/merge/edit/:id' title="Edit Migration" component={GlobalMergeSetting}></Route>
     <Route path='/migration/view/:id' title="Migration Detail" component={MigrationRow} />
     <Route path='/migration/fix-conflict/:id' title="Fix Conflict" component={MigrationRow}>
       <Route path='/migration/fix-conflict/:id/merge' title="Row Merging" component={MigrationRowDetail} />

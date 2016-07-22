@@ -1,4 +1,4 @@
-
+import * as React from 'react'
 /*
   Printing error view to user
   message : React component or plain string, shown message

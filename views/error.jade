@@ -1,9 +1,10 @@
 extends layout
 
 block content
-  #errors
-    h1 OOOPPPPSSS... 
-      span Page not found
-    p We don't know how you end up here but you should go 
-      a(href="/", rel="") home 
-      span now.
+  .container-fluid
+    #errors.col-sm-6.col-sm-offset-3
+      h1 OOOPPPPSSS... 
+        span Page not found
+      p We don't know how you end up here but you should go 
+        a(href="/", rel="") home 
+        span now.

@@ -139,5 +139,29 @@ describe("API Controller", function(){
         })
       })
     })
+
+    it('Should update Global Merge Config', (done) => {
+      models.Migration
+      .findOne({
+        order : 'id DESC',
+        limit : 1
+      })
+      .then((ds) => {
+      agent
+        .put(url + '/api/global-merge/' + ds.id)
+        .send({
+          status : 'processing',
+          name : ds.name + ' (on process)'
+        })
+        .end((err, res) => {
+          if(err)
+            console.log(err)
+
+          res.body.ok.should.equal(true)
+          res.body.result.should.instanceOf(Object)
+          done()
+        })
+      })
+    })
   })
 })
