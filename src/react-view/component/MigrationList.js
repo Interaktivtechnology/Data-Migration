@@ -3,16 +3,9 @@
 import React, {Component} from 'react';
 import ReactDOM, {render} from 'react-dom';
 import {Router, browserHistory, Link} from 'react-router'
-import faker from 'faker'
+import Modal from '../common/ModalConfirm'
 import moment from 'moment'
 import jq from 'jquery'
-if (typeof Math != 'object'){
-  let Math = {
-    random : () => {
-      return faker.random.number()
-    }
-  }
-}
 
 
 
@@ -24,8 +17,11 @@ class MigrationList extends React.Component {
     this.state = {
       jombotron : {display: 'block'},
       showModal : false,
-      rows : []
+      rows : [],
+      deletedObj : null
     }
+    this._delete = this._delete.bind(this)
+    this._showModal = this._showModal.bind(this)
     this.rows = []
   }
   componentDidMount(){
@@ -54,22 +50,34 @@ class MigrationList extends React.Component {
     this.props.history.push('/merge/new')
   }
 
-  showModal(status){
-    this.setState({showModal: status})
+  _showModal(status, obj){
+    this.setState({showModal: status, deletedObj : obj})
   }
 
   _queueMigration(){
     alert("Migration has been queued. We'll inform you when it's done.")
   }
 
+  _delete(deletedObj, callback)
+  {
+    let rows = this.state.rows
+    for(let x in rows)
+    {
+      if(rows[x] == deletedObj)
+        delete rows[x]
+    }
+    this.setState({rows : rows})
+    callback()
+  }
+
 
   render() {
-
-
     return this.props.children ? React.cloneElement(this.props.children) : (
       <div className="col-md-12">
         <h1>Global Merge Configuration</h1>
-        {this.state.showModal ? <Modal handleHideModal={ () => this.showModal(false)} /> : null}
+        {this.state.showModal ? <Modal object={this.state.deletedObj} handleHideModal={ () => this._showModal(false)} yesCallback={this._delete} >
+          By clicking yes, "{this.state.deletedObj.name}" will be deleted. Are you sure to continue?
+        </Modal> : null}
         <div className="row">
           <div className="col-md-4 col-md-offset-4 text-center" >
             <button className="btn btn-primary" onClick={this._addDataSource.bind(this)}>
@@ -112,12 +120,11 @@ class MigrationList extends React.Component {
                         Action <span className="caret"></span>
                       </button>
                       <ul className="dropdown-menu">
-                        <li><Link to={"/migration/fix-conflict/" + object.id}><i className={'fa fa-chain-broken'}></i> Fix Conflict</Link></li>
-                        <li><Link to={"/migration/view/" + object.id}><i className={'fa fa-eye'}></i> View Success</Link></li>
-                       <li><Link to={"/migration/success/account/" + object.id}><i className={'fa fa-eye'}></i> View Account</Link></li>
-                       <li><Link to={"/migration/success/opportunity/" + object.id}><i className={'fa fa-eye'}></i> View Opportunity</Link></li>
-                       <li role="separator" className="divider"></li>
-                        <li><a href="#" onClick={this._queueMigration}>Queue Migration!</a></li>
+                        <li className={object.status == 'draft' ? 'hidden' : 'shown'}><Link to={"/migration/fix-conflict/" + object.id}><i className={'fa fa-chain-broken'}></i> Fix Conflict</Link></li>
+                        <li className={object.status == 'draft' ? 'shown' : 'hidden'}><Link to={"/merge/edit/" + object.id}><i className={'fa fa-pencil'}></i> Edit Config</Link></li>
+                        <li className={object.status == 'draft' ? 'hidden' : 'shown'}><Link to={"/migration/view/" + object.id}><i className={'fa fa-eye'}></i> View Rows</Link></li>
+                        <li className={object.status == 'draft' ? 'hidden' : 'shown'}><a href="#" onClick={this._queueMigration}> <i className="fa fa-chain" ></i>Do Merge</a></li>
+                        <li className={object.status == 'draft' ? 'shown' : 'hidden'}><a href="#" onClick={(e) => {e.preventDefault(); this._showModal(true, object)}}> <i className="fa fa-trash" ></i> Delete Merge Config</a></li>
                       </ul>
                       </div>
                     </td>

@@ -17,7 +17,6 @@ body .bPageTitle .ptBody .pageDescription { font-size: 120%; font-weight: normal
 img { border: 0px; }
 .pageTitleIcon { display: inline; float: left; width: 32px; margin-right: 5px; }
 
-h1 { font-family: Verdana, Geneva, sans-serif; font-size: 100%; margin: 0px; display: inline; }
 .bPageTitle h1 { display: block; }
 .bPageTitle .ptBody .pageType { font-size: 91%; }
 
@@ -68,10 +67,7 @@ body .bPageBlock .pbTitle h2 { color: #000; font-size: 1.3em; }
   padding: 5px 0;
 }
 
-h1,h2,h3,h4,h5,h6{
-  font-size: 100%;
-  font-weight: bold;
-}
+
 .subtitle{
 	color : #888
 }
@@ -207,4 +203,10 @@ td, th {
 .data-save-preview label{
   font-weight: 600;
   font-size: 14px;
+}
+.hidden {
+  display:  none !important;
+}
+.shown : {
+  display: block !important;
 }

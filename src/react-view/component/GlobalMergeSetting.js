@@ -2,11 +2,11 @@
 
 import React, {Component} from 'react';
 import ReactDOM, {render} from 'react-dom';
-import {Router, browserHistory} from 'react-router'
+import {Router, browserHistory, withRouter} from 'react-router'
 import {SF_REQUEST} from '../global'
 import moment from 'moment'
 import jq from 'jquery'
-
+import * as helper from "../common/Helper"
 const _FORM = {}
 const _META = [{fields : []}, {fields : []}]
 const _DATASOURCE = [{} , {}]
@@ -311,7 +311,7 @@ class MergeTable extends React.Component {
 
 
 
-export default class Migration extends React.Component {
+class Migration extends React.Component {
 
   constructor(props)
   {
@@ -347,12 +347,6 @@ export default class Migration extends React.Component {
         Object.assign(_FORM, this.refs.mergeTable.state.form)
       }
       else{
-
-        let errorView = <div className="alert alert-warning alert-dismissible" role="alert">
-                      <button type="button" className="close" onClick={() => this.setState({errorView : <p></p>})} aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <strong>Saving Data Failed</strong> Please re-check your configuration.
-                    </div>
-        console.log(_FORM)
         jq.ajax({
           url : '/api/global-merge',
           type: "POST",
@@ -365,7 +359,9 @@ export default class Migration extends React.Component {
             var response = JSON.parse(res.responseText)
             if(typeof response.message == 'object')
               this.setState({
-                errorView : errorView
+                errorView : helper.printErrorView(response.message, 'danger', function(){
+                  this.setState({errorView: <p></p>})
+                }.bind(this))
               })
           }.bind(this)
         })
@@ -411,8 +407,6 @@ export default class Migration extends React.Component {
           role : _FORM[key].source
         })
       })
-
-    console.log(config)
     return config
   }
 
@@ -461,6 +455,7 @@ export default class Migration extends React.Component {
   }
 }
 
+export default withRouter(Migration)
 
 
 

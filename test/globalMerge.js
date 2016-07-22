@@ -43,7 +43,7 @@ describe("API Controller", function(){
   })
 
   //Data Source
-  describe('#DataSource', () => {
+  describe('Global Merge Config', () => {
     this.timeout(10000);
     it('Should allow to use API', () => {
       agent
@@ -121,5 +121,23 @@ describe("API Controller", function(){
 
     })
 
+    it('Should delete Global Merge Config', (done) => {
+      models.Migration
+      .findOne({
+        order : 'id DESC',
+        limit : 1
+      })
+      .then((ds) => {
+      agent
+        .delete(url + '/api/global-merge/' + ds.id)
+        .end((err, res) => {
+          if(err)
+            console.log(err)
+
+          res.body.ok.should.equal(true)
+          done()
+        })
+      })
+    })
   })
 })
