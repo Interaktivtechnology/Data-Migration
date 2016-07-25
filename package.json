@@ -4,6 +4,7 @@
   "description": "Data Migration for Salesforce with built in View using ReactJS as V and NodeJS as server",
   "main": "index.js",
   "dependencies": {
+    "asyncawait": "^1.0.6",
     "aws-sdk": "^2.4.7",
     "babel-preset-react": "^6.5.0",
     "body-parser": "~1.13.2",

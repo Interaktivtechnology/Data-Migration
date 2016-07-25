@@ -3,8 +3,8 @@ var config = {
     "password": process.env.SwiftDbPass,
     "database": process.env.SwiftDbName,
     "host": process.env.SwiftDbHost,
-    "dialect": "mysql"
-
+    "dialect": "mysql",
+    logging: false,
 }
 
 module.exports = config
