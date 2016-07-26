@@ -34,22 +34,27 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    successRow: {
+    merged: {
       type: DataTypes.BIGINT,
       allowNull: true,
       defaultValue : 0
     },
-    conflictRow: {
+    conflict: {
       type: DataTypes.BIGINT,
       allowNull: true,
       defaultValue : 0
     },
-    importedRow: {
+    existing: {
       type : DataTypes.INTEGER,
       allowNull : false,
       defaultValue: 0
     },
-    newRow : {
+    new: {
+      type : DataTypes.INTEGER,
+      allowNull : false,
+      defaultValue: 0
+    },
+    status : {
       type : DataTypes.INTEGER,
       allowNull : false,
       defaultValue: 0

@@ -174,10 +174,10 @@ class MigrationList extends React.Component {
                     <td>{object.name}</td>
                     <td>{object.deduplicationLogic}</td>
                     <td>
-                      <p style={{color: 'red'}}>{object.conflictRow} Conflict</p>
-                      <p style={{color: 'green'}}>{object.successRow} Success</p>
-                      <p style={{color: 'aqua'}}>{object.importedRow} Existing</p>
-                      <p style={{color: 'aqua'}}>{object.newRow} New</p>
+                      <p style={{color: 'red'}}>{object.conflict} Conflict</p>
+                      <p style={{color: 'green'}}>{object.merged} Merged</p>
+                      <p style={{color: '#222'}}>{object.existing} Existing</p>
+                      <p style={{color: '#666'}}>{object.new} New</p>
                     </td>
                     <td>{object.status}</td>
                     <td>{moment(object.createdAt).format("ddd, DD-MMMM-YYYY hh:mm a")}</td>

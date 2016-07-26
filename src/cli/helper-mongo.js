@@ -23,21 +23,29 @@ function insertToDb(tableName, items, callback)
     let collection = db.collection(tableName)
     for(let x in items){
       items[x]._id = items[x].Id
-      collection.find({id: items[x].Id}).limit(1).size()
+      collection.findOne({_id : items[x].Id}, (err, result) => {
+        if(err) console.log(err)
+        else
+        {
+          if(result == null){
+            console.log(result, 31)
+            collection.insert(items[x], (err, returnedData) => {
+
+            })
+          }
+        }
+      })
     }
-    collection.insert(items, (err, result) => {
-      if(err) console.log(err)
-      if(typeof callback == "function")
-        callback(result)
-    })
   })
 }
 
-function checkIfExists(tableName, args:array)
-{
-  
-}
 
+function MergeData(tableName1, tableName2)
+{
+  MongoClient.connect(url, function(err, db) {
+
+  })
+}
 
 module.exports = {
   endProcess : (err) =>{
