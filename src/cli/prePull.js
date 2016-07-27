@@ -132,7 +132,7 @@ function getAllData(objectName, id, tableName, filter ){
       soql += returnVal.fields[x].name + ", "
     soql = soql.substring(0, soql.length - 2)
     soql += ` FROM ${objectName} ${filter ? " WHERE " + filter : ''} Order By LastModifiedDate DESC LIMIT ${ARGS[1]} OFFSET ${ARGS[2]} `
-    console.log(`Executing : LIMIT ${ARGS[1]} OFFSET ${ARGS[2]} `)
+    console.log(`Executing : LIMIT ${ARGS[1]} ${ARGS[2] == 0 ? '' : ' OFFSET ' + ARGS[2]} `)
     console.log(soql)
     SF_CONN[id].query(soql, (err, sobject) =>{
       if(err) {
