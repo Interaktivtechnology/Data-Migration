@@ -43,8 +43,10 @@ router.get('/migration/describe-object/:id/:objectName', objectCache, globalMerg
 */
 
 router.get('/global-merge', globalMerge.list)
+router.get('/global-merge/:id', globalMerge.listOne)
 router.post('/global-merge', globalMerge.create)
 router.put('/global-merge/:id', globalMerge.updateStatus)
 router.delete('/global-merge/:id', globalMerge.deleteObj)
 
+router.get('/global-merge/merged/:id/:page', globalMerge.listMerged)
 module.exports = router;

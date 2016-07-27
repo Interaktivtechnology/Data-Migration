@@ -189,7 +189,7 @@ class MigrationList extends React.Component {
                       <ul className="dropdown-menu">
                         <li className={object.status == 'draft' ? 'hidden' : 'shown'}><Link to={"/migration/fix-conflict/" + object.id}><i className={'fa fa-chain-broken'}></i> Fix Conflict</Link></li>
                         <li className={object.status == 'draft' ? 'shown' : 'hidden'}><Link to={"/merge/edit/" + object.id}><i className={'fa fa-pencil'}></i> Edit Config</Link></li>
-                        <li className={object.status == 'draft' ? 'hidden' : 'shown'}><Link to={"/migration/view/" + object.id}><i className={'fa fa-eye'}></i> View Rows</Link></li>
+                        <li className={object.status == 'draft' ? 'hidden' : 'shown'}><Link to={"/merge/view/" + object.id}><i className={'fa fa-eye'}></i> View Rows</Link></li>
                         <li className={object.status == 'draft' ? 'shown' : 'hidden'}><a href="#" onClick={(e) => { e.preventDefault(); this._queueMigration(object) }}> <i className="fa fa-chain" ></i> Do Merge</a></li>
                         <li className={object.status == 'draft' ? 'shown' : 'hidden'}><a href="#" onClick={(e) => {e.preventDefault(); this._showModal(true, object)}}> <i className="fa fa-trash" ></i> Delete Merge Config</a></li>
                       </ul>

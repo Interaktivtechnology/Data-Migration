@@ -1,7 +1,8 @@
 const models = require('../sequelize/models')
+const mysql = require('mysql')
 const AWS = require('aws-sdk')
 import jsforce from 'jsforce'
-
+const {mongodb, mysqldb} = require('../sequelize/config/mongo')
 
 export function describeObject(req, res, next)
 {
@@ -97,6 +98,18 @@ export function list(req, res, next)
     res.status(500).send({message: err, ok : false})
   })
 }
+export function listOne(req, res, next)
+{
+  models.Migration.findOne({
+    where : {
+      id : req.params.id
+    }
+  }).then((result) => {
+    res.status(200).send({message : "Listed", ok : true, result : result})
+  }).catch((err) => {
+    res.status(500).send({message: err, ok : false})
+  })
+}
 
 export function deleteObj(req, res, next)
 {
@@ -124,7 +137,7 @@ export function updateStatus(req, res, next)
       id : req.params.id
     }
   }).then((result) => {
-    
+
     result.update({status : req.body.status}).then((update) => {
       res.status(200).send({
         message : "Deleted.",
@@ -138,5 +151,20 @@ export function updateStatus(req, res, next)
   }).catch((err) => {
     console.log(err)
     res.status(500).send({message: "Object not found", ok : false})
+  })
+}
+
+export function listMerged(req, res, next)
+{
+  mongodb.open((err, db) => {
+    let dm = db.collection(`dm_${req.params.id}_merged`)
+    dm.find().skip(req.params.page ? req.params.page * 20 : 0 ).limit(20).toArray((err, result) => {
+      let response = {message : "Data migration listed.", ok: true, result : result, pageSize : ''}
+      dm.count((err, pageSize) => {
+        response.pageSize = Math.round(pageSize / 20)
+        res.status(200).send(response)
+        //mongodb.close()
+      })
+    })
   })
 }

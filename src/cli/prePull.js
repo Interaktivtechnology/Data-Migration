@@ -68,7 +68,8 @@ let getDataSource = (migration) =>{
         objectName : mysql_rows[i].objectName,
         passwordToken : mysql_rows[i].password + mysql_rows[i].token,
         loginUrl : JSON.parse(mysql_rows[i].additionalSetting).mode == "prod" ? "https://login.salesforce.com" : "https://test.salesforce.com",
-        migration : migration
+        migration : migration,
+        filter : mysql_rows[i].role
       }
       getFieldList(migration,  (fieldList) => {
         defineSalesforceConnection(config, mysql_rows[i].name, fieldList)
@@ -116,7 +117,7 @@ function defineSalesforceConnection(config, id, fieldList){
         })
         helper.createTable(`dm_${config.migration.id}_${id}_${config.objectName}`, (data) => {
           console.log(`Table Created dm_${config.migration.id}_${id}_${config.objectName}`, 114);
-          getAllData(config.objectName, id, `dm_${config.migration.id}_${id}_${config.objectName}`)
+          getAllData(config.objectName, id, `dm_${config.migration.id}_${id}_${config.objectName}`, config.filter)
         })
 
       })
@@ -124,14 +125,15 @@ function defineSalesforceConnection(config, id, fieldList){
     FIELD_LIST = fieldList
   })
 }
-function getAllData(objectName, id, tableName ){
+function getAllData(objectName, id, tableName, filter ){
   SF_CONN[id].sobject(objectName).describe((err, returnVal) => {
     let soql = "SELECT "
     for(let x = 0 ; x < returnVal.fields.length; x ++)
       soql += returnVal.fields[x].name + ", "
     soql = soql.substring(0, soql.length - 2)
-    soql += ` FROM ${objectName} Order By LastModifiedDate DESC LIMIT ${ARGS[1]} OFFSET ${ARGS[2]} `
+    soql += ` FROM ${objectName} ${filter ? " WHERE " + filter : ''} Order By LastModifiedDate DESC LIMIT ${ARGS[1]} OFFSET ${ARGS[2]} `
     console.log(`Executing : LIMIT ${ARGS[1]} OFFSET ${ARGS[2]} `)
+    console.log(soql)
     SF_CONN[id].query(soql, (err, sobject) =>{
       if(err) {
         console.log(err)

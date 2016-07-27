@@ -163,5 +163,26 @@ describe("API Controller", function(){
         })
       })
     })
+
+    it('List 20 merged items record from mongodb ', (done) => {
+      models.Migration
+      .findOne({
+        order : 'id DESC',
+        limit : 1
+      })
+      .then((ds) => {
+      agent
+        .get(url + '/api/global-merge/merged/' + ds.id)
+        .send()
+        .end((err, res) => {
+          if(err)
+            console.log(err)
+
+          res.body.ok.should.equal(true)
+          res.body.result.should.instanceOf(Object)
+          done()
+        })
+      })
+    })
   })
 })
