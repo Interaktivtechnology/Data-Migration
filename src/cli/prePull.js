@@ -141,10 +141,10 @@ function getAllData(objectName, id, tableName, filter ){
       }
       else
       {
-        console.log("Insert to mongodb", 138)
+        console.log("Insert to mongodb... ")
         console.log("Total Length : " + sobject.records.length);
-        helper.insertToDb(tableName, sobject.records, (data) => {
-          //console.log(data)
+        helper.insertToDb(tableName, sobject.records, (iterator) => {
+          if(iterator == sobject.records.length) process.exit()
         })
       }
     })

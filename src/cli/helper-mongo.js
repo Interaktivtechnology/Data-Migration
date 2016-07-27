@@ -23,17 +23,8 @@ function insertToDb(tableName, items, callback)
     let collection = db.collection(tableName)
     for(let x in items){
       items[x]._id = items[x].Id
-      collection.findOne({_id : items[x].Id}, (err, result) => {
-        if(err) console.log(err)
-        else
-        {
-          if(result == null){
-            console.log(result, 31)
-            collection.insert(items[x], (err, returnedData) => {
-
-            })
-          }
-        }
+      collection.insert(items[x], (err, returnedData) => {
+        callback(x)
       })
     }
   })
