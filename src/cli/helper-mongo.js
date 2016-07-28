@@ -42,10 +42,14 @@ function getLastModifiedDate(tableName, callback)
     collection.count().then((count) => {
       collection.find({}).limit(1).skip(count - 1)
       .toArray((err, result) => {
-        db.close()
+        if(err) {
+          callback("01/01/1970t00:00:00.000z")
+          return
+        }
         if(result.length > 0)
         {
           console.log(result[0].LastModifiedDate)
+          db.close()
           callback(result[0].LastModifiedDate)
         }
         else callback("01/01/1970t00:00:00.000z")
