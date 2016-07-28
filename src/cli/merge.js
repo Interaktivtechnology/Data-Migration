@@ -82,6 +82,7 @@ function compare(ds1, ds2, mergeCollection, config)
     newData._id = newData.Id = ds2[y].Id
     newData.status = "Existing"
     newData.attributes = ds2[y].attributes
+    newData['Owner'] = ds2[y].Owner
     newData.OldData = {
       ds2 : ds2[y]
     }
@@ -99,6 +100,7 @@ function compare(ds1, ds2, mergeCollection, config)
     newData.OldData = {
       ds1 : ds1[x]
     }
+    newData['Owner'] = ds1[x].Owner
     unMergedData[ds1[x].Id] = newData
 
   }
@@ -120,6 +122,7 @@ function compare(ds1, ds2, mergeCollection, config)
         newData.status = "merged"
         newData.RefId = ds1[x].Id
         newData.attributes = ds2[y].attributes
+        newData.Owner = ds2[y].Owner
         config['ds1'].fields.map((object, key) => {
           newData[object.fieldName] = ds1[x][object.fieldName]
         })
