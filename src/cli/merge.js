@@ -29,6 +29,10 @@ db.open((err, mongodb) => {
                   "Where m.status = 'processing' Order By m.updatedAt LIMIT 2 ", (err, result) => {
                     if(err) console.log(err)
     let config = {}
+    if(result.length == 0){
+      console.log("No merging found..");
+      process.exit()
+    }
     for(let x in result)
     {
       config[`${result[x].codeReferences}`] = {
@@ -41,7 +45,8 @@ db.open((err, mongodb) => {
       }
     }
 
-    getField(result[0].migrationId, config, (newConfig) => {
+
+    getField(config.ds1.migrationId, config, (newConfig) => {
       let collectionName = config['ds1'].tableName.split('_');
       db.createCollection(`${collectionName[0]}_${collectionName[1]}_merged`, (err, collection) => {
 
@@ -76,6 +81,10 @@ function compare(ds1, ds2, mergeCollection, config)
     let newData = HandleUnMergeObject(config, ds2[y])
     newData._id = newData.Id = ds2[y].Id
     newData.status = "Existing"
+    newData.attributes = ds2[y].attributes
+    newData.OldData = {
+      ds2 : ds2[y]
+    }
     unMergedData[ds2[y].Id] = newData
   }
 
@@ -86,11 +95,17 @@ function compare(ds1, ds2, mergeCollection, config)
     let newData = HandleUnMergeObject(config, ds1[x])
     newData.RefId = ds1[x].Id
     newData.status = "New"
+    newData.attributes = ds1[x].attributes
+    newData.OldData = {
+      ds1 : ds1[x]
+    }
     unMergedData[ds1[x].Id] = newData
+
   }
 
   //Detect the merge
   report.merged  = 0
+  console.log("Merging...")
   for(let y in ds2){
     for(let x in ds1){
       if(ClearAllWhiteSpace(ds1[x].Name) == ClearAllWhiteSpace(ds2[y].Name))
@@ -103,16 +118,22 @@ function compare(ds1, ds2, mergeCollection, config)
         newData.Id = ds2[y].Id
         newData._id = ds2[y].Id
         newData.status = "merged"
-        newData.oldId = ds1[x].Id
+        newData.RefId = ds1[x].Id
+        newData.attributes = ds2[y].attributes
         config['ds1'].fields.map((object, key) => {
           newData[object.fieldName] = ds1[x][object.fieldName]
         })
         config['ds2'].fields.map((object, key) => {
           newData[object.fieldName] = ds2[y][object.fieldName]
         })
+        newData.OldData = {
+          ds1 : ds1[x],
+          ds2 : ds2[y]
+        }
         mergedData[newData.Id] = newData
+
         delete unMergedData[newData.Id]
-        delete unMergedData[newData.oldId]
+        delete unMergedData[newData.RefId]
         report.merged ++
       }
     }
@@ -121,14 +142,18 @@ function compare(ds1, ds2, mergeCollection, config)
   report.unMergedData = Object.keys(unMergedData).length
   report.new = ds1.length - report.merged
   report.existing = ds2.length - report.merged
+
   memoryUsage = process.memoryUsage()
-  memoryUsage = (memoryUsage.rss + memoryUsage.heapTotal + memoryUsage.heapUsed)/(1024*1024)
+
   Object.assign(mergedData, unMergedData)
+  unMergedData = null
+
   let i = 0
   for(let z in mergedData)
   {
     mergeCollection.insert(mergedData[z], (err, result) => {
       if(Object.keys(mergedData).length - 1 == i ){
+        memoryUsage = (memoryUsage.rss + memoryUsage.heapTotal + memoryUsage.heapUsed)/(1024*1024)
         let sql = "UPDATE Migration SET ? Where Id = '" + config.ds1.migrationId+ "'"
         let params = {
           status : 'done',
@@ -186,3 +211,6 @@ function getField(migrationId, config, callback){
       callback(fieldConfig)
   })
 }
+
+//Automatically stopped after 1 minute
+setTimeout( () => process.exit(), 60 * 1000)

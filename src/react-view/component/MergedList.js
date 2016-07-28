@@ -9,13 +9,14 @@ import * as helper from '../common/Helper'
 
 
 class MergedTable extends React.Component {
+
+
   render () {
     let warning = this.props.rows.length == 0 ?
     <td colSpan={6}><h3>No records found.</h3></td> : ''
     return (
       <div className="table-responsive">
-
-        <table className="table table-striped table-bordered table-condensed">
+        <table className="table table-striped table-bordered table-condensed" ref={'table'}>
           <thead>
             <tr>
               <th>#</th>
@@ -31,14 +32,14 @@ class MergedTable extends React.Component {
             {
               this.props.rows.map((object, key) => {
                 return <tr key={key+2000}>
-                <td><a target="_blank" href={`https://login.salesforce.com/${object.OldId ? object.OldId : object.Id}`}>{object.OldId ? object.OldId : object.Id}</a></td>
-                <td>{object.Name}</td>
-                <td>{object.status}</td>
-                <td>{object.OwnerId}</td>
-                <td>{moment(object.CreatedDate).format("ddd, DD/MM/YYYY hh:mm a")}</td>
-                <td><Link to={"/merge/view/detail/" + object._id}>
-                  <button type="button" className="btn btn-success btn-sm"> <i className="fa fa-eye"></i> View Detail</button>
-                </Link></td>
+                  <td><a target="_blank" href={`https://login.salesforce.com/${object.RefId ? object.RefId : object.Id}`}>{object.RefId ? object.RefId : object.Id}</a></td>
+                  <td>{object.Name}</td>
+                  <td>{object.status}</td>
+                  <td>{object.OwnerId}</td>
+                  <td>{moment(object.CreatedDate).format("ddd, DD/MM/YYYY hh:mm a")}</td>
+                  <td><Link onClick={(component) => console.log("test")} to={`/merge/view/${object.attributes ? object.attributes.type : 'generic'}/${this.props.migrationId}/${object._id}`}>
+                    <button type="button" className="btn btn-success btn-sm"> <i className="fa fa-eye"></i> View Detail</button></Link>
+                  </td>
                 </tr>
               })
             }
@@ -147,7 +148,7 @@ class MergedList extends React.Component {
 
   render() {
     let {id} = this.props.params
-    return (
+    return this.props.children || (
       <div className="col-md-12">
         <h2>Merged List : {id}</h2>
         {this.state.errorView}
@@ -156,30 +157,30 @@ class MergedList extends React.Component {
 
         <div className="row" style={{marginBottom: 20}}>
           <div className="col-md-12">
-            <h4>Migration Detail</h4>
+            <h4>Merge Configuration Detail</h4>
             <hr />
           </div>
         </div>
         <div className="row">
           <div className="col-md-6 col-sm-6">
             <div className="form-group">
-              <label className="col-md-5 col-sm-6">Name</label>
+              <label className="col-md-5 col-sm-5">Name</label>
               <span className="col-md-1 col-sm-1 col-xs-hidden">:</span>
-              <p className="col-md-6 col-sm-6">{this.state.migrationObj.name} </p>
+              <p className="col-md-5 col-sm-5">{this.state.migrationObj.name} </p>
             </div>
             <div className="form-group">
-              <label className="col-md-5 col-sm-6">Deduplication Logic</label>
+              <label className="col-md-5 col-sm-5">Deduplication Logic</label>
               <span className="col-md-1 col-sm-1 col-xs-hidden">:</span>
-              <p className="col-md-6 col-sm-6">{this.state.migrationObj.deduplicationLogic} </p>
+              <p className="col-md-5 col-sm-5">{this.state.migrationObj.deduplicationLogic} </p>
             </div>
             <div className="form-group">
-              <label className="col-md-5">Created Date</label>
-              <span className="col-md-1 hidden-sm hidden-xs">:</span>
+              <label className="col-md-5 col-sm-5">Created Date</label>
+              <span className="col-md-1 col-sm-1 hidden-xs">:</span>
               <p className="col-md-5 col-sm-5">{moment(this.state.migrationObj.createdAt).format("ddd, DD-MMMM-YYYY hh:mm a")}</p>
             </div>
             <div className="form-group">
-              <label className="col-md-5">Last Modified Date</label>
-              <span className="col-md-1 hidden-sm hidden-xs">:</span>
+              <label className="col-md-5 col-sm-5">Last Modified Date</label>
+              <span className="col-md-1 col-sm-1 hidden-xs">:</span>
               <p className="col-md-5 col-sm-5">{moment(this.state.migrationObj.updatedAt).format("ddd, DD-MMMM-YYYY hh:mm a")}</p>
             </div>
           </div>
@@ -205,8 +206,8 @@ class MergedList extends React.Component {
               <p className="col-md-5 col-sm-5">{this.state.migrationObj.new}</p>
             </div>
             <div className="form-group">
-              <label className="col-md-5">Status</label>
-              <span className="col-md-1 hidden-sm hidden-xs">:</span>
+              <label className="col-md-5 col-sm-5">Status</label>
+              <span className="col-md-1 col-sm-1 hidden-xs">:</span>
               <p className="col-md-5 col-sm-5" style={{textTransform: 'capitalize'}}>{this.state.migrationObj.status}</p>
             </div>
 
@@ -214,10 +215,12 @@ class MergedList extends React.Component {
         </div>
         <div className="row">
           <div className="col-md-12">
-            {this.props.children || (<div>
+            <div>
               <h4>Merged Row</h4>
               <hr />
-             <MergedTable rows={this.state.rows} page={this.state.page} pageSize={this.state.pageSize} next={this._next.bind(this)} /> </div>)}
+              <MergedTable rows={this.state.rows} migrationId={this.props.params.id} page={this.state.page} pageSize={this.state.pageSize} next={this._next.bind(this)} >
+              </MergedTable>
+            </div>
 
           </div>
         </div>

@@ -49,4 +49,6 @@ router.put('/global-merge/:id', globalMerge.updateStatus)
 router.delete('/global-merge/:id', globalMerge.deleteObj)
 
 router.get('/global-merge/merged/:id/:page', globalMerge.listMerged)
+router.get('/global-merge/merged/detail/:migrationId/:objectId', globalMerge.detailMerged)
+router.put('/global-merge/merged/detail/:migrationId/:objectId', globalMerge.detailMerged)
 module.exports = router;
