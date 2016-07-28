@@ -176,12 +176,18 @@ export function detailMerged(req, res, next)
     let dm = db.collection(`dm_${req.params.migrationId}_merged`)
     console.log(req.params)
     dm.find({_id : req.params.objectId.length == 18 ? req.params.objectId :  ObjectId(req.params.objectId) }).limit(1).toArray((err, result) => {
-      if(err)
+      if(err){
+        db.close()
         res.status(500).send({message: "Error Occured.", ok : false, err : JSON.stringify(err, null, 2)})
+      }
+
 
       if(result && result.length > 0){
-        if(req.method == 'GET')
+        if(req.method == 'GET'){
           res.status(200).send({message : "Detail showed.", ok: true, result : result[0], pageSize : ''})
+          db.close()
+        }
+
         else if(req.method == 'PUT')
         {
           let updateVal = {}
@@ -189,17 +195,21 @@ export function detailMerged(req, res, next)
           dm.updateOne(
             {_id : result[0]._id}, { $set : updateVal},
             (err, result) => {
+              db.close()
               if(err) res.status(500).send({message: "Error Occured.", ok : false})
               else
                 res.status(200).send({message : "Updated.", ok: true, result : result})
             })
         }
         else {
+          db.close()
           res.send({message : JSON.stringify(req.method)})
         }
       }
-      else
+      else{
+        db.close()
         res.status(404).send({message: "Object not found.", ok : false})
+      }
     })
   })
 }
