@@ -4,7 +4,6 @@
   "description": "Data Migration for Salesforce with built in View using ReactJS as V and NodeJS as server",
   "main": "index.js",
   "dependencies": {
-    "asyncawait": "^1.0.6",
     "aws-sdk": "^2.4.7",
     "babel-preset-react": "^6.5.0",
     "body-parser": "~1.13.2",
@@ -22,7 +21,6 @@
     "jsdom": "^9.3.0",
     "jsforce": "^1.6.5",
     "moment": "^2.13.0",
-    "mongodb": "^2.2.4",
     "morgan": "^1.6.1",
     "mysql": "^2.10.2",
     "proxy-agent": "^2.0.0",
@@ -58,7 +56,7 @@
   "scripts": {
     "test": "mocha --compilers js:babel-register --recursive",
     "devreact": "NODE_ENV=production watchify -t [ babelify --presets [ react ] ] src/react-view/app.js -o ./public/javascripts/app.js -v -d ",
-    "buildreact": "NODE_ENV=production browserify ./src/react-view/app.js -t [envify --NODE_ENV production] -t [babelify --presets [react] --comments false] | uglifyjs -cm > ./public/javascripts/app.min.js",
+    "buildreact": "browserify ./src/react-view/app.js -t [envify --NODE_ENV production]  -t [babelify ] [envify] | uglifyjs -cm > ./public/javascripts/app.min.js",
     "dev": "nodemon --watch src/app.js --watch src/routes-server/ --exec babel-node ./src/app",
     "prestart": "babel src --recursive --out-dir dist && browserify ./src/react-view/app.js -t [envify --NODE_ENV production]  -t [babelify] | uglifyjs -cm > ./public/javascripts/app.min.js",
     "start": "NODE_ENV=production node dist/bin/www"

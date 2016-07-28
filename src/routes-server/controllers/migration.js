@@ -163,7 +163,7 @@ export function listMerged(req, res, next)
       dm.count((err, pageSize) => {
         response.pageSize = Math.round(pageSize / 20)
         res.status(200).send(response)
-        //mongodb.close()
+        mongodb.close()
       })
     })
   })
