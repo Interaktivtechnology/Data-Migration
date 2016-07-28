@@ -7,6 +7,9 @@ table{
 }
 body .bPageTitle .ptBody .pageDescription { font-size: 120%; font-weight: normal; line-height: 1.1em; }
 
+.bPageTitle{
+  margin-bottom: 50px
+}
 .bPageTitle .ptBody .content {
     float: left;
     vertical-align: middle;

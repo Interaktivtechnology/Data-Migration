@@ -70,13 +70,13 @@ class NavbarInstance extends Component{
           }
 
           if(this.props.routes.length != (index + 1)){
-
+            
             return <li key={index}>
               <Link
                 onlyActiveOnIndex={true}
                 activeClassName="breadcrumb-active"
-                to={item.path || ''}>
-                {item.title != undefined ? item.title : ''}
+                to={item.path.replace(/:[a-zA-Z0-9]{1,100}/ig,'') || ''}>
+                {item.title != undefined ? item.title : '1'}
               </Link>
             </li>
           }
@@ -88,8 +88,8 @@ class NavbarInstance extends Component{
         )}
       </ul>
        <ReactCSSTransitionGroup
-         component="div" transitionName="swap"
-         transitionEnterTimeout={500} transitionLeaveTimeout={500}
+         component="div"
+          transitionName="carousel" transitionEnterTimeout={500} transitionLeaveTimeout={500}
        >
           {React.cloneElement(this.props.children || <Home />, { key: key })}
        </ReactCSSTransitionGroup>

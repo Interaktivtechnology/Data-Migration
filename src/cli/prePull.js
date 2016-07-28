@@ -53,11 +53,7 @@ var getFieldList = (migration, callback) =>{
 
 
 let getDataSource = (migration) =>{
-  let query = 'SELECT objectName, role, codeReferences, ds.name, ds.type, ds.username, ds.password, ds.token, ds.additionalSetting  from MigrationDataSource mds INNER JOIN ' +
-    ' DataSource ds on  mds.dataSourceId = ds.Id where mds.migrationId = ? '
-  let params = []
-  params.push(migration.id)
-  query = mysql.format(query, params)
+  let query = helper.getMigrationDataSource(migration)
 
   pool.query(query, (err, mysql_rows, fields) => {
     for(let i =0 ;i < mysql_rows.length; i++)
@@ -116,24 +112,26 @@ function defineSalesforceConnection(config, id, fieldList){
           accessToken : accessToken
         })
         helper.createTable(`dm_${config.migration.id}_${id}_${config.objectName}`, (data) => {
-          console.log(`Table Created dm_${config.migration.id}_${id}_${config.objectName}`, 114);
-          getAllData(config.objectName, id, `dm_${config.migration.id}_${id}_${config.objectName}`, config.filter)
+          console.log(`Table Created dm_${config.migration.id}_${id}_${config.objectName}`);
+          helper.getLastModifiedDate(`dm_${config.migration.id}_${id}_${config.objectName}`, (result) =>{
+            getAllData(config.objectName, id, `dm_${config.migration.id}_${id}_${config.objectName}`, config.filter, result)
+          })
         })
-
       })
     }
     FIELD_LIST = fieldList
   })
 }
-function getAllData(objectName, id, tableName, filter ){
+function getAllData(objectName, id, tableName, filter, lastModifiedDate ){
   SF_CONN[id].sobject(objectName).describe((err, returnVal) => {
     let soql = "SELECT "
+    filter = `WHERE LastModifiedDate >= ${lastModifiedDate}  ${filter ? ' AND ' +  filter : ''}`
     for(let x = 0 ; x < returnVal.fields.length; x ++)
       soql += returnVal.fields[x].name + ", "
     soql = soql.substring(0, soql.length - 2)
-    soql += ` FROM ${objectName} ${filter ? " WHERE " + filter : ''} Order By LastModifiedDate DESC LIMIT ${ARGS[1]}`
+    soql += `, Owner.Name, Owner.Email FROM ${objectName}  ${filter} Order By LastModifiedDate LIMIT ${ARGS[1]} `
     console.log(`Executing : LIMIT ${ARGS[1]} ${ARGS[2] == 0 ? '' : ' OFFSET ' + ARGS[2]} `)
-    console.log(soql)
+    //console.log(soql)
     SF_CONN[id].query(soql, (err, sobject) =>{
       if(err) {
         console.log(err)
@@ -141,12 +139,20 @@ function getAllData(objectName, id, tableName, filter ){
       }
       else
       {
-        console.log("Insert to mongodb... ")
+        console.log(`Insert to mongodb for ${tableName}...` )
         console.log("Total Length : " + sobject.records.length);
-        helper.insertToDb(tableName, sobject.records, (iterator) => {
-          if(iterator == sobject.records.length) process.exit()
-        })
+        if(sobject.records.length > 0)
+          helper.insertToDb(tableName, sobject.records, (iterator) => {
+            if(iterator == sobject.records.length) process.exit()
+          })
+        else{
+          let migrationId = tableName.split('_')[1]
+          console.log("Pulling data end here...")
+        }
       }
     })
   })
 }
+
+//End the process after one minutes
+setTimeout(() => { process.exit() }, 60*1000)

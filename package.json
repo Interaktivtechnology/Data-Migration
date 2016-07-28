@@ -22,7 +22,6 @@
     "jsdom": "^9.3.0",
     "jsforce": "^1.6.5",
     "moment": "^2.13.0",
-    "mongodb": "^2.2.4",
     "morgan": "^1.6.1",
     "mysql": "^2.10.2",
     "proxy-agent": "^2.0.0",
@@ -57,8 +56,8 @@
   },
   "scripts": {
     "test": "mocha --compilers js:babel-register --recursive",
-    "devreact": "NODE_ENV=production watchify -t [ babelify --presets [ react ] ] src/react-view/app.js -o ./public/javascripts/app.js -v -d ",
-    "buildreact": "NODE_ENV=production browserify ./src/react-view/app.js -t [envify --NODE_ENV production] -t [babelify --presets [react] --comments false] | uglifyjs -cm > ./public/javascripts/app.min.js",
+    "devreact": "NODE_ENV=dev watchify -t [ babelify --presets [ react ] ] src/react-view/app.js -o ./public/javascripts/app.js -v -d ",
+    "buildreact": "browserify ./src/react-view/app.js -t [envify --NODE_ENV production]  -t [babelify] | uglifyjs -cm > ./public/javascripts/app.min.js",
     "dev": "nodemon --watch src/app.js --watch src/routes-server/ --exec babel-node ./src/app",
     "prestart": "babel src --recursive --out-dir dist && browserify ./src/react-view/app.js -t [envify --NODE_ENV production]  -t [babelify] | uglifyjs -cm > ./public/javascripts/app.min.js",
     "start": "NODE_ENV=production node dist/bin/www"
