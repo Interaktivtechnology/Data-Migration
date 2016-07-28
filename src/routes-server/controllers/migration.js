@@ -162,9 +162,10 @@ export function listMerged(req, res, next)
     dm.find().skip(req.params.page ? req.params.page * 20 : 0 ).limit(20).toArray((err, result) => {
       let response = {message : "Data migration listed.", ok: true, result : result, pageSize : ''}
       dm.count((err, pageSize) => {
+        db.close()
         response.pageSize = Math.round(pageSize / 20)
         res.status(200).send(response)
-        mongodb.close()
+
       })
     })
   })
