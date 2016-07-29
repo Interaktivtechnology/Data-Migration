@@ -32,7 +32,8 @@ class MergedTable extends React.Component {
             {
               this.props.rows.map((object, key) => {
                 return <tr key={key+2000}>
-                  <td><a target="_blank" href={`https://login.salesforce.com/${object.RefId ? object.RefId : object.Id}`}>{object.RefId ? object.RefId : object.Id}</a></td>
+                  <td><a target="_blank" href={object.status == 'New' ? 'https://na24.salesforce.com/' +
+                    object.RefId : 'https://eu3.salesforce.com/' + object.Id}>{object.status == 'New' ? object.RefId : object.Id}</a></td>
                   <td>{object.Name}</td>
                   <td>{object.status}</td>
                   <td>{object.OwnerId}</td>
