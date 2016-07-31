@@ -1,4 +1,4 @@
 
-for i in $(seq 10 $END); do
-node pull.js --pull 1000;
+for i in $(seq 15 $END); do
+node pull.js --pull 250;
 done

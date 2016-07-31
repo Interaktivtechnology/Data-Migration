@@ -9,8 +9,9 @@ import GlobalMergeSetting from '../component/GlobalMergeSetting'
 import MigrationList from '../component/MigrationList'
 import MigrationRow from '../component/MigrationRow'
 import MigrationRowDetail from '../component/MigrationRowDetail'
-import OpportunityDetail from '../component/migration-opp-detail'
+import OpportunityDetail from '../component/OpportunityDetail'
 import AccountDetail from '../component/AccountDetail'
+import ContactDetail from '../component/ContactDetail'
 import MergedList from '../component/MergedList'
 
 //import $ from 'jquery'
@@ -27,8 +28,8 @@ const rootRoute = <Route path='/' component={NavbarInstance} title={'Home'}>
     <Route path='/merge/new' title="New Migration" component={GlobalMergeSetting}></Route>
     <Route path='/merge/view/:id' title="Succesfully merged record" component={MergedList}>
       <Route path='/merge/view/Account/:migrationId/:objectId' title="Account Detail" component={AccountDetail} />
-      <Route path='/merge/view/Contact/:migrationId/:objectId' title="Account Detail" component={AccountDetail} />
-      <Route path='/merge/view/Opportunity/:migrationId/:objectId' title="Account Detail" component={AccountDetail} />
+      <Route path='/merge/view/Contact/:migrationId/:objectId' title="Contact Detail" component={ContactDetail} />
+      <Route path='/merge/view/Opportunity/:migrationId/:objectId' title="Opportunity Detail" component={OpportunityDetail} />
     </Route>
     <Route path='/merge/edit/:id' title="Edit Migration" component={GlobalMergeSetting}></Route>
     <Route path='/migration/fix-conflict/:id' title="Fix Conflict" component={MigrationRow}>

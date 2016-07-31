@@ -32,11 +32,11 @@ class MergedTable extends React.Component {
             {
               this.props.rows.map((object, key) => {
                 return <tr key={key+2000}>
-                  <td><a target="_blank" href={object.status == 'New' ? 'https://na24.salesforce.com/' +
-                    object.RefId : 'https://eu3.salesforce.com/' + object.Id}>{object.status == 'New' ? object.RefId : object.Id}</a></td>
+                  <td><a target="_blank" href={object.status.toLowerCase() == 'new' ? 'https://na24.salesforce.com/' +
+                    object.RefId : 'https://eu3.salesforce.com/' + object.Id}>{object.status.toLowerCase() == 'new' ? object.RefId : object.Id}</a></td>
                   <td>{object.Name}</td>
                   <td>{object.status}</td>
-                  <td>{object.OwnerId}</td>
+                  <td>{object.Owner ? (<div><p>{object.Owner.Name}</p><p>({object.Owner.Email})</p></div>) : ''}</td>
                   <td>{moment(object.CreatedDate).format("ddd, DD/MM/YYYY hh:mm a")}</td>
                   <td><Link onClick={(component) => console.log("test")} to={`/merge/view/${object.attributes ? object.attributes.type : 'generic'}/${this.props.migrationId}/${object._id}`}>
                     <button type="button" className="btn btn-success btn-sm"> <i className="fa fa-eye"></i> View Detail</button></Link>

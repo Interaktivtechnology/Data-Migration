@@ -69,7 +69,10 @@ class AccountDetail extends React.Component {
       </div>
       <div className="clearfix"></div>
       <div className="row">
-
+        <div className="col-sm-4 col-sm-offset-8 text-right">
+          <a className="btn btn-primary" target="_blank" href={`https://eu3.salesforce.com/${this.state.account._id}`}>Air Record</a>
+          <a  className="btn btn-success" target="_blank" href={`https://na24.salesforce.com/${this.state.account._id}`}>Swift Record</a>
+        </div>
       </div>
       <div className="pbHeader">
         <table border="0" cellpadding="0" cellspacing="0">
@@ -93,7 +96,7 @@ class AccountDetail extends React.Component {
              <td className="tlabel col25">Account Owner</td>
              <td className="tdata col25"><DoubleClickInput fieldName="Owner.Name" urlUpdate={urlUpdate} >{this.state.account.Owner ? this.state.account.Owner.Name : '' }</DoubleClickInput></td>
              <td className="tlabel col25">Account Record Type</td>
-             <td className="tdata col25"><DoubleClickInput fieldName="RecordType.Name" urlUpdate={urlUpdate} >{this.state.account.RecordType ? this.state.account.RecordType.Name : '' }</DoubleClickInput></td>
+             <td className="tdata col25">{this.state.account.RecordType ? this.state.account.RecordType.Name : ''}</td>
            </tr>
            <tr>
              <td className="tlabel col25">Account Name</td>
@@ -216,115 +219,7 @@ class AccountDetail extends React.Component {
          </div>
         </div>
         <div>
-          <br/>
-              {
-               <div className="bPageBlock">
-                   <div className="pHeader">
-                   <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-                   <tr>
-                     <td class="pbTitle"><h3>Contacts</h3></td>
-                   </tr>
-                 </table>
-                 <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-                   <thead>
-                   {dispheadcont}
-                   </thead>
-                 <tbody>
-                  {disprowcont}
-                </tbody>
-                </table>
-                </div>
-                </div>
-              }
-              </div>
-              <div>
-                <br/>
-                    {
-                     <div className="bPageBlock">
-                         <div className="pHeader">
-                         <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-                         <tr>
-                           <td class="pbTitle"><h3>Account Score Cards</h3></td>
-                         </tr>
-                       </table>
-                       <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-                         <thead>
-                         {dispheadsc}
-                         </thead>
-                       <tbody>
-                        {disprowsc}
-                      </tbody>
-                      </table>
-                      </div>
-                      </div>
-                    }
-                    </div>
-              <div>
-                <br/>
-                    {
-                     <div className="bPageBlock">
-                         <div className="pHeader">
-                         <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-                         <tr>
-                           <td class="pbTitle"><h3>Opportunities</h3></td>
-                         </tr>
-                       </table>
-                       <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-                         <thead>
-                         {dispheadopp}
-                         </thead>
-                       <tbody>
-                        {disprowopp}
-                      </tbody>
-                      </table>
-                      </div>
-                      </div>
-                    }
-                    </div>
-                    <div>
-                      <br/>
-                          {
-                           <div className="bPageBlock">
-                               <div className="pHeader">
-                               <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-                               <tr>
-                                 <td class="pbTitle"><h3>Activity History</h3></td>
-                               </tr>
-                             </table>
-                             <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-                               <thead>
-                               {dispheadah}
-                               </thead>
-                             <tbody>
-                              {disprowah}
-                            </tbody>
-                            </table>
-                            </div>
-                            </div>
-                          }
-                </div>
-              <div>
-            <br/>
-            {
-             <div className="bPageBlock">
-                 <div className="pHeader">
-                 <table border="0" cellPadding="0" cellSpacing="0" width="100%">
-                 <tr>
-                   <td class="pbTitle"><h3>Notes And Attachments</h3></td>
-                 </tr>
-               </table>
-               <table className="list" border="0" cellPadding="0" cellSpacing="0"  width="100%">
-                 <thead>
-                 {dispheadna}
-                 </thead>
-               <tbody>
-                {disprowna}
-              </tbody>
-              </table>
-              </div>
-              </div>
-            }
-            </div>
+      </div>
     </div>
   )}
 }

@@ -21,7 +21,7 @@ const db = new Db('DataMigration', new Server('localhost', 27017)),
 });
 memoryUsage = (memoryUsage.rss + memoryUsage.heapTotal + memoryUsage.heapUsed)/(1024*1024)
 console.log("Memory Usage :" , memoryUsage.toFixed(2), "MB")
-
+const SKIP = process.argv[2] ? parseInt(process.argv[2]) * 1000 : 0
 
 db.open((err, mongodb) => {
   if(err) console.log(err)
@@ -52,77 +52,98 @@ db.open((err, mongodb) => {
       let collectionName = config['ds1'].tableName.split('_');
       db.createCollection(`${collectionName[0]}_${collectionName[1]}_merged`, (err, mergedCollection) => {
         report.merged = 0
-        config.ds1.collection.find().count((err, ds1Length)=>{
-          let cursorDs1 = newConfig.ds1.collection.find({})
-          helper.asyncLoop({
-            length : ds1Length,
-            functionToLoop : function(loop, i){
-                cursorDs1.nextObject((err, item) => {
-                  if(item != null){
-                    let filter = newConfig.ds2.objectName == 'Contact' ? {
-                      Email :
-                      { $regex : `/${helper.getFirstWord(item.Email)}/` }
-                    } : {
-                      Name : new RegExp(`\.*${ClearAllWhiteSpace(helper.getFirstWord(item.Name.toLowerCase()))}*\.`, 'ig')
-                    }
-                    process.stdout.clearLine();  // clear current text
-                    process.stdout.cursorTo(0);
-                    process.stdout.write(`Processing ${i} / ${ds1Length}`)
-                    newConfig.ds2.collection.find(filter).toArray((err, result) => {
-                      //console.log("Filter : ", filter.Name)
-                        if(result.length > 0)
+        report.conflict = 0
+        let cursorDs1 = newConfig.ds1.collection.find({})
+        cursorDs1.count((err, dslength1) => helper.asyncLoop({
+          length : dslength1,
+          functionToLoop : function(loop, i){
+            if(i == dslength1 - 1) {
+              loop()
+              return
+            }
+            cursorDs1.nextObject((err, item) => {
+
+              if(item != null){
+                let filter = {}
+                if(newConfig.ds2.objectName == 'Contact'){
+                  if(typeof(item.Email) == 'string')
+                    filter.Email = new RegExp(`\.*${item.Email.toLowerCase()}*\.`, 'ig')
+                  if(typeof(item.Name) == 'string')
+                    filter.Name = new RegExp(`\.*${ClearAllWhiteSpace(helper.getFirstWord(item.Name.toLowerCase()))}*\.`, 'ig')
+                }
+                else
+                  filter.Name = new RegExp(`\.*${ClearAllWhiteSpace(helper.getFirstWord(item.Name.toLowerCase()))}*\.`, 'ig')
+
+
+                let cursor = newConfig.ds2.collection.find(filter)
+                cursor.toArray((err, result) => {
+                  process.stdout.clearLine();  // clear current text
+                  process.stdout.cursorTo(0);
+                  process.stdout.write(`Processing ${i} / ${dslength1}`)
+
+                  if(result != null){
+                    for(let x in result)
+                    {
+                      let ds1 = item, ds2 = result[x], isEqual
+                      eval("isEqual = " + newConfig.ds1.deduplicationLogic)
+                      //console.log(ClearAllWhiteSpace(ds1.Name), '-', ClearAllWhiteSpace(ds2.Name), isEqual)
+                      if(isEqual)
+                      {
+                        let newData = {}
+                        //console.log(result)
+                        newData.Id = ds2.Id
+                        newData._id = ds2.Id
+                        newData.status = "merged"
+                        newData.RefId = ds1.Id
+                        newData.attributes = ds2.attributes
+                        newData.Owner = ds2.Owner
+                        newData.RecordType = ds2.RecordType
+                        newData.CreatedBy = ds2.CreatedBy
+                        newData.LastModifiedBy = ds2.LastModifiedBy
+                        if(ds2.Account) newData.Account = ds2.Account
+                        if(config.objectName == 'Contact')
                         {
-                          for(let x in result)
-                          {
-                            let ds1 = item, ds2 = result[x], isEqual
-
-                            eval("isEqual = " + newConfig.ds1.deduplicationLogic)
-
-                            //console.log(ClearAllWhiteSpace(ds1.Name), '-', ClearAllWhiteSpace(ds2.Name), isEqual)
-                            if(isEqual)
-                            {
-                              let newData = {}
-                              newData.Id = ds2.Id
-                              newData._id = ds2.Id
-                              newData.status = "merged"
-                              newData.RefId = ds1.Id
-                              newData.attributes = ds2.attributes
-                              newData.Owner = ds2.Owner
-                              config['ds1'].fields.map((object, key) => {
-                                newData[object.mergedTo] = ds1[object.fieldName]
-                              })
-                              config['ds2'].fields.map((object, key) => {
-                                newData[object.mergedTo] = ds2[object.fieldName]
-                              })
-                              newData.OldData = {
-                                ds1 : ds1,
-                                ds2 : ds2
-                              }
-                              mergedRecord.push(ds1.Id)
-                              mergedRecord.push(ds2.Id)
-                              mergedCollection.insert(newData)
-                              newData = null
-                              report.merged ++
-                            }
-                          }
+                          newData.IsConflict = ds1.Phone == ds2.Phone || ds1.MailingPostalCode == ds2.MailingPostalCode ||
+                            ds1.Mobile == ds2.Mobile
+                          report.conflict += newData.IsConflict ? 1 : 0
                         }
-                        loop()
-
-                    })
+                        config['ds1'].fields.map((object, key) => {
+                          newData[object.mergedTo] = ds1[object.fieldName]
+                        })
+                        config['ds2'].fields.map((object, key) => {
+                          newData[object.mergedTo] = ds2[object.fieldName]
+                        })
+                        newData.OldData = {
+                          ds1 : ds1,
+                          ds2 : ds2
+                        }
+                        mergedRecord.push(ds1.Id)
+                        mergedRecord.push(ds2.Id)
+                        mergedCollection.insert(newData, (err, result) => result = null)
+                        newData = null
+                        report.merged ++
+                      }
+                    }
                   }
-                  else loop()
+                  result = null
+                  cursor.close()
+                  cursor = null
+                  loop()
                 })
-             },
-             callback : function(){
-                readline.clearLine()
-                readline.cursorTo(process.stdout, 0);
-                process.stdout.write("Merged Done...");
-                setTimeout(() => InsertOther(config, mergedCollection), 3000)
-                cursorDs1 = null
+              }
+              else loop()
+            })
+          },
+          callback : function(){
+            readline.clearLine()
+            readline.cursorTo(process.stdout, 0);
+            process.stdout.write("Merged Done...");
+            setTimeout(() => InsertOther(config, mergedCollection), 3000)
 
-             }
-          })
-        })
+          }
+        }))
+
+
       })
     })
 
@@ -150,6 +171,12 @@ function InsertOther(config, mergedCollection)
             newData._id = item.Id
             newData.status = "new"
             newData.RefId = item.Id
+            newData.RecordType = item.RecordType
+            newData.Owner = item.Owner
+            newData.attributes = item.attributes
+            newData.CreatedBy = item.CreatedBy
+            newData.LastModifiedBy = item.LastModifiedBy
+            if(item.Account) newData.Account = item.Account
             if(config.objectName =='Account' )
             {
               let index = mergedRecord.indexOf(item.ParentId)
@@ -195,8 +222,17 @@ let ds2Insert  = (config, mergedCollection) =>{
             let newData = HandleUnMergeObject(config, item)
             newData._id = item.Id
             newData.OldData = [item]
-            newData.status = "Existing"
+            newData.attributes = item.attributes
             newData.RefId = item.Id
+            newData.RecordType = item.RecordType
+            newData.Owner = item.Owner
+            newData.CreatedBy = item.CreatedBy
+            newData.LastModifiedBy = item.LastModifiedBy
+            if(item.Account) newData.Account = item.Account
+            if(config.objectName == 'Account')
+              newData.Parent = item.Parent
+
+            newData.status = "existing"
             mergedCollection.insert(newData, (err) => { if(err) console.log(err); newData = null })
 
             report.existing++
@@ -211,7 +247,7 @@ let ds2Insert  = (config, mergedCollection) =>{
         let params = {
           status : 'done',
           merged : report.merged,
-          conflict : 0,
+          conflict : report.conflict,
           existing : report.existing,
           new : report.new,
         }
@@ -220,7 +256,7 @@ let ds2Insert  = (config, mergedCollection) =>{
         pool.query(query, (err, res) => {
           pool.end()
           db.close()
-
+          readline.clearLine()
           console.log(report)
           console.log("Memory Usage After :" , memoryUsage.toFixed(2), "MB")
           process.exit()
@@ -242,6 +278,7 @@ function HandleUnMergeObject(config, ds){
 }
 
 function ClearAllWhiteSpace(str){
+  str = typeof(str) == 'string'  ? str : ''
   let result = str.match(/[a-zA-Z]/ig)
   if(!result)
     return str
@@ -271,4 +308,4 @@ function getField(migrationId, config, callback){
 }
 
 //Automatically stopped after 1 minute
-setTimeout( () => process.exit(), 60 * 1000)
+//setTimeout( () => process.exit(), 60 * 1000)

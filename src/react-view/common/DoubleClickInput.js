@@ -8,13 +8,14 @@ class DoubleClickInput extends Component{
     this.state = {
       editing : false,
       value : '',
-      loading : false
+      loading : false,
+      textArea : false
     }
   }
 
   componentWillReceiveProps(nextProps){
     this.setState({
-      value : nextProps.children
+      value : nextProps.children,
     })
   }
 
@@ -46,6 +47,8 @@ class DoubleClickInput extends Component{
   }
   render()
   {
+
+
     return this.state.editing ? (
       <input type="text"  onKeyUp={this.disableEditModeOnKeyUp.bind(this)}
       style={{display : 'block', padding : 5, width : '100%'}} onBlur={() => this.setState({editing : false})} onChange={(component) => this.setState({value : component.target.value})} value={this.state.value}/>

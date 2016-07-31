@@ -182,7 +182,7 @@ export function detailMerged(req, res, next)
       }
 
 
-      if(result && result.length > 0){
+      if(!err && result && result.length > 0){
         if(req.method == 'GET'){
           res.status(200).send({message : "Detail showed.", ok: true, result : result[0], pageSize : ''})
           db.close()

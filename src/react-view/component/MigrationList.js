@@ -187,6 +187,7 @@ class MigrationList extends React.Component {
                         Action <span className="caret"></span>
                       </button>
                       <ul className="dropdown-menu">
+                        <li><Link to={"/merge/config/" + object.id}><i className={'fa fa-cogs'}></i> View Config</Link></li>
                         <li className={object.status == 'draft' ? 'hidden' : 'shown'}><Link to={"/migration/fix-conflict/" + object.id}><i className={'fa fa-chain-broken'}></i> Fix Conflict</Link></li>
                         <li className={object.status == 'draft' ? 'shown' : 'hidden'}><Link to={"/merge/edit/" + object.id}><i className={'fa fa-pencil'}></i> Edit Config</Link></li>
                         <li className={object.status == 'draft' ? 'hidden' : 'shown'}><Link to={"/merge/view/" + object.id}><i className={'fa fa-eye'}></i> View Rows</Link></li>

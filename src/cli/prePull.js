@@ -125,14 +125,26 @@ function defineSalesforceConnection(config, id, fieldList){
 function getAllData(objectName, id, tableName, filter, lastModifiedDate ){
   objectName = objectName.charAt(0).toUpperCase() + objectName.slice(1)
   SF_CONN[id].sobject(objectName).describe((err, returnVal) => {
-    let soql = "SELECT "
+    let soql = "SELECT ",
+      additionalField = ''
     filter = `WHERE LastModifiedDate >= ${lastModifiedDate}  ${filter ? ' AND ' +  filter : ''}`
-    for(let x = 0 ; x < returnVal.fields.length; x ++)
+
+    for(let x = 0 ; x < returnVal.fields.length; x ++){
       soql += returnVal.fields[x].name + ", "
+      if(returnVal.fields[x].name == 'RecordTypeId')
+        additionalField += ", RecordType.Name, RecordType.Id"
+      if(returnVal.fields[x].name == 'ParentId')
+        additionalField += ", Parent.Name, Parent.Id"
+      if(returnVal.fields[x].name == 'AccountId')
+        additionalField += ", Account.Name, Account.Id"
+    }
+
     soql = soql.substring(0, soql.length - 2)
-    if(objectName != 'User')
-      soql += `, Owner.Name, Owner.Email, RecordType.Id`
-    soql += ` FROM ${objectName}  ${filter} Order By LastModifiedDate LIMIT ${ARGS[1]} `
+    if(objectName != 'User'){
+      additionalField += `, Owner.Name, Owner.Email`
+    }
+
+    soql += ` ${additionalField} FROM ${objectName}  ${filter} Order By LastModifiedDate LIMIT ${ARGS[1]} `
     console.log(`Executing : LIMIT ${ARGS[1]} ${ARGS[2] == 0 ? '' : ' OFFSET ' + ARGS[2]} `)
     console.log(soql)
     SF_CONN[id].query(soql, (err, sobject) =>{
@@ -158,4 +170,4 @@ function getAllData(objectName, id, tableName, filter, lastModifiedDate ){
 }
 
 //End the process after one minutes
-setTimeout(() => { process.exit() }, 60*1000)
+setTimeout(() => { process.exit() }, 120*1000)
