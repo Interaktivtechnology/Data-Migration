@@ -61,7 +61,7 @@ class AccountDetail extends React.Component {
       <div className="bPageTitle">
         <div className="ptBody">
           <div className="content">
-            <img className="pageTitleIcon" src={'//free-121d5f44d20-121d603d1c5-121ee2b8103.force.com/img/icon/bank32.png'}/>
+            <img className="pageTitleIcon" src={'/images/bank32.png'}/>
             <h1 className="pageType">Account</h1>
             <h2 className="pageDescription">{this.state.account.Name}</h2>
           </div>

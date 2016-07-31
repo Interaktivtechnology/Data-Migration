@@ -5,7 +5,8 @@ const config = require('../routes-server/sequelize/config/config')
 const mongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017/DataMigration';
 const Db = require('mongodb').Db,
-    Server = require('mongodb').Server
+    Server = require('mongodb').Server,
+    helper = require('./helper-mongo')
 const util = require('util')
 const report = {}
 
@@ -40,7 +41,7 @@ db.open((err, mongodb) => {
         objectName : result[x].objectName,
         tableName : `dm_${result[x].migrationId}_${result[x].name}_${result[x].objectName}`,
         deduplicationLogic : result[x].deduplicationLogic,
-        collection : db.collection(`dm_${result[x].migrationId}_${result[x].name}_${result[x].objectName}`),
+        collection : mongodb.collection(`dm_${result[x].migrationId}_${result[x].name}_${result[x].objectName}`),
         migrationId : result[x].migrationId
       }
     }
@@ -48,11 +49,66 @@ db.open((err, mongodb) => {
 
     getField(config.ds1.migrationId, config, (newConfig) => {
       let collectionName = config['ds1'].tableName.split('_');
-      db.createCollection(`${collectionName[0]}_${collectionName[1]}_merged`, (err, collection) => {
+      db.createCollection(`${collectionName[0]}_${collectionName[1]}_merged`, (err, mergedCollection) => {
 
-        newConfig.ds1.collection.find().toArray((err, ds1) => {
-          newConfig.ds2.collection.find().toArray((err, ds2) => {
-            compare(ds1, ds2, collection, config)
+        config.ds1.collection.find().count((err, ds1Length)=>{
+          let cursorDs1 = newConfig.ds1.collection.find({})
+          helper.asyncLoop({
+            length : ds1Length,
+            functionToLoop : function(loop, i){
+                cursorDs1.nextObject((err, item) => {
+                  if(item != null){
+                    let filter = newConfig.ds2.objectName == 'Contact' ? {
+                      Email :
+                      { $regex : `/${helper.getFirstWord(item.Email)}/` }
+                    } : {
+                      Name : new RegExp(`\.*${ClearAllWhiteSpace(helper.getFirstWord(item.Name.toLowerCase()))}*\.`, 'ig')
+                    }
+                    newConfig.ds2.collection.find(filter).toArray((err, result) => {
+                      console.log("Filter : ", filter.Name)
+                        if(result.length > 0)
+                        {
+                          for(let x in result)
+                          {
+                            let ds1 = item, ds2 = result[x], isEqual
+
+                            eval("isEqual = " + newConfig.ds1.deduplicationLogic)
+
+                            console.log(ClearAllWhiteSpace(ds1.Name), '-', ClearAllWhiteSpace(ds2.Name), isEqual)
+                            if(isEqual)
+                            {
+                              let newData = {}
+                              newData.Id = ds2.Id
+                              newData._id = ds2.Id
+                              newData.status = "merged"
+                              newData.RefId = ds1.Id
+                              newData.attributes = ds2.attributes
+                              newData.Owner = ds2.Owner
+                              config['ds1'].fields.map((object, key) => {
+                                newData[object.fieldName] = ds1[object.fieldName]
+                              })
+                              config['ds2'].fields.map((object, key) => {
+                                newData[object.fieldName] = ds2[object.fieldName]
+                              })
+                              newData.OldData = {
+                                ds1 : ds1,
+                                ds2 : ds2
+                              }
+                              mergedCollection.insert(newData)
+                              newData = null
+                            }
+                          }
+                        }
+                        loop()
+
+                    })
+                  }
+                  else loop()
+                })
+             },
+             callback : function(){
+                 console.log('All done!');
+             }
           })
         })
       })
@@ -69,9 +125,6 @@ function compare(ds1, ds2, mergeCollection, config)
   report.dataLength[`${config['ds1'].dsName}`] = ds1.length
   report.dataLength[`${config['ds2'].dsName}`] = ds2.length
   let mergedData = {}, unMergedData = {}
-
-
-
 
   //UnMerged Data from Data Source 2
   report.existing = 0
@@ -191,7 +244,11 @@ function HandleUnMergeObject(config, ds){
 }
 
 function ClearAllWhiteSpace(str){
-  return str.match(/[a-zA-Z]/ig).join('').toLowerCase()
+  let result = str.match(/[a-zA-Z]/ig)
+  if(!result)
+    return str
+  else
+    return result.join('').toLowerCase()
 }
 
 function getField(migrationId, config, callback){

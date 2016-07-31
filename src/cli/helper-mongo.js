@@ -72,6 +72,25 @@ function getMigrationDataSource(migration)
   return query
 }
 
+let asyncLoop = function(o){
+    var i=-1;
+
+    var loop = function(){
+        i++;
+        if(i==o.length){o.callback(); return;}
+        o.functionToLoop(loop, i);
+    }
+    loop();//init
+}
+
+
+function getFirstWord(str) {
+  if (str.indexOf(' ') === -1)
+      return str;
+  else
+      return str.substr(0, str.indexOf(' '));
+};
+
 module.exports = {
   endProcess : (err) =>{
     console.log(err)
@@ -80,5 +99,7 @@ module.exports = {
   createTable : createTable,
   insertToDb : insertToDb,
   getLastModifiedDate : getLastModifiedDate,
-  getMigrationDataSource : getMigrationDataSource
+  getMigrationDataSource : getMigrationDataSource,
+  asyncLoop : asyncLoop,
+  getFirstWord : getFirstWord
 }

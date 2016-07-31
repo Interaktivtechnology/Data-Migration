@@ -3,7 +3,7 @@
 import {Navbar, Nav, NavItem, MenuItem, NavDropdown} from 'react-bootstrap'
 import React, {Component} from 'react'
 import {Link} from 'react-router'
-import Home from '../home'
+import MigrationList from '../component/MigrationList'
 import ReactCSSTransitionGroup from  'react-addons-css-transition-group'
 
 const CURRENT_USER = CURRENT_USER ? CURRENT_USER : {}
@@ -32,16 +32,13 @@ class NavbarInstance extends Component{
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <NavDropdown eventKey={3} title="Migration" id="basic-nav-dropdown">
+              <NavDropdown eventKey={3} title="Configuration" id="basic-nav-dropdown">
                 <li>
-                  <Link to={"/migration/"}><i className={'fa fa-th-list'}></i> Migration List</Link>
-                </li>
-                <li>
-                  <Link to={"/ds-config"}><i className={'fa fa-database'}></i> Data Source Config</Link>
+                  <Link to={"/ds-config"}><i className={'fa fa-database'}></i> Data Source</Link>
                 </li>
                 <li className="divider"></li>
                 <li>
-                  <Link to={"/DataSource"}><i className={'fa fa-medkit'}></i> System Health</Link>
+                  <Link to={"/DataSource"}><i className={'fa fa-users'}></i> Users</Link>
                 </li>
               </NavDropdown>
 
@@ -62,7 +59,7 @@ class NavbarInstance extends Component{
         {this.props.routes.map((item, index) =>{
           var params = item.component.contextType ? item.component.contextType.params : {}
           var matches = item.path.match(/:[a-zA-Z]{1,30}[\/]/ig)
-          
+
           if(typeof params == 'object'){
             Object.keys(params).forEach((row, i) => {
               console.log(row)
@@ -91,7 +88,7 @@ class NavbarInstance extends Component{
          component="div" transitionName="swap"
          transitionEnterTimeout={500} transitionLeaveTimeout={500}
        >
-          {React.cloneElement(this.props.children || <Home />, { key: key })}
+          {React.cloneElement(this.props.children || <MigrationList />, { key: key })}
        </ReactCSSTransitionGroup>
 
       </div>
