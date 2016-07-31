@@ -7,9 +7,10 @@ const url = 'mongodb://localhost:27017/DataMigration';
 const Db = require('mongodb').Db,
     Server = require('mongodb').Server,
     helper = require('./helper-mongo')
-const util = require('util')
+const util = require('util'),
+    readline = require('readline')
 const report = {}
-
+let mergedRecord = []
 const db = new Db('DataMigration', new Server('localhost', 27017)),
  pool = mysql.createConnection({
   connectionLimit : 100,
@@ -50,7 +51,7 @@ db.open((err, mongodb) => {
     getField(config.ds1.migrationId, config, (newConfig) => {
       let collectionName = config['ds1'].tableName.split('_');
       db.createCollection(`${collectionName[0]}_${collectionName[1]}_merged`, (err, mergedCollection) => {
-
+        report.merged = 0
         config.ds1.collection.find().count((err, ds1Length)=>{
           let cursorDs1 = newConfig.ds1.collection.find({})
           helper.asyncLoop({
@@ -64,8 +65,11 @@ db.open((err, mongodb) => {
                     } : {
                       Name : new RegExp(`\.*${ClearAllWhiteSpace(helper.getFirstWord(item.Name.toLowerCase()))}*\.`, 'ig')
                     }
+                    process.stdout.clearLine();  // clear current text
+                    process.stdout.cursorTo(0);
+                    process.stdout.write(`Processing ${i} / ${ds1Length}`)
                     newConfig.ds2.collection.find(filter).toArray((err, result) => {
-                      console.log("Filter : ", filter.Name)
+                      //console.log("Filter : ", filter.Name)
                         if(result.length > 0)
                         {
                           for(let x in result)
@@ -74,7 +78,7 @@ db.open((err, mongodb) => {
 
                             eval("isEqual = " + newConfig.ds1.deduplicationLogic)
 
-                            console.log(ClearAllWhiteSpace(ds1.Name), '-', ClearAllWhiteSpace(ds2.Name), isEqual)
+                            //console.log(ClearAllWhiteSpace(ds1.Name), '-', ClearAllWhiteSpace(ds2.Name), isEqual)
                             if(isEqual)
                             {
                               let newData = {}
@@ -85,17 +89,20 @@ db.open((err, mongodb) => {
                               newData.attributes = ds2.attributes
                               newData.Owner = ds2.Owner
                               config['ds1'].fields.map((object, key) => {
-                                newData[object.fieldName] = ds1[object.fieldName]
+                                newData[object.mergedTo] = ds1[object.fieldName]
                               })
                               config['ds2'].fields.map((object, key) => {
-                                newData[object.fieldName] = ds2[object.fieldName]
+                                newData[object.mergedTo] = ds2[object.fieldName]
                               })
                               newData.OldData = {
                                 ds1 : ds1,
                                 ds2 : ds2
                               }
+                              mergedRecord.push(ds1.Id)
+                              mergedRecord.push(ds2.Id)
                               mergedCollection.insert(newData)
                               newData = null
+                              report.merged ++
                             }
                           }
                         }
@@ -107,7 +114,12 @@ db.open((err, mongodb) => {
                 })
              },
              callback : function(){
-                 console.log('All done!');
+                readline.clearLine()
+                readline.cursorTo(process.stdout, 0);
+                process.stdout.write("Merged Done...");
+                setTimeout(() => InsertOther(config, mergedCollection), 3000)
+                cursorDs1 = null
+
              }
           })
         })
@@ -117,98 +129,83 @@ db.open((err, mongodb) => {
   })
 })
 
-function compare(ds1, ds2, mergeCollection, config)
+// Insert UnMerged Record
+function InsertOther(config, mergedCollection)
 {
-  console.log(`Data Source ds1 length ${ds1.length}`)
-  console.log(`Data Source ds2 length ${ds2.length}`)
-  report.dataLength = {}
-  report.dataLength[`${config['ds1'].dsName}`] = ds1.length
-  report.dataLength[`${config['ds2'].dsName}`] = ds2.length
-  let mergedData = {}, unMergedData = {}
-
-  //UnMerged Data from Data Source 2
-  report.existing = 0
-
-  for(let y in ds2)
-  {
-    let newData = HandleUnMergeObject(config, ds2[y])
-    newData._id = newData.Id = ds2[y].Id
-    newData.status = "Existing"
-    newData.attributes = ds2[y].attributes
-    newData['Owner'] = ds2[y].Owner
-    newData.OldData = {
-      ds2 : ds2[y]
-    }
-    unMergedData[ds2[y].Id] = newData
-  }
-
-  //UnMerged Data from Data Source 1
+  readline.cursorTo(process.stdout, 0);
+  process.stdout.write("Inserting UnMerged Object object");
+  let ds1Cursor = config.ds1.collection.find({})
   report.new = 0
-  for(let x in ds1)
-  {
-    let newData = HandleUnMergeObject(config, ds1[x])
-    newData.RefId = ds1[x].Id
-    newData.status = "New"
-    newData.attributes = ds1[x].attributes
-    newData.OldData = {
-      ds1 : ds1[x]
-    }
-    newData['Owner'] = ds1[x].Owner
-    unMergedData[ds1[x].Id] = newData
 
-  }
-
-  //Detect the merge
-  report.merged  = 0
-  console.log("Merging...")
-  for(let y in ds2){
-    for(let x in ds1){
-      if(ClearAllWhiteSpace(ds1[x].Name) == ClearAllWhiteSpace(ds2[y].Name))
-      {
-        let newData = {}
-        let requiredField = {
-          ds1 : [],
-          ds2 : []
-        }
-        newData.Id = ds2[y].Id
-        newData._id = ds2[y].Id
-        newData.status = "merged"
-        newData.RefId = ds1[x].Id
-        newData.attributes = ds2[y].attributes
-        newData.Owner = ds2[y].Owner
-        config['ds1'].fields.map((object, key) => {
-          newData[object.fieldName] = ds1[x][object.fieldName]
+  config.ds1.collection.find().count((err, ds1Length) =>{
+    helper.asyncLoop({
+      length : ds1Length,
+      functionToLoop : function(loop, i){
+        ds1Cursor.nextObject((err, item) => {
+          process.stdout.cursorTo(0);
+          process.stdout.write(`Inserting to ${config.ds1.tableName}, processing ${i}` )
+          if(mergedRecord.indexOf(item.Id) == -1)
+          {
+            let newData = HandleUnMergeObject(config, item)
+            newData._id = item.Id
+            newData.status = "new"
+            newData.RefId = item.Id
+            if(config.objectName =='Account' )
+            {
+              let index = mergedRecord.indexOf(item.ParentId)
+              if(index > -1)
+                newData.ParentId = mergedRecord[index + 1]
+              index = ''
+              console.log("Changing ParentId....")
+            }
+            mergedCollection.insert(newData, (err) => { if(err) console.log(err); newData = null}  )
+            newData = null
+            report.new ++
+          }
+          loop()
         })
-        config['ds2'].fields.map((object, key) => {
-          newData[object.fieldName] = ds2[y][object.fieldName]
-        })
-        newData.OldData = {
-          ds1 : ds1[x],
-          ds2 : ds2[y]
-        }
-        mergedData[newData.Id] = newData
+      },
+      callback : function(){
+         readline.clearLine()
+         readline.cursorTo(process.stdout, 0);
+         process.stdout.write("Unmerged Record from Ds1 Done...");
+         setTimeout(() => ds2Insert(config, mergedCollection), 3000)
+         ds1Cursor = null
 
-        delete unMergedData[newData.Id]
-        delete unMergedData[newData.RefId]
-        report.merged ++
       }
-    }
-  }
+    })
+  })
 
-  report.unMergedData = Object.keys(unMergedData).length
-  report.new = ds1.length - report.merged
-  report.existing = ds2.length - report.merged
 
-  memoryUsage = process.memoryUsage()
 
-  Object.assign(mergedData, unMergedData)
-  unMergedData = null
+}
 
-  let i = 0
-  for(let z in mergedData)
-  {
-    mergeCollection.insert(mergedData[z], (err, result) => {
-      if(Object.keys(mergedData).length - 1 == i ){
+let ds2Insert  = (config, mergedCollection) =>{
+  let ds2Cursor = config.ds2.collection.find({})
+  report.existing = 0
+  config.ds2.collection.find().count((err, ds1Length) =>{
+    helper.asyncLoop({
+      length : ds1Length,
+      functionToLoop : function(loop, i){
+        ds2Cursor.nextObject((err, item) => {
+          readline.cursorTo(process.stdout, 0);
+          process.stdout.write(`Inserting to ${config.ds2.tableName}, processing ${i}` )
+          if(mergedRecord.indexOf(item.Id) == -1)
+          {
+            let newData = HandleUnMergeObject(config, item)
+            newData._id = item.Id
+            newData.OldData = [item]
+            newData.status = "Existing"
+            newData.RefId = item.Id
+            mergedCollection.insert(newData, (err) => { if(err) console.log(err); newData = null })
+
+            report.existing++
+          }
+          loop()
+        })
+      },
+      callback : () => {
+        let memoryUsage = process.memoryUsage()
         memoryUsage = (memoryUsage.rss + memoryUsage.heapTotal + memoryUsage.heapUsed)/(1024*1024)
         let sql = "UPDATE Migration SET ? Where Id = '" + config.ds1.migrationId+ "'"
         let params = {
@@ -219,18 +216,19 @@ function compare(ds1, ds2, mergeCollection, config)
           new : report.new,
         }
         var query = mysql.format(sql, params)
+        ds2Cursor = null
         pool.query(query, (err, res) => {
+          pool.end()
+          db.close()
+
           console.log(report)
           console.log("Memory Usage After :" , memoryUsage.toFixed(2), "MB")
           process.exit()
         })
       }
-      i++
     })
-  }
-
+  })
 }
-
 
 function HandleUnMergeObject(config, ds){
   let newData = {}

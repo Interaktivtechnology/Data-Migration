@@ -130,9 +130,11 @@ function getAllData(objectName, id, tableName, filter, lastModifiedDate ){
     for(let x = 0 ; x < returnVal.fields.length; x ++)
       soql += returnVal.fields[x].name + ", "
     soql = soql.substring(0, soql.length - 2)
-    soql += `, Owner.Name, Owner.Email, RecordType.Id FROM ${objectName}  ${filter} Order By LastModifiedDate LIMIT ${ARGS[1]} `
+    if(objectName != 'User')
+      soql += `, Owner.Name, Owner.Email, RecordType.Id`
+    soql += ` FROM ${objectName}  ${filter} Order By LastModifiedDate LIMIT ${ARGS[1]} `
     console.log(`Executing : LIMIT ${ARGS[1]} ${ARGS[2] == 0 ? '' : ' OFFSET ' + ARGS[2]} `)
-    //console.log(soql)
+    console.log(soql)
     SF_CONN[id].query(soql, (err, sobject) =>{
       if(err) {
         console.log(err, id)
