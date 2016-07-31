@@ -108,10 +108,10 @@ db.open((err, mongodb) => {
                           report.conflict += newData.IsConflict ? 1 : 0
                         }
                         config['ds1'].fields.map((object, key) => {
-                          newData[object.mergedTo] = ds1[object.fieldName]
+                          newData[object.mergedTo] = ds1[object.fieldName] ? ds1[object.fieldName] : ds2[object.fieldName]
                         })
                         config['ds2'].fields.map((object, key) => {
-                          newData[object.mergedTo] = ds2[object.fieldName]
+                          newData[object.mergedTo] = ds2[object.fieldName] ? ds2[object.fieldName]  : ds1[object.fieldName] 
                         })
                         newData.OldData = {
                           ds1 : ds1,
