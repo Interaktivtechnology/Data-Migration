@@ -218,11 +218,12 @@ class MergeTable extends React.Component {
          </select>
          <select name={'DataSource' + i} className="form-control" onChange={this._objectChange.bind(this)} data-key={i}>
            <option>---Object--- </option>
-           <option value='account' selected={this.state.dataSource[i].objectName == 'account'} >Account</option>
-           <option value='contact' selected={this.state.dataSource[i].objectName == 'contact'}>Contact</option>
-           <option value='opportunity' selected={this.state.dataSource[i].objectName == 'opportunity'}>Opportunity</option>
-           <option value='activities' selected={this.state.dataSource[i].objectName == 'activities'}>Activities</option>
-           <option value='attachment' selected={this.state.dataSource[i].objectName == 'attachment'}>Notes & Attachment</option>
+           <option value='Account' selected={this.state.dataSource[i].objectName == 'account'} >Account</option>
+           <option value='Contact' selected={this.state.dataSource[i].objectName == 'contact'}>Contact</option>
+           <option value='Opportunity' selected={this.state.dataSource[i].objectName == 'opportunity'}>Opportunity</option>
+           <option value='Activities' selected={this.state.dataSource[i].objectName == 'activities'}>Activities</option>
+           <option value='Leads' selected={this.state.dataSource[i].objectName == 'activities'}>Leads</option>
+           <option value='User' selected={this.state.dataSource[i].objectName == 'activities'}>User</option>
          </select>
          <input type="text" className="form-control"  value={this.state.dataSource[i].filter} data-key={i} placeholder = "Filter" onChange={this._filterChange.bind(this)} />
          <div className="text-center">

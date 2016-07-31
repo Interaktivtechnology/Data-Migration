@@ -57,9 +57,9 @@
   "scripts": {
     "test": "mocha --compilers js:babel-register --recursive",
     "devreact": "NODE_ENV=dev watchify -t [ babelify --presets [ react ] ] src/react-view/app.js -o ./public/javascripts/app.js -v -d ",
-    "buildreact": "browserify ./src/react-view/app.js -t [envify --NODE_ENV production]  -t [babelify] | uglifyjs -cm > ./public/javascripts/app.min.js",
+    "buildreact": "NODE_ENV=production browserify ./src/react-view/app.js -t [envify --NODE_ENV production]  -t [babelify] | uglifyjs -cm > ./public/javascripts/app.min.js",
     "dev": "nodemon --watch src/app.js --watch src/routes-server/ --exec babel-node ./src/app",
-    "prestart": "babel src --recursive --out-dir dist && browserify ./src/react-view/app.js -t [envify --NODE_ENV production]  -t [babelify] | uglifyjs -cm > ./public/javascripts/app.min.js",
+    "prestart": "NODE_ENV=production babel src --recursive --out-dir dist && NODE_ENV=production browserify ./src/react-view/app.js -t [envify --NODE_ENV production]  -t [babelify] | uglifyjs -cm > ./public/javascripts/app.min.js",
     "start": "NODE_ENV=production node dist/bin/www"
   },
   "author": "eko.purnomo@icloud.com",

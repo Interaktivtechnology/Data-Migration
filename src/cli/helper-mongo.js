@@ -43,7 +43,7 @@ function getLastModifiedDate(tableName, callback)
       collection.find({}).limit(1).skip(count - 1)
       .toArray((err, result) => {
         if(err) {
-          callback("01/01/1970t00:00:00.000z")
+          callback("1970-01-01t00:00:00.000z")
           return
         }
         if(result.length > 0)
@@ -52,7 +52,7 @@ function getLastModifiedDate(tableName, callback)
           db.close()
           callback(result[0].LastModifiedDate)
         }
-        else callback("01/01/1970t00:00:00.000z")
+        else callback("1970-01-01t00:00:00.000z")
       })
 
     })
