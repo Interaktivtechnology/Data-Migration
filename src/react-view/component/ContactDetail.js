@@ -60,7 +60,7 @@ class contactDetail extends React.Component {
       <div className="row">
         <div className="col-sm-4 col-sm-offset-8 text-right">
           <a className="btn btn-primary" target="_blank" href={`https://eu3.salesforce.com/${this.state.contact._id}`}>Air Record</a>
-          <a  className="btn btn-success" target="_blank" href={`https://na24.salesforce.com/${this.state.contact._id}`}>Swift Record</a>
+          <a  className="btn btn-success" target="_blank" href={`https://na24.salesforce.com/${this.state.contact.RefId}`}>Swift Record</a>
         </div>
       </div>
       <div className="pbHeader">
@@ -182,7 +182,7 @@ class contactDetail extends React.Component {
          </table>
          </div>
         </div>
-        
+
         <div>
       </div>
     </div>
