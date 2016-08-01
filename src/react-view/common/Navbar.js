@@ -3,7 +3,7 @@
 import {Navbar, Nav, NavItem, MenuItem, NavDropdown} from 'react-bootstrap'
 import React, {Component} from 'react'
 import {Link} from 'react-router'
-import MigrationList from '../component/MigrationList'
+import Home from '../Home'
 import ReactCSSTransitionGroup from  'react-addons-css-transition-group'
 
 const CURRENT_USER = CURRENT_USER ? CURRENT_USER : {}
@@ -34,11 +34,14 @@ class NavbarInstance extends Component{
             <Nav>
               <NavDropdown eventKey={3} title="Configuration" id="basic-nav-dropdown">
                 <li>
+                  <Link to={"/migration"}><i className={'fa fa-refresh'}></i> Migration List</Link>
+                </li>
+                <li>
                   <Link to={"/ds-config"}><i className={'fa fa-database'}></i> Data Source</Link>
                 </li>
                 <li className="divider"></li>
                 <li>
-                  <Link to={"/DataSource"}><i className={'fa fa-users'}></i> Users</Link>
+                  <Link to={"/user"}><i className={'fa fa-users'}></i> Users</Link>
                 </li>
               </NavDropdown>
 
@@ -78,7 +81,7 @@ class NavbarInstance extends Component{
             </li>
           }
           else
-            return <li key={index}>
+            return <li key={ index}>
               {item.title != undefined ? item.title : ''}
             </li>
         }
@@ -88,7 +91,7 @@ class NavbarInstance extends Component{
          component="div" transitionName="swap"
          transitionEnterTimeout={500} transitionLeaveTimeout={500}
        >
-          {React.cloneElement(this.props.children || <MigrationList />, { key: key })}
+          {React.cloneElement(this.props.children || <Home />, { key: key })}
        </ReactCSSTransitionGroup>
 
       </div>
