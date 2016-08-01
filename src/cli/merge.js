@@ -111,7 +111,7 @@ db.open((err, mongodb) => {
                           newData[object.mergedTo] = ds1[object.fieldName] ? ds1[object.fieldName] : ds2[object.fieldName]
                         })
                         config['ds2'].fields.map((object, key) => {
-                          newData[object.mergedTo] = ds2[object.fieldName] ? ds2[object.fieldName]  : ds1[object.fieldName] 
+                          newData[object.mergedTo] = ds2[object.fieldName] ? ds2[object.fieldName]  : ds1[object.fieldName]
                         })
                         newData.OldData = {
                           ds1 : ds1,
@@ -228,6 +228,7 @@ let ds2Insert  = (config, mergedCollection) =>{
             newData.Owner = item.Owner
             newData.CreatedBy = item.CreatedBy
             newData.LastModifiedBy = item.LastModifiedBy
+
             if(item.Account) newData.Account = item.Account
             if(config.objectName == 'Account')
               newData.Parent = item.Parent
@@ -268,12 +269,18 @@ let ds2Insert  = (config, mergedCollection) =>{
 
 function HandleUnMergeObject(config, ds){
   let newData = {}
+
   config['ds1'].fields.map((object, key) => {
-    newData[object.fieldName] = ds[object.fieldName]
+    let ds1 = ds
+    newData[object.mergedTo] = ds1[object.fieldName]
+    let logic = object.logic.replace(\/\*.*\*\/,'')
+    eval(logic)
+    ds1 = null
   })
   config['ds2'].fields.map((object, key) => {
-    newData[object.fieldName] = ds[object.fieldName]
+    newData[object.mergedTo] = newData[object.fieldName] ? newData[object.fieldName] : ds[object.fieldName]
   })
+
   return newData
 }
 

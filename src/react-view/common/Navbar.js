@@ -16,6 +16,7 @@ class NavbarInstance extends Component{
     }
 
   }
+  
   render(){
 
     const { pathname } = this.props.location
