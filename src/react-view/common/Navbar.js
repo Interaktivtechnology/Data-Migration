@@ -3,7 +3,7 @@
 import {Navbar, Nav, NavItem, MenuItem, NavDropdown} from 'react-bootstrap'
 import React, {Component} from 'react'
 import {Link} from 'react-router'
-import Home from '../Home'
+import Home from '../home'
 import ReactCSSTransitionGroup from  'react-addons-css-transition-group'
 
 const CURRENT_USER = CURRENT_USER ? CURRENT_USER : {}
