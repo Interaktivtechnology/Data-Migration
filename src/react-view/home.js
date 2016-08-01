@@ -16,15 +16,16 @@ export default class App extends React.Component {
       jombotron : {display: 'block'}
     }
   }
-  componentWillMount(){
-
+  componentDidMount(){
+    window.location = "/migration/"
+    console.log("test")
   }
   render() {
     return (
       <div>
         <h1>Welcome to Migration Tools</h1>
         <div className="jumbotron" style={this.state.jumbotron}>
-          <p>You can try to config your migration setting.</p>
+          <p>You can try to config your migration.</p>
         </div>
       </div>
     );

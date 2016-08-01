@@ -70,6 +70,7 @@ class AccountDetail extends React.Component {
       <div className="clearfix"></div>
       <div className="row">
         <div className="col-sm-4 col-sm-offset-8 text-right">
+          <h3>Status : {this.state.account.status}</h3>
           <a className="btn btn-primary" target="_blank" href={`https://eu3.salesforce.com/${this.state.account._id}`}>Air Record</a>
           <a  className="btn btn-success" target="_blank" href={`https://na24.salesforce.com/${this.state.account.RefId}`}>Swift Record</a>
         </div>
@@ -110,7 +111,7 @@ class AccountDetail extends React.Component {
            <tr>
              <td className="tlabel col25">Type Of Account</td>
              <td className="tdata col25">
-                <DoubleClickInput fieldName="Type" urlUpdate={urlUpdate} >{this.state.account.Type}</DoubleClickInput>
+                <DoubleClickInput fieldName="airenergi__Type_of_Account__c" urlUpdate={urlUpdate} >{this.state.account.airenergi__Type_of_Account__c}</DoubleClickInput>
              </td>
              <td className="tlabel col25">Website</td>
              <td className="tdata col25">
@@ -121,12 +122,6 @@ class AccountDetail extends React.Component {
              <td className="tlabel col25">ParentAccount</td>
              <td className="tdata col25">
                 <DoubleClickInput fieldName="ParentId" urlUpdate={urlUpdate} >{this.state.account.ParentId}</DoubleClickInput>
-             </td>
-           </tr>
-           <tr>
-             <td className="tlabel col25">Status</td>
-             <td className="tdata col25">
-                <DoubleClickInput fieldName="status" urlUpdate={urlUpdate} >{this.state.account.status}</DoubleClickInput>
              </td>
            </tr>
            </tbody>
@@ -211,7 +206,7 @@ class AccountDetail extends React.Component {
            <tr>
              <td className="tlabel col25">Account Overview</td>
              <td className="tdata col25">
-                <DoubleClickInput fieldName="AccountOverview" urlUpdate={urlUpdate} >{this.state.account.AccountOverview}</DoubleClickInput>
+                <DoubleClickInput fieldName="AccountOverview" urlUpdate={urlUpdate} >{this.state.account.Account_Overview__c}</DoubleClickInput>
              </td>
            </tr>
            </tbody>
