@@ -99,9 +99,12 @@ function readMongoCollection(fieldList){
 
           })
         }
-
-
-
+        else{
+          conn.sobject(sfTable).insert(newObj, (err, res) => {
+            if(err) console.log(err) process.exit()
+            console.log(res.Id)
+          })
+        }
       }
       else
         process.exit()
