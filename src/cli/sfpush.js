@@ -75,22 +75,37 @@ function describeTable()
 function readMongoCollection(fieldList){
   fieldList = typeof fieldList == 'object' ? fieldList : JSON.parse(fieldList)
   MongoClient.connect(url, function(err, db) {
+
     let coll = db.collection(mongoCollection)
 
-    coll.find({ParentId : null}).limit(10).each((err, res) => {
-      let newFieldInserted = []
-      Object.keys(res).forEach((obj) => {
-        for(let x in fieldList.fields)
-        {
-          if(fieldList.fields[x].name.toLowerCase() == obj.toLowerCase())
-            newFieldInserted.push(obj)
+    coll.find({ParentId : null, status : 'new', NewId : null }).limit(1).each((err, res) => {
+      const ignoredField = ['id', 'Id', 'OwnerId', 'CreatedById', 'LastModifiedById']
+      let newObj = {}
+      if(res != null){
+        Object.keys(res).forEach((key) => {
+          for(let x in fieldList.fields)
+          {
+            if(fieldList.fields[x].name.toLowerCase() == key.toLowerCase() &&
+              ignoredField.indexOf(key) == -1)
+              newObj[key] = res[key]
+          }
+        })
+        if(res.RefId){
+          newObj.Airswift_Record_Id__c = res.RefId
+          conn.sobject(sfTable).upsert(newObj, 'Airswift_Record_Id__c', (err, res) => {
+            if(err) console.log(err) process.exit()
+
+            console.log(res.Id)
+
+          })
         }
-      })
 
-      console.log(newFieldInserted)
 
-      db.close()
-      process.exit()
+
+      }
+      else
+        process.exit()
+
 
     })
   })
