@@ -79,18 +79,22 @@ function readMongoCollection(fieldList){
     let coll = db.collection(mongoCollection)
 
     coll.find({ParentId : null, status : 'new', NewId : null }).limit(1).each((err, res) => {
-      const ignoredField = ['id', 'Id', 'OwnerId', 'CreatedById', 'LastModifiedById']
+      const ignoredField = ['id', 'Id', 'OwnerId', 'CreatedById', 'LastModifiedById',
+      'Google_News__c', 'Owner_Bullhorn_User_Id__c', 'New_Scorecard_Eval__c', 'LastViewedDate',
+      'LastReferencedDate', 'SystemModstamp', 'BillingAddress', 'CreatedDate', 'LastActivityDate', 'PhotoUrl']
       let newObj = {}
       if(res != null){
         Object.keys(res).forEach((key) => {
           for(let x in fieldList.fields)
           {
             if(fieldList.fields[x].name.toLowerCase() == key.toLowerCase() &&
-              ignoredField.indexOf(key) == -1)
+              ignoredField.indexOf(key) == -1 &&
+              res[key] != null)
               newObj[key] = res[key]
           }
         })
         newObj.RecordTypeId = '01220000000ILXOAA4'
+
         if(res.RefId){
           newObj.Airswift_Record_Id__c = res.RefId
           conn.sobject(sfTable).upsert(newObj, 'Airswift_Record_Id__c', (err, res) => {
@@ -113,10 +117,6 @@ function readMongoCollection(fieldList){
           })
         }
       }
-      else
-        process.exit()
-
-
     })
   })
 }
