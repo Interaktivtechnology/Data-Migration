@@ -8,7 +8,9 @@ const url = 'mongodb://localhost:27017/DataMigration';
 
 const sfTable = process.argv[2],
   mongoCollection = process.argv[3],
-  mode = process.argv[4]
+  mode = process.argv[4],
+  LIMIT = parseInt(process.argv[5]),
+  SKIP = parseInt(process.argv[6])
 
 const redis = require('redis'),
       client = redis.createClient();
@@ -77,8 +79,7 @@ function readMongoCollection(fieldList){
   MongoClient.connect(url, function(err, db) {
 
     let coll = db.collection(mongoCollection)
-
-    coll.find({ParentId : null, status : 'new', NewId : null }).limit(1).each((err, res) => {
+    coll.find({ParentId : null, status : 'new' }).limit(LIMIT).skip(SKIP).each((err, res) => {
       const ignoredField = ['id', 'Id', 'OwnerId', 'CreatedById', 'LastModifiedById',
       'Google_News__c', 'Owner_Bullhorn_User_Id__c', 'New_Scorecard_Eval__c', 'LastViewedDate',
       'LastReferencedDate', 'SystemModstamp', 'BillingAddress', 'CreatedDate', 'LastActivityDate', 'PhotoUrl']
@@ -95,28 +96,20 @@ function readMongoCollection(fieldList){
         })
         newObj.RecordTypeId = '01220000000ILXOAA4'
 
-        if(res.RefId){
           newObj.Airswift_Record_Id__c = res.RefId
-          conn.sobject(sfTable).upsert(newObj, 'Airswift_Record_Id__c', (err, res) => {
+          conn.sobject(sfTable).insert(newObj, (err, sfres) => {
             if(err) {
               console.log(err)
-              process.exit()
+	      conn.sobject(sfTable).select("Id").where({Airswift_Record_Id__c : res.RefId}).execute((err, record) => {
+		console.log(res.RefId)
+		coll.updateOne({_id : res._id}, {$set : {NewId : record[0].Id}}, (err, res) => console.log(err ? err : "No error \n") )
+		})
             }
-
-            console.log(res.Id)
-
+	    else{
+	    	coll.updateOne({_id : res._id}, {$set : {NewId : sfres.id}}, (err, res) => console.log(err ? err : "No error ", sfres) ) 
+	    }
           })
         }
-        else{
-          conn.sobject(sfTable).insert(newObj, (err, res) => {
-            if(err) {
-              console.log(err)
-              process.exit()
-            }
-            console.log(res.Id)
-          })
-        }
-      }
     })
   })
 }
