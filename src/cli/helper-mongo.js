@@ -91,6 +91,18 @@ function getFirstWord(str) {
       return str.substr(0, str.indexOf(' '));
 };
 
+function UpdateOwner(OwnerName, userCollection, callback)
+{
+  let filter = {
+    Name : new RegExp(`\.*${ClearAllWhiteSpace(helper.getFirstWord(OwnerName.toLowerCase()))}*\.`, 'ig')
+  }
+
+  userCollection.find(filter).each((err, res) => {
+    if(res.Name.toLowerCase().match(/[a-zA-Z]/ig).join('') == OwnerName.toLowerCase().match(/[a-zA-Z]/ig).join(''))
+      callback(res.Id)
+  })
+}
+
 module.exports = {
   endProcess : (err) =>{
     console.log(err)
@@ -101,5 +113,7 @@ module.exports = {
   getLastModifiedDate : getLastModifiedDate,
   getMigrationDataSource : getMigrationDataSource,
   asyncLoop : asyncLoop,
-  getFirstWord : getFirstWord
+  getFirstWord : getFirstWord,
+  normalizeRelation : '',
+  UpdateOwner : UpdateOwner
 }

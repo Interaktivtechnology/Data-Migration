@@ -176,6 +176,7 @@ function InsertOther(config, mergedCollection)
             newData.attributes = item.attributes
             newData.CreatedBy = item.CreatedBy
             newData.LastModifiedBy = item.LastModifiedBy
+
             if(item.Account) newData.Account = item.Account
             if(config.objectName =='Account' )
             {
@@ -185,6 +186,9 @@ function InsertOther(config, mergedCollection)
               index = ''
               console.log("Changing ParentId....")
             }
+            helper.UpdateOwner(item.Owner.Name, mongodb.collection("dm_15_merged"), (newId) => {
+
+            });
             mergedCollection.insert(newData, (err) => { if(err) console.log(err); newData = null}  )
             newData = null
             report.new ++
@@ -273,13 +277,15 @@ function HandleUnMergeObject(config, ds){
   config['ds1'].fields.map((object, key) => {
     let ds1 = ds
     newData[object.mergedTo] = ds1[object.fieldName]
-    let logic = object.logic.replace(\/\*.*\*\/,'')
+    let logic = object.logic.replace(/\/\*.*\*\//ig,'')
     eval(logic)
     ds1 = null
   })
   config['ds2'].fields.map((object, key) => {
     newData[object.mergedTo] = newData[object.fieldName] ? newData[object.fieldName] : ds[object.fieldName]
+
   })
+
 
   return newData
 }
