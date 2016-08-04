@@ -90,10 +90,14 @@ function readMongoCollection(fieldList){
               newObj[key] = res[key]
           }
         })
+        newObj.RecordTypeId = '01220000000ILXOAA4'
         if(res.RefId){
           newObj.Airswift_Record_Id__c = res.RefId
           conn.sobject(sfTable).upsert(newObj, 'Airswift_Record_Id__c', (err, res) => {
-            if(err) console.log(err) process.exit()
+            if(err) {
+              console.log(err)
+              process.exit()
+            }
 
             console.log(res.Id)
 
@@ -101,7 +105,10 @@ function readMongoCollection(fieldList){
         }
         else{
           conn.sobject(sfTable).insert(newObj, (err, res) => {
-            if(err) console.log(err) process.exit()
+            if(err) {
+              console.log(err)
+              process.exit()
+            }
             console.log(res.Id)
           })
         }
