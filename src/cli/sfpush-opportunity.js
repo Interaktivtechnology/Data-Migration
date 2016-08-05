@@ -70,13 +70,15 @@ function readMongoCollection(fieldList){
 
     let coll = db.collection(mongoCollection)
     coll.find({
-      status: 'new'
-    }).limit(10).skip(10)
+      status: 'new',
+      NewId : null
+    }).limit(100).skip(0)
     .each((err, mongoResult) => {
 
       if(mongoResult != null){
         //compareTheField(fieldList, mongoResult)
         let soql = `select id from Account where Airswift_Record_Id__c= '${mongoResult.AccountId}'`
+
         conn.query(soql, (err, res) =>{
           //console.log(err ? err : res)
           let newObj = {}
@@ -88,18 +90,32 @@ function readMongoCollection(fieldList){
           if(res.totalSize > 0)
           {
             newObj.AccountId = res.records[0].Id
-            conn.query(`select Id from User where name = '${mongoResult.Owner.Name}' and IsActive = true`, (err, ownerRes) => {
+
+            conn.query(`select Id from User where name = '${mongoResult.Owner.Name} and IsActive = true'  `, (err, ownerRes) => {
               if(ownerRes.records.length > 0)
                 newObj.OwnerId = ownerRes.records[0].Id
-                conn.sobject("Opportunity").upsert(newObj, 'Airswift_Record_Id__c', (err, res) =>
+              console.log("OwnerId", newObj.OwnerId, mongoResult.Owner.Name)
+              soql = `select Id from Opportunity where Airswift_Record_Id__c = '${mongoResult.Id}'`
+              console.log(soql)
+              conn.query(soql, (err, oppRes) => {
+                console.log("Result :",  JSON.stringify(err ? err : oppRes, null, 2))
+                if(oppRes.records.length == 0)
                 {
-                  console.log(err ? err : JSON.stringify(res, null ,2 ))
-                })
+                  conn.sobject("Opportunity").insert(newObj, 'Airswift_Record_Id__c', (err, res) =>
+                  {
+                    console.log(err ? err : JSON.stringify(res, null ,2 ))
+                    coll.update({_id : mongoResult._id}, {$set : {NewId : res.Id}}, (err) => console.log(err ? err : "Update opportunity on mongodb"))
+                  })
+                }
+                else {
+                  coll.update({_id : mongoResult._id}, {$set : {NewId : oppRes.records[0].Id}}, (err) => console.log(err ? err : "Update opportunity on mongodb"))
+                }
+              })
             })
           }
           else {
             insertAccount(mongoResult.AccountId, db, (newId) => {
-              newObj.AccountId = res.records[0].newId
+              //newObj.AccountId = res.records[0].newId
             })
           }
 
@@ -113,13 +129,14 @@ function readMongoCollection(fieldList){
 }
 
 function insertAccount(id, db, callback){
+  console.log(`SwiftId Not Found ${id}`)
   let coll = db.collection("dm_9_SwiftProduction_Account")
   coll.find({
     _id : id
   }).limit(1)
   .each((err, res) => {
     if(res != null){
-      console.log(res.Name)
+
       callback(res)
     }
   })
@@ -141,7 +158,7 @@ function compareTheField(targetList, mongoResult){
      'New_Oppty_Assessment__c',
      'FiscalQuarter',
      'Fiscal',
-     'HasOverdueTask'
+     'HasOverdueTask', 'Last_Assessment_Date__c'
   ]
   let newObj = {}
   Object.keys(mongoResult).forEach((key) => {
