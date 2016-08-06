@@ -15,10 +15,13 @@ export function describeObject(req, res, next)
       if(!dbResult) res.status(500).send({ ok: false, message : "No record found"})
       var setting = JSON.parse(dbResult.additionalSetting)
       var conn = new jsforce.Connection({
-        loginUrl : setting.mode == 'dev' ? 'https://test.salesforce.com' : 'https://login.salesforce.com'
+        loginUrl : setting.mode.toLowerCase() == 'dev' ? 'https://test.salesforce.com' : 'https://login.salesforce.com'
       })
       conn.login(dbResult.username, dbResult.password + dbResult.token, function(err, sfResult) {
-        if(err) res.status(500).send({ ok: false, message : "Login Error, please check again your password"})
+        if(err) {
+          console.log(JSON.stringify(err, 2, null))
+          res.status(500).send({ ok: false, message : "Login Error, please check again your password"})
+        }
 
         else
         {
@@ -92,6 +95,9 @@ export function create(req, res, next)
 export function list(req, res, next)
 {
   models.Migration.findAll({
+    where : {
+      $not : {status : 'hidden'}
+    },
     limit : [req.query.offset ? req.query.offset : 0, req.query.limit ? req.query.limit : 10]
   }).then((result) => {
     res.status(200).send({message : "Listed", ok : true, result : result})
