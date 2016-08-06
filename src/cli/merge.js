@@ -109,9 +109,13 @@ db.open((err, mongodb) => {
                         }
                         config['ds1'].fields.map((object, key) => {
                           newData[object.mergedTo] = ds1[object.fieldName] ? ds1[object.fieldName] : ds2[object.fieldName]
+                          let logic = object.logic.replace(/\/\*.*\*\//ig,'')
+                          eval(logic)
                         })
                         config['ds2'].fields.map((object, key) => {
                           newData[object.mergedTo] = ds2[object.fieldName] ? ds2[object.fieldName]  : ds1[object.fieldName]
+                          let logic = object.logic.replace(/\/\*.*\*\//ig,'')
+                          eval(logic)
                         })
                         newData.OldData = {
                           ds1 : ds1,
